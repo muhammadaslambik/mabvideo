@@ -1,1 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>MAB-Video</title>
+
+    <meta
+        name="description"
+        content="MAB-Video - A modern video sharing platform."
+    >
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="header-left">
+
+            <button
+                class="icon-button menu-button"
+                id="menuButton"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+
+            <a href="index.html" class="logo">
+                <span class="logo-icon">▶</span>
+                <span class="logo-text">MAB-Video</span>
+            </a>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-container">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search"
+            >
+
+            <button
+                class="search-button"
+                id="searchButton"
+                aria-label="Search"
+            >
+                🔍
+            </button>
+
+        </div>
+
+
+        <!-- HEADER RIGHT -->
+
+        <div class="header-right">
+
+            <button
+                class="icon-button"
+                id="themeButton"
+                aria-label="Toggle dark mode"
+            >
+                🌙
+            </button>
+
+            <button
+                class="icon-button"
+                aria-label="Notifications"
+            >
+                🔔
+            </button>
+
+            <button
+                class="profile-button"
+                aria-label="Profile"
+            >
+                M
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <nav>
+
+            <a href="#" class="sidebar-item active">
+                <span>🏠</span>
+                <span>Home</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>🔥</span>
+                <span>Trending</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>📺</span>
+                <span>Subscriptions</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <a href="#" class="sidebar-item">
+                <span>📚</span>
+                <span>Library</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>🕘</span>
+                <span>History</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>▶️</span>
+                <span>Your videos</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>⏰</span>
+                <span>Watch later</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <h3>Explore</h3>
+
+            <a href="#" class="sidebar-item">
+                <span>🎵</span>
+                <span>Music</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>🎮</span>
+                <span>Gaming</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>💻</span>
+                <span>Technology</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>📚</span>
+                <span>Education</span>
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+
+    <!-- MOBILE SIDEBAR OVERLAY -->
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main-content">
+
+
+        <!-- CATEGORY -->
+
+        <div class="category-bar">
+
+            <button
+                class="category-button active"
+                data-category="all"
+            >
+                All
+            </button>
+
+            <button
+                class="category-button"
+                data-category="music"
+            >
+                Music
+            </button>
+
+            <button
+                class="category-button"
+                data-category="gaming"
+            >
+                Gaming
+            </button>
+
+            <button
+                class="category-button"
+                data-category="coding"
+            >
+                Coding
+            </button>
+
+            <button
+                class="category-button"
+                data-category="technology"
+            >
+                Technology
+            </button>
+
+            <button
+                class="category-button"
+                data-category="education"
+            >
+                Education
+            </button>
+
+            <button
+                class="category-button"
+                data-category="news"
+            >
+                News
+            </button>
+
+        </div>
+
+
+
+        <!-- VIDEO SECTION -->
+
+        <section class="video-section">
+
+            <div class="section-header">
+
+                <h1>Recommended videos</h1>
+
+            </div>
+
+
+            <!-- JavaScript akan memasukkan video ke sini -->
+
+            <div
+                class="video-grid"
+                id="videoGrid"
+            ></div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>
