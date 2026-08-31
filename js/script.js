@@ -190,6 +190,10 @@ const categoryButtons =
 
 function renderVideos(videoList) {
 
+    if (!videoGrid) {
+        return;
+    }
+   
     videoGrid.innerHTML = "";
 
 
@@ -330,21 +334,28 @@ function searchVideos() {
 
 /* Search button */
 
+if (searchButton) {
 searchButton.addEventListener(
     "click",
     searchVideos
 );
 
+}
 
 /* Search while typing */
 
+if (searchInput) {
+   
 searchInput.addEventListener(
     "input",
     searchVideos
 );
 
+}
 
 /* Enter key */
+
+if (searchInput) {
 
 searchInput.addEventListener(
     "keydown",
@@ -359,6 +370,7 @@ searchInput.addEventListener(
     }
 );
 
+}
 
 /* ================= CATEGORY FILTER ================= */
 
@@ -431,6 +443,8 @@ categoryButtons.forEach(button => {
 
 /* ================= DARK MODE ================= */
 
+if (themeButton) {
+
 themeButton.addEventListener(
     "click",
     () => {
@@ -465,6 +479,7 @@ themeButton.addEventListener(
     }
 );
 
+}
 
 /* ================= LOAD SAVED THEME ================= */
 
