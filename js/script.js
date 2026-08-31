@@ -285,11 +285,8 @@ function renderVideos(videoList) {
 
         videoCard.addEventListener("click", () => {
 
-            console.log(
-                "Video selected:",
-                video.id,
-                video.title
-            );
+    window.location.href =
+        `watch.html?id=${video.id}`;
 
         });
 
@@ -616,3 +613,137 @@ console.log(
     "Total videos:",
     videos.length
 );
+
+/* ================= WATCH PAGE ================= */
+
+const videoPlayer =
+    document.getElementById("videoPlayer");
+
+const videoTitle =
+    document.getElementById("videoTitle");
+
+const videoInfo =
+    document.getElementById("videoInfo");
+
+const backButton =
+    document.getElementById("backButton");
+
+
+/*
+    Jalankan hanya jika
+    halaman Watch Page sedang dibuka.
+*/
+
+if (
+    videoPlayer &&
+    videoTitle &&
+    videoInfo
+) {
+
+    /*
+        Ambil ID dari URL
+
+        Contoh:
+
+        watch.html?id=1
+
+        hasil:
+        videoId = 1
+    */
+
+    const urlParams =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const videoId =
+        Number(
+            urlParams.get("id")
+        );
+
+
+    /*
+        Cari video berdasarkan ID
+    */
+
+    const selectedVideo =
+        videos.find(video => {
+
+            return video.id === videoId;
+
+        });
+
+
+    /*
+        Jika video ditemukan
+    */
+
+    if (selectedVideo) {
+
+        videoTitle.textContent =
+            selectedVideo.title;
+
+
+        videoInfo.innerHTML = `
+            <strong>
+                ${selectedVideo.channel}
+            </strong>
+            <br>
+
+            ${selectedVideo.views}
+            •
+            ${selectedVideo.date}
+            •
+            ${selectedVideo.duration}
+        `;
+
+
+        /*
+            Untuk sementara player
+            masih berupa placeholder.
+        */
+
+        videoPlayer.innerHTML = `
+
+            <div class="video-placeholder">
+
+                ▶
+
+            </div>
+
+        `;
+
+    }
+
+
+    /*
+        Jika ID video tidak ditemukan
+    */
+
+    else {
+
+        videoTitle.textContent =
+            "Video not found";
+
+        videoInfo.textContent =
+            "The video you are looking for does not exist.";
+
+    }
+
+}
+
+
+/* ================= BACK BUTTON ================= */
+
+if (backButton) {
+
+    backButton.addEventListener(
+        "click",
+        () => {
+
+            history.back();
+
+        }
+    );
+
+}
