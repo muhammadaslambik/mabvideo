@@ -504,6 +504,52 @@ a {
 }
 
 
+/* ================= COLLAPSED SIDEBAR ================= */
+
+.sidebar {
+    transition: width 0.3s ease;
+}
+
+.main-content {
+    transition: margin-left 0.3s ease;
+}
+
+
+/* Desktop: sidebar mengecil */
+
+.sidebar.collapsed {
+    width: 80px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.sidebar.collapsed .sidebar-item {
+    justify-content: center;
+    gap: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sidebar.collapsed .sidebar-item span:not(:first-child) {
+    display: none;
+}
+
+.sidebar.collapsed h3 {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-divider {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+
+/* Main ikut bergeser */
+
+.main-content.sidebar-collapsed {
+    margin-left: 80px;
+}
+
 /* ================= MOBILE OVERLAY ================= */
 
 .sidebar-overlay {
