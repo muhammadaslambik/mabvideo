@@ -19,8 +19,9 @@
 
 </head>
 
-
 <body>
+
+    <!-- ================= HEADER ================= -->
 
     <header class="header">
 
@@ -28,7 +29,8 @@
 
             <button
                 class="icon-button"
-                onclick="history.back()"
+                id="backButton"
+                aria-label="Go back"
             >
                 ←
             </button>
@@ -53,16 +55,17 @@
     </header>
 
 
-    <main
-        class="main-content"
-        style="margin-left: 0;"
-    >
+    <!-- ================= WATCH PAGE ================= -->
 
-        <section class="watch-page">
+    <main class="watch-main">
+
+        <!-- VIDEO PLAYER -->
+
+        <section class="watch-container">
 
             <div
-                id="videoPlayer"
                 class="video-player"
+                id="videoPlayer"
             >
 
                 <div class="video-placeholder">
@@ -72,15 +75,23 @@
             </div>
 
 
-            <h1 id="videoTitle">
+            <!-- VIDEO TITLE -->
+
+            <h1
+                class="watch-title"
+                id="videoTitle"
+            >
                 Loading video...
             </h1>
 
 
-            <div id="videoInfo">
+            <!-- VIDEO INFORMATION -->
 
+            <div
+                class="watch-info"
+                id="videoInfo"
+            >
                 Loading information...
-
             </div>
 
         </section>
