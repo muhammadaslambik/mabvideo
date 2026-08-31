@@ -483,20 +483,47 @@ if (savedTheme === "dark") {
 }
 
 
-/* ================= MOBILE MENU ================= */
+
+/* ================= MENU ================= */
 
 menuButton.addEventListener(
     "click",
     () => {
 
-        sidebar.classList.toggle("open");
+        /*
+            DESKTOP
+            Klik ☰ → sidebar mengecil
+        */
 
-        sidebarOverlay.classList.toggle(
-            "active"
-        );
+        if (window.innerWidth > 800) {
+
+            sidebar.classList.toggle("collapsed");
+
+            document
+                .querySelector(".main-content")
+                .classList.toggle("sidebar-collapsed");
+
+        }
+
+
+        /*
+            MOBILE
+            Klik ☰ → sidebar muncul
+        */
+
+        else {
+
+            sidebar.classList.toggle("open");
+
+            sidebarOverlay.classList.toggle(
+                "active"
+            );
+
+        }
 
     }
 );
+
 
 
 sidebarOverlay.addEventListener(
