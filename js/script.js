@@ -315,28 +315,32 @@ function renderVideos(videoList) {
 const mainVideo = document.getElementById("mainVideo");
 const playButton = document.getElementById("playButton");
 
+console.log("Video player:", mainVideo);
+console.log("Play button:", playButton);
+
 if (mainVideo && playButton) {
 
-    playButton.addEventListener(
-        "click",
-        () => {
+    playButton.addEventListener("click", function () {
 
-            if (mainVideo.paused) {
+        console.log("PLAY BUTTON DIKLIK");
 
-                mainVideo.play();
+        if (mainVideo.paused) {
 
-                playButton.textContent = "❚❚";
+            playButton.textContent = "❚❚";
 
-            } else {
+            mainVideo.play().catch(function(error) {
+                console.log("Video belum memiliki sumber:", error);
+            });
 
-                mainVideo.pause();
+        } else {
 
-                playButton.textContent = "▶";
+            mainVideo.pause();
 
-            }
+            playButton.textContent = "▶";
 
         }
-    );
+
+    });
 
 }
 
