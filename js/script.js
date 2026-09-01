@@ -883,48 +883,11 @@ if (
                 "videoProgress"
             );
 
-
 /* ==================================================
-   VIDEO PLAY / PAUSE
+   PLAY / PAUSE
 ================================================== */
 
-if (mainVideo && playButton) {
-
-    let hidePlayButtonTimer;
-
-
-    /* ==================================================
-       TAMPILKAN IKON SEBENTAR
-    ================================================== */
-
-    function showPlayButton() {
-
-        playButton.classList.remove("hidden");
-
-
-        clearTimeout(
-            hidePlayButtonTimer
-        );
-
-
-        if (!mainVideo.paused) {
-
-            hidePlayButtonTimer =
-                setTimeout(
-                    () => {
-
-                        playButton.classList.add(
-                            "hidden"
-                        );
-
-                    },
-                    500
-                );
-
-        }
-
-    }
-
+if (mainVideo) {
 
     /* ==================================================
        KLIK LAYAR VIDEO
@@ -956,17 +919,16 @@ if (mainVideo && playButton) {
         "play",
         () => {
 
-            playButton.textContent =
-                "❚❚";
+            if (playButton) {
 
+                playButton.textContent = "❚❚";
 
-            playButton.setAttribute(
-                "aria-label",
-                "Pause video"
-            );
+                playButton.setAttribute(
+                    "aria-label",
+                    "Pause video"
+                );
 
-
-            showPlayButton();
+            }
 
         }
     );
@@ -980,24 +942,16 @@ if (mainVideo && playButton) {
         "pause",
         () => {
 
-            playButton.textContent =
-                "▶";
+            if (playButton) {
 
+                playButton.textContent = "▶";
 
-            playButton.setAttribute(
-                "aria-label",
-                "Play video"
-            );
+                playButton.setAttribute(
+                    "aria-label",
+                    "Play video"
+                );
 
-
-            playButton.classList.remove(
-                "hidden"
-            );
-
-
-            clearTimeout(
-                hidePlayButtonTimer
-            );
+            }
 
         }
     );
@@ -1011,24 +965,50 @@ if (mainVideo && playButton) {
         "ended",
         () => {
 
-            playButton.textContent =
-                "▶";
+            if (playButton) {
+
+                playButton.textContent = "▶";
+
+                playButton.setAttribute(
+                    "aria-label",
+                    "Play video"
+                );
+
+            }
+
+        }
+    );
+
+}
 
 
-            playButton.setAttribute(
-                "aria-label",
-                "Play video"
-            );
+/* ==================================================
+   PLAY BUTTON
+================================================== */
+
+if (
+    mainVideo &&
+    playButton
+) {
+
+    playButton.addEventListener(
+        "click",
+        event => {
+
+            /* Jangan teruskan klik ke video */
+
+            event.stopPropagation();
 
 
-            playButton.classList.remove(
-                "hidden"
-            );
+            if (mainVideo.paused) {
 
+                mainVideo.play();
 
-            clearTimeout(
-                hidePlayButtonTimer
-            );
+            } else {
+
+                mainVideo.pause();
+
+            }
 
         }
     );
