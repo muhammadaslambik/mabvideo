@@ -869,7 +869,7 @@ if (
                 "videoProgress"
             );
 
-   /* ==================================================
+/* ==================================================
    PLAY / PAUSE + AUTO HIDE ICON
 ================================================== */
 
@@ -892,7 +892,11 @@ if (mainVideo && playButton) {
 
             hidePlayButtonTimer = setTimeout(() => {
 
-                playButton.classList.add("hidden");
+                if (!mainVideo.paused) {
+
+                    playButton.classList.add("hidden");
+
+                }
 
             }, 500);
 
@@ -902,7 +906,7 @@ if (mainVideo && playButton) {
 
 
     /* ==================================================
-       KLIK LAYAR VIDEO = PLAY / PAUSE
+       KLIK LAYAR = PLAY / PAUSE
     ================================================== */
 
     mainVideo.addEventListener("click", () => {
@@ -977,8 +981,8 @@ if (mainVideo && playButton) {
 
     });
 
-} 
-
+}
+       
         /* ==================================================
            PROGRESS BAR
         ================================================== */
