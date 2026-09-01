@@ -885,26 +885,21 @@ if (
 
 
 /* ==================================================
-   PLAY / PAUSE
+   VIDEO PLAY / PAUSE
 ================================================== */
 
-if (
-    mainVideo &&
-    playButton
-) {
-
-    /* ==================================================
-       AUTO HIDE PLAY BUTTON
-    ================================================== */
+if (mainVideo && playButton) {
 
     let hidePlayButtonTimer;
 
 
+    /* ==================================================
+       TAMPILKAN IKON SEBENTAR
+    ================================================== */
+
     function showPlayButton() {
 
-        playButton.classList.remove(
-            "hidden"
-        );
+        playButton.classList.remove("hidden");
 
 
         clearTimeout(
@@ -912,44 +907,38 @@ if (
         );
 
 
-        hidePlayButtonTimer =
-            setTimeout(
-                () => {
+        if (!mainVideo.paused) {
 
-                    if (
-                        !mainVideo.paused
-                    ) {
+            hidePlayButtonTimer =
+                setTimeout(
+                    () => {
 
                         playButton.classList.add(
                             "hidden"
                         );
 
-                    }
+                    },
+                    500
+                );
 
-                },
-                800
-            );
+        }
 
     }
 
 
     /* ==================================================
-       PLAY / PAUSE CLICK
+       KLIK LAYAR VIDEO
     ================================================== */
 
-    playButton.addEventListener(
+    mainVideo.addEventListener(
         "click",
         () => {
 
-            if (
-                mainVideo.paused
-            ) {
+            if (mainVideo.paused) {
 
                 mainVideo.play();
 
-            }
-
-            else {
+            } else {
 
                 mainVideo.pause();
 
@@ -1045,7 +1034,6 @@ if (
     );
 
 }
-
 
         /* ==================================================
            PROGRESS BAR
