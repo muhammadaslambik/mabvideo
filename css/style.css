@@ -1010,22 +1010,3 @@ body.dark .more-button:hover {
 }
 
 
-/* ==================================================
-   PLAY BUTTON AUTO HIDE
-================================================== */
-
-.play-button {
-    opacity: 1;
-
-    transition:
-        opacity 0.2s ease,
-        transform 0.2s ease,
-        background 0.2s ease;
-}
-
-
-/* Tombol disembunyikan */
-
-.play-button.hidden {
-    opacity: 0;
-}
