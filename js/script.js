@@ -20,6 +20,7 @@ const videos = [
         category: "coding",
         icon: "💻",
         avatar: "M"
+        // videoUrl: "assets/videos/nama-file.mp4"  <-- tambahkan kalau sudah ada file mp4-nya
     },
 
     {
@@ -792,297 +793,404 @@ if (
 
 
         /* ==================================================
-           CREATE VIDEO PLAYER
+           VIDEO TIDAK PUNYA FILE (belum ada videoUrl)
         ================================================== */
 
-        watchVideoPlayer.innerHTML = `
+        if (!selectedVideo.videoUrl) {
 
-            <div class="video-container">
+            watchVideoPlayer.innerHTML = `
 
-                <video
-                    id="mainVideo"
-                    class="main-video"
-                    preload="metadata"
-                >
-
-                    <source
-                        src="${selectedVideo.videoUrl || ""}"
-                        type="video/mp4"
-                    >
-
-                    Browser kamu tidak mendukung
-                    video HTML5.
-
-                </video>
-
-
-                <button
-                    id="playButton"
-                    class="play-button"
-                    aria-label="Play video"
-                >
-                    ▶
-                </button>
-
-
-                <div
-                    class="video-progress-container"
-                    id="videoProgressContainer"
-                >
+                <div class="video-container">
 
                     <div
-                        class="video-progress"
-                        id="videoProgress"
-                    ></div>
+                        style="
+                            width:100%;
+                            height:100%;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            color:#ffffff;
+                            font-size:14px;
+                            text-align:center;
+                            padding:20px;
+                        "
+                    >
+                        Video ini belum memiliki file (videoUrl).<br>
+                        Tambahkan properti "videoUrl" pada data video ini di script.js.
+                    </div>
 
                 </div>
 
-            </div>
-
-        `;
-
-
-        /* ==================================================
-           VIDEO ELEMENTS
-        ================================================== */
-
-        const mainVideo =
-            document.getElementById(
-                "mainVideo"
-            );
-
-
-        const playButton =
-            document.getElementById(
-                "playButton"
-            );
-
-
-        const videoProgressContainer =
-            document.getElementById(
-                "videoProgressContainer"
-            );
-
-
-        const videoProgress =
-            document.getElementById(
-                "videoProgress"
-            );
-
-/* ==================================================
-   PLAY / PAUSE + AUTO HIDE ICON
-================================================== */
-
-if (mainVideo && playButton) {
-
-    let hidePlayButtonTimer;
-
-
-    /* ==================================================
-       TAMPILKAN IKON
-    ================================================== */
-
-    function showPlayButton() {
-
-        playButton.classList.remove("hidden");
-
-        clearTimeout(hidePlayButtonTimer);
-
-        if (!mainVideo.paused) {
-
-            hidePlayButtonTimer = setTimeout(() => {
-
-                if (!mainVideo.paused) {
-
-                    playButton.classList.add("hidden");
-
-                }
-
-            }, 500);
+            `;
 
         }
 
-    }
+        else {
+
+            /* ==================================================
+               CREATE VIDEO PLAYER
+            ================================================== */
+
+            watchVideoPlayer.innerHTML = `
+
+                <div class="video-container">
+
+                    <video
+                        id="mainVideo"
+                        class="main-video"
+                        preload="metadata"
+                    >
+
+                        <source
+                            src="${selectedVideo.videoUrl}"
+                            type="video/mp4"
+                        >
+
+                        Browser kamu tidak mendukung
+                        video HTML5.
+
+                    </video>
 
 
-    /* ==================================================
-       KLIK LAYAR = PLAY / PAUSE
-    ================================================== */
-
-    mainVideo.addEventListener("click", () => {
-
-        if (mainVideo.paused) {
-
-            mainVideo.play();
-
-        } else {
-
-            mainVideo.pause();
-
-        }
-
-    });
+                    <button
+                        id="playButton"
+                        class="play-button"
+                        aria-label="Play video"
+                    >
+                        ▶
+                    </button>
 
 
-    /* ==================================================
-       VIDEO PLAY
-    ================================================== */
+                    <div
+                        class="video-progress-container"
+                        id="videoProgressContainer"
+                    >
 
-    mainVideo.addEventListener("play", () => {
+                        <div
+                            class="video-progress"
+                            id="videoProgress"
+                        ></div>
 
-        playButton.textContent = "❚❚";
+                    </div>
 
-        playButton.setAttribute(
-            "aria-label",
-            "Pause video"
-        );
+                </div>
 
-        showPlayButton();
-
-    });
-
-
-    /* ==================================================
-       VIDEO PAUSE
-    ================================================== */
-
-    mainVideo.addEventListener("pause", () => {
-
-        clearTimeout(hidePlayButtonTimer);
-
-        playButton.textContent = "▶";
-
-        playButton.setAttribute(
-            "aria-label",
-            "Play video"
-        );
-
-        playButton.classList.remove("hidden");
-
-    });
+            `;
 
 
-    /* ==================================================
-       VIDEO SELESAI
-    ================================================== */
+            /* ==================================================
+               VIDEO ELEMENTS
+            ================================================== */
 
-    mainVideo.addEventListener("ended", () => {
-
-        clearTimeout(hidePlayButtonTimer);
-
-        playButton.textContent = "▶";
-
-        playButton.setAttribute(
-            "aria-label",
-            "Play video"
-        );
-
-        playButton.classList.remove("hidden");
-
-    });
-
-}
-       
-        /* ==================================================
-           PROGRESS BAR
-        ================================================== */
-
-        if (
-            mainVideo &&
-            videoProgressContainer &&
-            videoProgress
-        ) {
-
-            /* ==========================
-               UPDATE PROGRESS
-            ========================== */
-
-            mainVideo.addEventListener(
-                "timeupdate",
-                () => {
-
-                    if (
-                        mainVideo.duration &&
-                        !isNaN(
-                            mainVideo.duration
-                        )
-                    ) {
-
-                        const progress =
-                            (
-                                mainVideo.currentTime /
-                                mainVideo.duration
-                            ) * 100;
+            const mainVideo =
+                document.getElementById(
+                    "mainVideo"
+                );
 
 
-                        videoProgress.style.width =
-                            `${progress}%`;
+            const playButton =
+                document.getElementById(
+                    "playButton"
+                );
+
+
+            const videoProgressContainer =
+                document.getElementById(
+                    "videoProgressContainer"
+                );
+
+
+            const videoProgress =
+                document.getElementById(
+                    "videoProgress"
+                );
+
+
+            /* ==================================================
+               PLAY / PAUSE + IKON LANGSUNG HILANG SETELAH DIKLIK
+            ================================================== */
+
+            if (mainVideo && playButton) {
+
+                let hidePlayButtonTimer;
+
+
+                /* ==========================
+                   TOGGLE PLAY / PAUSE
+                ========================== */
+
+                function togglePlayPause() {
+
+                    if (mainVideo.paused) {
+
+                        mainVideo.play();
+
+                    } else {
+
+                        mainVideo.pause();
 
                     }
 
                 }
-            );
 
 
-            /* ==========================
-               SEEK VIDEO
-            ========================== */
+                /* ==========================
+                   TAMPILKAN IKON SEBENTAR
+                   LALU SEGERA DISEMBUNYIKAN
+                   (baik saat play maupun pause)
+                   supaya tidak menutupi gambar video
+                ========================== */
 
-            videoProgressContainer.addEventListener(
-                "click",
-                event => {
+                function flashPlayButton() {
 
-                    const rect =
-                        videoProgressContainer
-                            .getBoundingClientRect();
-
-
-                    const clickPosition =
-                        event.clientX -
-                        rect.left;
-
-
-                    const percentage =
-                        clickPosition /
-                        rect.width;
-
-
-                    if (
-                        mainVideo.duration &&
-                        !isNaN(
-                            mainVideo.duration
-                        )
-                    ) {
-
-                        mainVideo.currentTime =
-                            percentage *
-                            mainVideo.duration;
-
-                    }
-
-                }
-            );
-
-        }
-
-
-        /* ==================================================
-           VIDEO ERROR
-        ================================================== */
-
-        if (mainVideo) {
-
-            mainVideo.addEventListener(
-                "error",
-                () => {
-
-                    console.error(
-                        "Video gagal dimuat:",
-                        selectedVideo.videoUrl
+                    playButton.classList.remove(
+                        "hidden"
                     );
 
+                    clearTimeout(
+                        hidePlayButtonTimer
+                    );
+
+                    hidePlayButtonTimer =
+                        setTimeout(() => {
+
+                            playButton.classList.add(
+                                "hidden"
+                            );
+
+                        }, 350);
+
                 }
-            );
+
+
+                /* ==========================
+                   KLIK DI LAYAR VIDEO
+                   = PLAY / PAUSE
+                ========================== */
+
+                mainVideo.addEventListener(
+                    "click",
+                    () => {
+
+                        togglePlayPause();
+
+                        flashPlayButton();
+
+                    }
+                );
+
+
+                /* ==========================
+                   KLIK TEPAT DI TOMBOL PLAY
+                   (sebelumnya tidak berfungsi)
+                ========================== */
+
+                playButton.addEventListener(
+                    "click",
+                    event => {
+
+                        event.stopPropagation();
+
+                        togglePlayPause();
+
+                        flashPlayButton();
+
+                    }
+                );
+
+
+                /* ==========================
+                   UBAH IKON SESUAI STATUS
+                ========================== */
+
+                mainVideo.addEventListener(
+                    "play",
+                    () => {
+
+                        playButton.textContent =
+                            "❚❚";
+
+                        playButton.setAttribute(
+                            "aria-label",
+                            "Pause video"
+                        );
+
+                    }
+                );
+
+
+                mainVideo.addEventListener(
+                    "pause",
+                    () => {
+
+                        playButton.textContent =
+                            "▶";
+
+                        playButton.setAttribute(
+                            "aria-label",
+                            "Play video"
+                        );
+
+                    }
+                );
+
+
+                mainVideo.addEventListener(
+                    "ended",
+                    () => {
+
+                        clearTimeout(
+                            hidePlayButtonTimer
+                        );
+
+                        playButton.textContent =
+                            "▶";
+
+                        playButton.setAttribute(
+                            "aria-label",
+                            "Play video"
+                        );
+
+                        playButton.classList.remove(
+                            "hidden"
+                        );
+
+                    }
+                );
+
+            }
+
+
+            /* ==================================================
+               PROGRESS BAR
+            ================================================== */
+
+            if (
+                mainVideo &&
+                videoProgressContainer &&
+                videoProgress
+            ) {
+
+                /* ==========================
+                   UPDATE PROGRESS
+                ========================== */
+
+                mainVideo.addEventListener(
+                    "timeupdate",
+                    () => {
+
+                        if (
+                            mainVideo.duration &&
+                            !isNaN(
+                                mainVideo.duration
+                            )
+                        ) {
+
+                            const progress =
+                                (
+                                    mainVideo.currentTime /
+                                    mainVideo.duration
+                                ) * 100;
+
+
+                            videoProgress.style.width =
+                                `${progress}%`;
+
+                        }
+
+                    }
+                );
+
+
+                /* ==========================
+                   SEEK VIDEO
+                ========================== */
+
+                videoProgressContainer.addEventListener(
+                    "click",
+                    event => {
+
+                        event.stopPropagation();
+
+                        const rect =
+                            videoProgressContainer
+                                .getBoundingClientRect();
+
+
+                        const clickPosition =
+                            event.clientX -
+                            rect.left;
+
+
+                        const percentage =
+                            clickPosition /
+                            rect.width;
+
+
+                        if (
+                            mainVideo.duration &&
+                            !isNaN(
+                                mainVideo.duration
+                            )
+                        ) {
+
+                            mainVideo.currentTime =
+                                percentage *
+                                mainVideo.duration;
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            /* ==================================================
+               VIDEO ERROR
+            ================================================== */
+
+            if (mainVideo) {
+
+                mainVideo.addEventListener(
+                    "error",
+                    () => {
+
+                        console.error(
+                            "Video gagal dimuat:",
+                            selectedVideo.videoUrl
+                        );
+
+                        watchVideoPlayer.innerHTML = `
+
+                            <div class="video-container">
+
+                                <div
+                                    style="
+                                        width:100%;
+                                        height:100%;
+                                        display:flex;
+                                        align-items:center;
+                                        justify-content:center;
+                                        color:#ffffff;
+                                        font-size:14px;
+                                        text-align:center;
+                                        padding:20px;
+                                    "
+                                >
+                                    Video gagal dimuat.<br>
+                                    Pastikan file "${selectedVideo.videoUrl}"
+                                    ada di folder yang benar.
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    }
+                );
+
+            }
 
         }
 
