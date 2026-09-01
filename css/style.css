@@ -1009,4 +1009,20 @@ body.dark .more-button:hover {
     height: 7px;
 }
 
+/* ==================================================
+   PLAY BUTTON AUTO HIDE
+================================================== */
 
+.play-button {
+    opacity: 1;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.play-button.hidden {
+    opacity: 0;
+}
