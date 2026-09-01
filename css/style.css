@@ -1008,3 +1008,8 @@ body.dark .more-button:hover {
 .video-progress-container:hover {
     height: 7px;
 }
+
+.play-button.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
