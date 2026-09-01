@@ -793,7 +793,8 @@ if (
 
 
         /* ==================================================
-           VIDEO TIDAK PUNYA FILE (belum ada videoUrl)
+           VIDEO TIDAK PUNYA FILE
+           (belum ada videoUrl)
         ================================================== */
 
         if (!selectedVideo.videoUrl) {
@@ -835,6 +836,89 @@ if (
 
                 <div class="video-container">
 
+                    <style>
+
+                        /* ==================================================
+                           VOLUME CONTROLS
+                        ================================================== */
+
+                        .volume-controls {
+                            position: absolute;
+                            left: 16px;
+                            bottom: 28px;
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            z-index: 20;
+                            padding: 6px 8px;
+                            background: rgba(0, 0, 0, 0.55);
+                            border-radius: 8px;
+                            backdrop-filter: blur(4px);
+                        }
+
+
+                        .mute-button {
+                            width: 36px;
+                            height: 36px;
+                            border: none;
+                            border-radius: 6px;
+                            background: transparent;
+                            color: #fff;
+                            font-size: 18px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            cursor: pointer;
+                            padding: 0;
+                        }
+
+
+                        .mute-button:hover {
+                            background: rgba(255, 255, 255, 0.15);
+                        }
+
+
+                        .volume-slider {
+                            width: 90px;
+                            cursor: pointer;
+                        }
+
+
+                        .volume-slider:focus {
+                            outline: none;
+                        }
+
+
+                        /* ==================================================
+                           MOBILE
+                        ================================================== */
+
+                        @media (max-width: 600px) {
+
+                            .volume-controls {
+                                left: 10px;
+                                bottom: 24px;
+                                gap: 4px;
+                                padding: 4px 6px;
+                            }
+
+
+                            .mute-button {
+                                width: 32px;
+                                height: 32px;
+                                font-size: 16px;
+                            }
+
+
+                            .volume-slider {
+                                width: 70px;
+                            }
+
+                        }
+
+                    </style>
+
+
                     <video
                         id="mainVideo"
                         class="main-video"
@@ -852,6 +936,8 @@ if (
                     </video>
 
 
+                    <!-- PLAY BUTTON -->
+
                     <button
                         id="playButton"
                         class="play-button"
@@ -860,6 +946,43 @@ if (
                         ▶
                     </button>
 
+
+                    <!-- ==================================================
+                         VOLUME CONTROLS
+                    ================================================== -->
+
+                    <div
+                        class="volume-controls"
+                        id="volumeControls"
+                    >
+
+                        <button
+                            id="muteButton"
+                            class="mute-button"
+                            aria-label="Mute video"
+                            type="button"
+                        >
+                            🔊
+                        </button>
+
+
+                        <input
+                            id="volumeSlider"
+                            class="volume-slider"
+                            type="range"
+                            min="0"
+                            max="1"
+                            step="0.05"
+                            value="1"
+                            aria-label="Volume"
+                        >
+
+                    </div>
+
+
+                    <!-- ==================================================
+                         PROGRESS BAR
+                    ================================================== -->
 
                     <div
                         class="video-progress-container"
@@ -906,11 +1029,198 @@ if (
                 );
 
 
+            const muteButton =
+                document.getElementById(
+                    "muteButton"
+                );
+
+
+            const volumeSlider =
+                document.getElementById(
+                    "volumeSlider"
+                );
+
+
             /* ==================================================
-               PLAY / PAUSE + IKON LANGSUNG HILANG SETELAH DIKLIK
+               VOLUME + MUTE
             ================================================== */
 
-            if (mainVideo && playButton) {
+            if (
+                mainVideo &&
+                muteButton &&
+                volumeSlider
+            ) {
+
+                /* ==========================
+                   VOLUME SLIDER
+                ========================== */
+
+                volumeSlider.addEventListener(
+                    "input",
+                    event => {
+
+                        /* Supaya klik slider tidak
+                           dianggap klik video */
+
+                        event.stopPropagation();
+
+
+                        const volume =
+                            Number(
+                                event.target.value
+                            );
+
+
+                        mainVideo.volume =
+                            volume;
+
+
+                        if (volume === 0) {
+
+                            mainVideo.muted =
+                                true;
+
+
+                            muteButton.textContent =
+                                "🔇";
+
+
+                            muteButton.setAttribute(
+                                "aria-label",
+                                "Unmute video"
+                            );
+
+                        }
+
+                        else {
+
+                            mainVideo.muted =
+                                false;
+
+
+                            muteButton.textContent =
+                                "🔊";
+
+
+                            muteButton.setAttribute(
+                                "aria-label",
+                                "Mute video"
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                /* ==========================
+                   MUTE BUTTON
+                ========================== */
+
+                muteButton.addEventListener(
+                    "click",
+                    event => {
+
+                        /* Supaya klik tombol mute
+                           tidak dianggap klik video */
+
+                        event.stopPropagation();
+
+
+                        mainVideo.muted =
+                            !mainVideo.muted;
+
+
+                        if (mainVideo.muted) {
+
+                            muteButton.textContent =
+                                "🔇";
+
+
+                            muteButton.setAttribute(
+                                "aria-label",
+                                "Unmute video"
+                            );
+
+                        }
+
+                        else {
+
+                            muteButton.textContent =
+                                "🔊";
+
+
+                            muteButton.setAttribute(
+                                "aria-label",
+                                "Mute video"
+                            );
+
+
+                            volumeSlider.value =
+                                mainVideo.volume;
+
+                        }
+
+                    }
+                );
+
+
+                /* ==========================
+                   VOLUME CHANGE
+                ========================== */
+
+                mainVideo.addEventListener(
+                    "volumechange",
+                    () => {
+
+                        if (
+                            mainVideo.muted ||
+                            mainVideo.volume === 0
+                        ) {
+
+                            muteButton.textContent =
+                                "🔇";
+
+
+                            muteButton.setAttribute(
+                                "aria-label",
+                                "Unmute video"
+                            );
+
+                        }
+
+                        else {
+
+                            muteButton.textContent =
+                                "🔊";
+
+
+                            muteButton.setAttribute(
+                                "aria-label",
+                                "Mute video"
+                            );
+
+
+                            volumeSlider.value =
+                                mainVideo.volume;
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            /* ==================================================
+               PLAY / PAUSE
+               + IKON HILANG SETELAH 350ms
+            ================================================== */
+
+            if (
+                mainVideo &&
+                playButton
+            ) {
 
                 let hidePlayButtonTimer;
 
@@ -925,7 +1235,9 @@ if (
 
                         mainVideo.play();
 
-                    } else {
+                    }
+
+                    else {
 
                         mainVideo.pause();
 
@@ -935,10 +1247,7 @@ if (
 
 
                 /* ==========================
-                   TAMPILKAN IKON SEBENTAR
-                   LALU SEGERA DISEMBUNYIKAN
-                   (baik saat play maupun pause)
-                   supaya tidak menutupi gambar video
+                   FLASH PLAY BUTTON
                 ========================== */
 
                 function flashPlayButton() {
@@ -947,25 +1256,29 @@ if (
                         "hidden"
                     );
 
+
                     clearTimeout(
                         hidePlayButtonTimer
                     );
 
+
                     hidePlayButtonTimer =
-                        setTimeout(() => {
+                        setTimeout(
+                            () => {
 
-                            playButton.classList.add(
-                                "hidden"
-                            );
+                                playButton.classList.add(
+                                    "hidden"
+                                );
 
-                        }, 350);
+                            },
+                            350
+                        );
 
                 }
 
 
                 /* ==========================
-                   KLIK DI LAYAR VIDEO
-                   = PLAY / PAUSE
+                   CLICK VIDEO
                 ========================== */
 
                 mainVideo.addEventListener(
@@ -981,8 +1294,7 @@ if (
 
 
                 /* ==========================
-                   KLIK TEPAT DI TOMBOL PLAY
-                   (sebelumnya tidak berfungsi)
+                   CLICK PLAY BUTTON
                 ========================== */
 
                 playButton.addEventListener(
@@ -991,7 +1303,9 @@ if (
 
                         event.stopPropagation();
 
+
                         togglePlayPause();
+
 
                         flashPlayButton();
 
@@ -1000,7 +1314,7 @@ if (
 
 
                 /* ==========================
-                   UBAH IKON SESUAI STATUS
+                   VIDEO PLAY
                 ========================== */
 
                 mainVideo.addEventListener(
@@ -1009,6 +1323,7 @@ if (
 
                         playButton.textContent =
                             "❚❚";
+
 
                         playButton.setAttribute(
                             "aria-label",
@@ -1019,12 +1334,17 @@ if (
                 );
 
 
+                /* ==========================
+                   VIDEO PAUSE
+                ========================== */
+
                 mainVideo.addEventListener(
                     "pause",
                     () => {
 
                         playButton.textContent =
                             "▶";
+
 
                         playButton.setAttribute(
                             "aria-label",
@@ -1035,6 +1355,10 @@ if (
                 );
 
 
+                /* ==========================
+                   VIDEO ENDED
+                ========================== */
+
                 mainVideo.addEventListener(
                     "ended",
                     () => {
@@ -1043,13 +1367,16 @@ if (
                             hidePlayButtonTimer
                         );
 
+
                         playButton.textContent =
                             "▶";
+
 
                         playButton.setAttribute(
                             "aria-label",
                             "Play video"
                         );
+
 
                         playButton.classList.remove(
                             "hidden"
@@ -1110,7 +1437,12 @@ if (
                     "click",
                     event => {
 
+                        /* Jangan sampai klik
+                           progress bar dianggap
+                           klik play/pause */
+
                         event.stopPropagation();
+
 
                         const rect =
                             videoProgressContainer
@@ -1160,6 +1492,7 @@ if (
                             "Video gagal dimuat:",
                             selectedVideo.videoUrl
                         );
+
 
                         watchVideoPlayer.innerHTML = `
 
