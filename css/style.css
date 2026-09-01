@@ -878,10 +878,13 @@ body.dark .more-button:hover {
     background: #111;
 }
 
-/* PLAY BUTTON */
+/* ==================================================
+   VIDEO PLAY BUTTON
+================================================== */
 
 .play-button {
     position: absolute;
+
     top: 50%;
     left: 50%;
 
@@ -893,20 +896,27 @@ body.dark .more-button:hover {
     border: none;
     border-radius: 50%;
 
-    background: red;
+    background: transparent;
     color: white;
 
-    font-size: 32px;
+    font-size: 42px;
 
     cursor: pointer;
 
     display: flex;
     align-items: center;
     justify-content: center;
+
+    z-index: 2;
+
+    transition: transform 0.2s ease;
 }
 
+
 .play-button:hover {
-    transform: translate(-50%, -50%) scale(1.08);
+    transform:
+        translate(-50%, -50%)
+        scale(1.12);
 }
 
 /* ==================================================
