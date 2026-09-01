@@ -46,17 +46,18 @@ const videos = [
         avatar: "G"
     },
 
-    {
-        id: 4,
-        title: "Best Music Mix 2026",
-        channel: "MAB Music",
-        views: "3.4M views",
-        date: "3 weeks ago",
-        duration: "4:52",
-        category: "music",
-        icon: "🎵",
-        avatar: "M"
-    },
+{
+    id: 4,
+    title: "I'TIROF (Syair Abu Nawas) - SABYAN",
+    channel: "MAB Music",
+    views: "3.4M views",
+    date: "3 weeks ago",
+    duration: "4:52",
+    category: "music",
+    icon: "🎵",
+    avatar: "M",
+    videoUrl: "assets/videos/itirof-sabyan.mp4"
+},
 
     {
         id: 5,
@@ -816,7 +817,7 @@ watchVideoPlayer.innerHTML = `
         >
 
             <source
-                src="assets/videos/sample.mp4"
+                src="${selectedVideo.videoUrl || ""}"
                 type="video/mp4"
             >
 
@@ -836,6 +837,7 @@ watchVideoPlayer.innerHTML = `
     </div>
 
 `;
+
 
 /* ==================================================
    PLAY / PAUSE
@@ -858,27 +860,9 @@ if (mainVideo && playButton) {
 
                 mainVideo.play();
 
-                playButton.textContent =
-                    "❚❚";
-
-                playButton.setAttribute(
-                    "aria-label",
-                    "Pause video"
-                );
-
-            }
-
-            else {
+            } else {
 
                 mainVideo.pause();
-
-                playButton.textContent =
-                    "▶";
-
-                playButton.setAttribute(
-                    "aria-label",
-                    "Play video"
-                );
 
             }
 
@@ -886,14 +870,53 @@ if (mainVideo && playButton) {
     );
 
 
-    /* ================= VIDEO ENDED ================= */
+    /* ==========================
+       VIDEO PLAY
+    ========================== */
+
+    mainVideo.addEventListener(
+        "play",
+        () => {
+
+            playButton.textContent = "❚❚";
+
+            playButton.setAttribute(
+                "aria-label",
+                "Pause video"
+            );
+
+        }
+    );
+
+
+    /* ==========================
+       VIDEO PAUSE
+    ========================== */
+
+    mainVideo.addEventListener(
+        "pause",
+        () => {
+
+            playButton.textContent = "▶";
+
+            playButton.setAttribute(
+                "aria-label",
+                "Play video"
+            );
+
+        }
+    );
+
+
+    /* ==========================
+       VIDEO ENDED
+    ========================== */
 
     mainVideo.addEventListener(
         "ended",
         () => {
 
-            playButton.textContent =
-                "▶";
+            playButton.textContent = "▶";
 
             playButton.setAttribute(
                 "aria-label",
@@ -904,52 +927,6 @@ if (mainVideo && playButton) {
     );
 
 }
-
-
-/* ==========================
-   PLAY BUTTON
-========================== */
-
-const playButton =
-    watchVideoPlayer.querySelector(".play-button");
-
-
-if (playButton) {
-
-    playButton.addEventListener(
-        "click",
-        () => {
-
-            if (playButton.textContent === "▶") {
-
-                playButton.textContent = "❚❚";
-
-                playButton.setAttribute(
-                    "aria-label",
-                    "Pause video"
-                );
-
-            } else {
-
-                playButton.textContent = "▶";
-
-                playButton.setAttribute(
-                    "aria-label",
-                    "Play video"
-                );
-
-            }
-
-        }
-    );
-
-}
-
-       
-        console.log(
-            "Video loaded:",
-            selectedVideo
-        );
 
     }
 
