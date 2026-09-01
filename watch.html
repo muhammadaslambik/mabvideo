@@ -59,20 +59,28 @@
 
     <main class="watch-main">
 
-        <!-- VIDEO PLAYER -->
+        
+<!-- VIDEO PLAYER -->
 
-        <section class="watch-container">
+<section class="watch-container">
 
-            <div
-                class="video-player"
-                id="videoPlayer"
-            >
+    <div class="video-player" id="videoPlayer">
 
-                <div class="video-placeholder">
-                    ▶
-                </div>
+        <video
+            id="mainVideo"
+            preload="metadata"
+        >
+        </video>
 
-            </div>
+        <button
+            class="play-button"
+            id="playButton"
+            aria-label="Play video"
+        >
+            ▶
+        </button>
+
+    </div>
 
 
             <!-- VIDEO TITLE -->
