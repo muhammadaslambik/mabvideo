@@ -4,7 +4,9 @@
 ================================================== */
 
 
-/* ================= VIDEO DATA ================= */
+/* ==================================================
+   VIDEO DATA
+================================================== */
 
 const videos = [
 
@@ -155,19 +157,27 @@ const videos = [
 ];
 
 
-/* ================= DOM ELEMENTS ================= */
+/* ==================================================
+   DOM ELEMENTS
+================================================== */
 
-const videoGrid = document.getElementById("videoGrid");
+const videoGrid =
+    document.getElementById("videoGrid");
 
-const searchInput = document.getElementById("searchInput");
+const searchInput =
+    document.getElementById("searchInput");
 
-const searchButton = document.getElementById("searchButton");
+const searchButton =
+    document.getElementById("searchButton");
 
-const themeButton = document.getElementById("themeButton");
+const themeButton =
+    document.getElementById("themeButton");
 
-const menuButton = document.getElementById("menuButton");
+const menuButton =
+    document.getElementById("menuButton");
 
-const sidebar = document.getElementById("sidebar");
+const sidebar =
+    document.getElementById("sidebar");
 
 const sidebarOverlay =
     document.getElementById("sidebarOverlay");
@@ -176,45 +186,54 @@ const categoryButtons =
     document.querySelectorAll(".category-button");
 
 
-/* ================= RENDER VIDEOS ================= */
-
-/*
-    Fungsi ini bertugas:
-
-    Data videos
-          ↓
-    JavaScript
-          ↓
-    HTML Video Cards
-*/
+/* ==================================================
+   RENDER VIDEO CARDS
+================================================== */
 
 function renderVideos(videoList) {
 
+    /* Jika halaman bukan homepage,
+       hentikan fungsi */
     if (!videoGrid) {
         return;
     }
-   
+
+
     videoGrid.innerHTML = "";
 
+
+    /* Jika tidak ada hasil */
 
     if (videoList.length === 0) {
 
         videoGrid.innerHTML = `
+
             <div class="no-results">
+
                 <h2>No videos found</h2>
-                <p>Try another search.</p>
+
+                <p>
+                    Try another search.
+                </p>
+
             </div>
+
         `;
 
         return;
     }
 
 
+    /* Buat setiap video card */
+
     videoList.forEach(video => {
 
-        const videoCard = document.createElement("article");
+        const videoCard =
+            document.createElement("article");
 
-        videoCard.className = "video-card";
+
+        videoCard.className =
+            "video-card";
 
 
         videoCard.innerHTML = `
@@ -268,27 +287,19 @@ function renderVideos(videoList) {
         `;
 
 
-        /*
-            Ketika video diklik,
-            untuk sementara kita tampilkan
-            ID video di console.
+        /* ==================================================
+           VIDEO CARD CLICK
+        ================================================== */
 
-            Nanti fungsi ini akan berkembang
-            menjadi:
+        videoCard.addEventListener(
+            "click",
+            () => {
 
-            video card
-                 ↓
-            watch.html
-                 ↓
-            video player
-        */
+                window.location.href =
+                    `watch.html?id=${video.id}`;
 
-        videoCard.addEventListener("click", () => {
-
-    window.location.href =
-        `watch.html?id=${video.id}`;
-
-        });
+            }
+        );
 
 
         videoGrid.appendChild(videoCard);
@@ -298,9 +309,16 @@ function renderVideos(videoList) {
 }
 
 
-/* ================= SEARCH ================= */
+/* ==================================================
+   SEARCH
+================================================== */
 
 function searchVideos() {
+
+    if (!searchInput) {
+        return;
+    }
+
 
     const searchTerm =
         searchInput.value
@@ -312,13 +330,17 @@ function searchVideos() {
         videos.filter(video => {
 
             return (
+
                 video.title
                     .toLowerCase()
                     .includes(searchTerm)
+
                 ||
+
                 video.channel
                     .toLowerCase()
                     .includes(searchTerm)
+
             );
 
         });
@@ -329,48 +351,53 @@ function searchVideos() {
 }
 
 
-/* Search button */
+/* ==================================================
+   SEARCH BUTTON
+================================================== */
 
 if (searchButton) {
-   
-searchButton.addEventListener(
-    "click",
-    searchVideos
-);
+
+    searchButton.addEventListener(
+        "click",
+        searchVideos
+    );
 
 }
 
-/* Search while typing */
 
-if (searchInput) {
-   
-searchInput.addEventListener(
-    "input",
-    searchVideos
-);
-
-}
-
-/* Enter key */
+/* ==================================================
+   SEARCH WHILE TYPING
+================================================== */
 
 if (searchInput) {
 
-searchInput.addEventListener(
-    "keydown",
-    event => {
+    searchInput.addEventListener(
+        "input",
+        searchVideos
+    );
 
-        if (event.key === "Enter") {
 
-            searchVideos();
+    /* Enter key */
+
+    searchInput.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Enter") {
+
+                searchVideos();
+
+            }
 
         }
-
-    }
-);
+    );
 
 }
 
-/* ================= CATEGORY FILTER ================= */
+
+/* ==================================================
+   CATEGORY FILTER
+================================================== */
 
 categoryButtons.forEach(button => {
 
@@ -378,38 +405,38 @@ categoryButtons.forEach(button => {
         "click",
         () => {
 
-            /*
-                Hapus active dari semua button
-            */
+
+            /* Hapus active */
 
             categoryButtons.forEach(
                 item => {
-                    item.classList.remove("active");
+
+                    item.classList.remove(
+                        "active"
+                    );
+
                 }
             );
 
 
-            /*
-                Jadikan button yang diklik aktif
-            */
+            /* Tambahkan active */
 
-            button.classList.add("active");
+            button.classList.add(
+                "active"
+            );
 
 
-            /*
-                Ambil category
-            */
+            /* Ambil category */
 
             const selectedCategory =
                 button.dataset.category;
 
 
-            /*
-                Jika All,
-                tampilkan semua video.
-            */
+            /* Semua video */
 
-            if (selectedCategory === "all") {
+            if (
+                selectedCategory === "all"
+            ) {
 
                 renderVideos(videos);
 
@@ -418,15 +445,15 @@ categoryButtons.forEach(button => {
             }
 
 
-            /*
-                Filter berdasarkan category
-            */
+            /* Filter */
 
             const filteredVideos =
                 videos.filter(video => {
 
-                    return video.category ===
-                        selectedCategory;
+                    return (
+                        video.category ===
+                        selectedCategory
+                    );
 
                 });
 
@@ -439,47 +466,63 @@ categoryButtons.forEach(button => {
 });
 
 
-/* ================= DARK MODE ================= */
+/* ==================================================
+   DARK MODE
+================================================== */
 
 if (themeButton) {
 
-themeButton.addEventListener(
-    "click",
-    () => {
-
-        document.body.classList.toggle("dark");
+    themeButton.addEventListener(
+        "click",
+        () => {
 
 
-        const darkMode =
-            document.body.classList.contains("dark");
-
-
-        if (darkMode) {
-
-            themeButton.textContent = "☀️";
-
-            localStorage.setItem(
-                "mab-video-theme",
+            document.body.classList.toggle(
                 "dark"
             );
 
-        } else {
 
-            themeButton.textContent = "🌙";
+            const darkMode =
+                document.body.classList.contains(
+                    "dark"
+                );
 
-            localStorage.setItem(
-                "mab-video-theme",
-                "light"
-            );
+
+            if (darkMode) {
+
+                themeButton.textContent =
+                    "☀️";
+
+
+                localStorage.setItem(
+                    "mab-video-theme",
+                    "dark"
+                );
+
+            }
+
+            else {
+
+                themeButton.textContent =
+                    "🌙";
+
+
+                localStorage.setItem(
+                    "mab-video-theme",
+                    "light"
+                );
+
+            }
 
         }
-
-    }
-);
+    );
 
 }
 
-/* ================= LOAD SAVED THEME ================= */
+
+/* ==================================================
+   LOAD SAVED THEME
+================================================== */
 
 const savedTheme =
     localStorage.getItem(
@@ -489,70 +532,123 @@ const savedTheme =
 
 if (savedTheme === "dark") {
 
-    document.body.classList.add("dark");
+    document.body.classList.add(
+        "dark"
+    );
 
-    themeButton.textContent = "☀️";
+
+    if (themeButton) {
+
+        themeButton.textContent =
+            "☀️";
+
+    }
 
 }
 
 
+/* ==================================================
+   MENU
+================================================== */
 
-/* ================= MENU ================= */
+if (
+    menuButton &&
+    sidebar
+) {
 
-menuButton.addEventListener(
-    "click",
-    () => {
+    menuButton.addEventListener(
+        "click",
+        () => {
 
-        /*
-            DESKTOP
-            Klik ☰ → sidebar mengecil
-        */
 
-        if (window.innerWidth > 800) {
+            /* ==========================
+               DESKTOP
+            ========================== */
 
-            sidebar.classList.toggle("collapsed");
+            if (
+                window.innerWidth > 800
+            ) {
 
-            document
-                .querySelector(".main-content")
-                .classList.toggle("sidebar-collapsed");
+                sidebar.classList.toggle(
+                    "collapsed"
+                );
+
+
+                const mainContent =
+                    document.querySelector(
+                        ".main-content"
+                    );
+
+
+                if (mainContent) {
+
+                    mainContent.classList.toggle(
+                        "sidebar-collapsed"
+                    );
+
+                }
+
+            }
+
+
+            /* ==========================
+               MOBILE
+            ========================== */
+
+            else {
+
+                sidebar.classList.toggle(
+                    "open"
+                );
+
+
+                if (sidebarOverlay) {
+
+                    sidebarOverlay.classList.toggle(
+                        "active"
+                    );
+
+                }
+
+            }
 
         }
+    );
+
+}
 
 
-        /*
-            MOBILE
-            Klik ☰ → sidebar muncul
-        */
+/* ==================================================
+   MOBILE SIDEBAR OVERLAY
+================================================== */
 
-        else {
+if (
+    sidebarOverlay &&
+    sidebar
+) {
 
-            sidebar.classList.toggle("open");
+    sidebarOverlay.addEventListener(
+        "click",
+        () => {
 
-            sidebarOverlay.classList.toggle(
+            sidebar.classList.remove(
+                "open"
+            );
+
+
+            sidebarOverlay.classList.remove(
                 "active"
             );
 
         }
+    );
 
-    }
-);
-
-
-sidebarOverlay.addEventListener(
-    "click",
-    () => {
-
-        sidebar.classList.remove("open");
-
-        sidebarOverlay.classList.remove(
-            "active"
-        );
-
-    }
-);
+}
 
 
-/* ================= SIDEBAR ================= */
+/* ==================================================
+   SIDEBAR ITEMS
+================================================== */
 
 const sidebarItems =
     document.querySelectorAll(
@@ -580,18 +676,29 @@ sidebarItems.forEach(item => {
             );
 
 
-            item.classList.add("active");
-
-
-            /*
-                Tutup sidebar pada mobile
-            */
-
-            sidebar.classList.remove("open");
-
-            sidebarOverlay.classList.remove(
+            item.classList.add(
                 "active"
             );
+
+
+            /* Tutup mobile sidebar */
+
+            if (sidebar) {
+
+                sidebar.classList.remove(
+                    "open"
+                );
+
+            }
+
+
+            if (sidebarOverlay) {
+
+                sidebarOverlay.classList.remove(
+                    "active"
+                );
+
+            }
 
         }
     );
@@ -599,63 +706,49 @@ sidebarItems.forEach(item => {
 });
 
 
-/* ================= INITIAL RENDER ================= */
+/* ==================================================
+   WATCH PAGE
+================================================== */
 
-renderVideos(videos);
+const watchVideoPlayer =
+    document.getElementById(
+        "videoPlayer"
+    );
 
+const watchVideoTitle =
+    document.getElementById(
+        "videoTitle"
+    );
 
-/* ================= DEBUG ================= */
-
-console.log(
-    "MAB-Video loaded successfully 🚀"
-);
-
-console.log(
-    "Total videos:",
-    videos.length
-);
-
-/* ================= WATCH PAGE ================= */
-
-const videoPlayer =
-    document.getElementById("videoPlayer");
-
-const videoTitle =
-    document.getElementById("videoTitle");
-
-const videoInfo =
-    document.getElementById("videoInfo");
+const watchVideoInfo =
+    document.getElementById(
+        "videoInfo"
+    );
 
 const backButton =
-    document.getElementById("backButton");
+    document.getElementById(
+        "backButton"
+    );
 
 
-/*
-    Jalankan hanya jika
-    halaman Watch Page sedang dibuka.
-*/
+/* ==================================================
+   LOAD WATCH VIDEO
+================================================== */
 
 if (
-    videoPlayer &&
-    videoTitle &&
-    videoInfo
+    watchVideoPlayer &&
+    watchVideoTitle &&
+    watchVideoInfo
 ) {
 
-    /*
-        Ambil ID dari URL
 
-        Contoh:
-
-        watch.html?id=1
-
-        hasil:
-        videoId = 1
-    */
+    /* Ambil ?id= */
 
     const urlParams =
         new URLSearchParams(
             window.location.search
         );
+
 
     const videoId =
         Number(
@@ -663,78 +756,104 @@ if (
         );
 
 
-    /*
-        Cari video berdasarkan ID
-    */
+    /* Cari video */
 
     const selectedVideo =
-        videos.find(video => {
+        videos.find(
+            video =>
+                video.id === videoId
+        );
 
-            return video.id === videoId;
 
-        });
-
-
-    /*
-        Jika video ditemukan
-    */
+    /* ==========================
+       VIDEO FOUND
+    ========================== */
 
     if (selectedVideo) {
 
-        videoTitle.textContent =
+
+        /* Judul */
+
+        watchVideoTitle.textContent =
             selectedVideo.title;
 
 
-        videoInfo.innerHTML = `
+        /* Informasi */
+
+        watchVideoInfo.innerHTML = `
+
             <strong>
                 ${selectedVideo.channel}
             </strong>
+
             <br>
 
             ${selectedVideo.views}
+
             •
+            
             ${selectedVideo.date}
+
             •
+
             ${selectedVideo.duration}
+
         `;
 
 
-        /*
-            Untuk sementara player
-            masih berupa placeholder.
-        */
+        /* Video placeholder */
 
-        videoPlayer.innerHTML = `
+        watchVideoPlayer.innerHTML = `
 
             <div class="video-placeholder">
 
-                ▶
+                <button
+                    class="play-button"
+                    aria-label="Play video"
+                >
+                    ▶
+                </button>
 
             </div>
 
         `;
 
+
+        console.log(
+            "Video loaded:",
+            selectedVideo
+        );
+
     }
 
 
-    /*
-        Jika ID video tidak ditemukan
-    */
+    /* ==========================
+       VIDEO NOT FOUND
+    ========================== */
 
     else {
 
-        videoTitle.textContent =
+        watchVideoTitle.textContent =
             "Video not found";
 
-        videoInfo.textContent =
+
+        watchVideoInfo.textContent =
             "The video you are looking for does not exist.";
+
+
+        console.log(
+            "Video not found:",
+            videoId
+        );
 
     }
 
 }
 
 
-/* ================= BACK BUTTON ================= */
+/* ==================================================
+   BACK BUTTON
+================================================== */
 
 if (backButton) {
 
@@ -748,3 +867,28 @@ if (backButton) {
     );
 
 }
+
+
+/* ==================================================
+   INITIAL RENDER
+================================================== */
+
+if (videoGrid) {
+
+    renderVideos(videos);
+
+}
+
+
+/* ==================================================
+   DEBUG
+================================================== */
+
+console.log(
+    "MAB-Video loaded successfully 🚀"
+);
+
+console.log(
+    "Total videos:",
+    videos.length
+);
