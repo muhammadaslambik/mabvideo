@@ -801,22 +801,110 @@ if (
         `;
 
 
-        /* Video placeholder */
+/* ==================================================
+   HTML5 VIDEO PLAYER
+================================================== */
 
-        watchVideoPlayer.innerHTML = `
+watchVideoPlayer.innerHTML = `
 
-            <div class="video-placeholder">
+    <div class="video-container">
 
-                <button
-                    class="play-button"
-                    aria-label="Play video"
-                >
-                    ▶
-                </button>
+        <video
+            id="mainVideo"
+            class="main-video"
+            preload="metadata"
+        >
 
-            </div>
+            <source
+                src="assets/videos/sample.mp4"
+                type="video/mp4"
+            >
 
-        `;
+            Browser kamu tidak mendukung video HTML5.
+
+        </video>
+
+
+        <button
+            id="playButton"
+            class="play-button"
+            aria-label="Play video"
+        >
+            ▶
+        </button>
+
+    </div>
+
+`;
+
+/* ==================================================
+   PLAY / PAUSE
+================================================== */
+
+const mainVideo =
+    document.getElementById("mainVideo");
+
+const playButton =
+    document.getElementById("playButton");
+
+
+if (mainVideo && playButton) {
+
+    playButton.addEventListener(
+        "click",
+        () => {
+
+            if (mainVideo.paused) {
+
+                mainVideo.play();
+
+                playButton.textContent =
+                    "❚❚";
+
+                playButton.setAttribute(
+                    "aria-label",
+                    "Pause video"
+                );
+
+            }
+
+            else {
+
+                mainVideo.pause();
+
+                playButton.textContent =
+                    "▶";
+
+                playButton.setAttribute(
+                    "aria-label",
+                    "Play video"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* ================= VIDEO ENDED ================= */
+
+    mainVideo.addEventListener(
+        "ended",
+        () => {
+
+            playButton.textContent =
+                "▶";
+
+            playButton.setAttribute(
+                "aria-label",
+                "Play video"
+            );
+
+        }
+    );
+
+}
+
 
 /* ==========================
    PLAY BUTTON
