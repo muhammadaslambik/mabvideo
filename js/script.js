@@ -706,7 +706,6 @@ sidebarItems.forEach(item => {
 
 });
 
-
 /* ==================================================
    WATCH PAGE
 ================================================== */
@@ -742,14 +741,14 @@ if (
     watchVideoInfo
 ) {
 
-
-    /* Ambil ?id= */
+    /* ==========================
+       AMBIL VIDEO ID
+    ========================== */
 
     const urlParams =
         new URLSearchParams(
             window.location.search
         );
-
 
     const videoId =
         Number(
@@ -757,7 +756,9 @@ if (
         );
 
 
-    /* Cari video */
+    /* ==========================
+       CARI VIDEO
+    ========================== */
 
     const selectedVideo =
         videos.find(
@@ -766,20 +767,23 @@ if (
         );
 
 
-    /* ==========================
+    /* ==================================================
        VIDEO FOUND
-    ========================== */
+    ================================================== */
 
     if (selectedVideo) {
 
-
-        /* Judul */
+        /* ==========================
+           JUDUL
+        ========================== */
 
         watchVideoTitle.textContent =
             selectedVideo.title;
 
 
-        /* Informasi */
+        /* ==========================
+           INFORMASI
+        ========================== */
 
         watchVideoInfo.innerHTML = `
 
@@ -792,7 +796,7 @@ if (
             ${selectedVideo.views}
 
             •
-            
+
             ${selectedVideo.date}
 
             •
@@ -802,247 +806,273 @@ if (
         `;
 
 
-/* ==================================================
-   HTML5 VIDEO PLAYER
-================================================== */
+        /* ==================================================
+           HTML5 VIDEO PLAYER
+        ================================================== */
 
-watchVideoPlayer.innerHTML = `
+        watchVideoPlayer.innerHTML = `
 
-    <div class="video-container">
+            <div class="video-container">
 
-        <video
-            id="mainVideo"
-            class="main-video"
-            preload="metadata"
-        >
+                <video
+                    id="mainVideo"
+                    class="main-video"
+                    preload="metadata"
+                >
 
-            <source
-                src="${selectedVideo.videoUrl || ""}"
-                type="video/mp4"
-            >
+                    <source
+                        src="${selectedVideo.videoUrl || ""}"
+                        type="video/mp4"
+                    >
 
-            Browser kamu tidak mendukung video HTML5.
+                    Browser kamu tidak mendukung
+                    video HTML5.
 
-        </video>
-
-
-        <button
-            id="playButton"
-            class="play-button"
-            aria-label="Play video"
-        >
-            ▶
-        </button>
+                </video>
 
 
-        <!-- PROGRESS BAR -->
-
-        <div
-            class="video-progress-container"
-            id="videoProgressContainer"
-        >
-
-            <div
-                class="video-progress"
-                id="videoProgress"
-            ></div>
-
-        </div>
-
-    </div>
-
-`;
+                <button
+                    id="playButton"
+                    class="play-button"
+                    aria-label="Play video"
+                >
+                    ▶
+                </button>
 
 
-/* ==================================================
-   PLAY / PAUSE + PROGRESS BAR
-================================================== */
+                <!-- PROGRESS BAR -->
 
-const mainVideo =
-    document.getElementById("mainVideo");
+                <div
+                    class="video-progress-container"
+                    id="videoProgressContainer"
+                >
 
-const playButton =
-    document.getElementById("playButton");
+                    <div
+                        class="video-progress"
+                        id="videoProgress"
+                    ></div>
 
-const videoProgressContainer =
-    document.getElementById(
-        "videoProgressContainer"
-    );
+                </div>
 
-const videoProgress =
-    document.getElementById(
-        "videoProgress"
-    );
+            </div>
+
+        `;
 
 
-/* ==================================================
-   PLAY / PAUSE
-================================================== */
+        /* ==================================================
+           VIDEO ELEMENTS
+        ================================================== */
 
-if (mainVideo && playButton) {
+        const mainVideo =
+            document.getElementById(
+                "mainVideo"
+            );
 
-    playButton.addEventListener(
-        "click",
-        () => {
+        const playButton =
+            document.getElementById(
+                "playButton"
+            );
 
-            if (mainVideo.paused) {
+        const videoProgressContainer =
+            document.getElementById(
+                "videoProgressContainer"
+            );
 
-                mainVideo.play();
-
-            } else {
-
-                mainVideo.pause();
-
-            }
-
-        }
-    );
+        const videoProgress =
+            document.getElementById(
+                "videoProgress"
+            );
 
 
-    /* ==========================
-       VIDEO PLAY
-    ========================== */
+        /* ==================================================
+           PLAY / PAUSE
+        ================================================== */
 
-    mainVideo.addEventListener(
-        "play",
-        () => {
+        if (
+            mainVideo &&
+            playButton
+        ) {
 
-            playButton.textContent =
-                "❚❚";
+            playButton.addEventListener(
+                "click",
+                () => {
 
-            playButton.setAttribute(
-                "aria-label",
-                "Pause video"
+                    if (
+                        mainVideo.paused
+                    ) {
+
+                        mainVideo.play();
+
+                    } else {
+
+                        mainVideo.pause();
+
+                    }
+
+                }
+            );
+
+
+            /* ==========================
+               VIDEO PLAY
+            ========================== */
+
+            mainVideo.addEventListener(
+                "play",
+                () => {
+
+                    playButton.textContent =
+                        "❚❚";
+
+                    playButton.setAttribute(
+                        "aria-label",
+                        "Pause video"
+                    );
+
+                }
+            );
+
+
+            /* ==========================
+               VIDEO PAUSE
+            ========================== */
+
+            mainVideo.addEventListener(
+                "pause",
+                () => {
+
+                    playButton.textContent =
+                        "▶";
+
+                    playButton.setAttribute(
+                        "aria-label",
+                        "Play video"
+                    );
+
+                }
+            );
+
+
+            /* ==========================
+               VIDEO ENDED
+            ========================== */
+
+            mainVideo.addEventListener(
+                "ended",
+                () => {
+
+                    playButton.textContent =
+                        "▶";
+
+                    playButton.setAttribute(
+                        "aria-label",
+                        "Play video"
+                    );
+
+                }
             );
 
         }
-    );
 
 
-    /* ==========================
-       VIDEO PAUSE
-    ========================== */
+        /* ==================================================
+           PROGRESS BAR
+        ================================================== */
 
-    mainVideo.addEventListener(
-        "pause",
-        () => {
+        if (
+            mainVideo &&
+            videoProgressContainer &&
+            videoProgress
+        ) {
 
-            playButton.textContent =
-                "▶";
+            /* ==========================
+               UPDATE PROGRESS
+            ========================== */
 
-            playButton.setAttribute(
-                "aria-label",
-                "Play video"
+            mainVideo.addEventListener(
+                "timeupdate",
+                () => {
+
+                    if (
+                        mainVideo.duration &&
+                        !isNaN(
+                            mainVideo.duration
+                        )
+                    ) {
+
+                        const progress =
+                            (
+                                mainVideo.currentTime /
+                                mainVideo.duration
+                            ) * 100;
+
+
+                        videoProgress.style.width =
+                            `${progress}%`;
+
+                    }
+
+                }
+            );
+
+
+            /* ==========================
+               SEEK VIDEO
+            ========================== */
+
+            videoProgressContainer.addEventListener(
+                "click",
+                event => {
+
+                    const rect =
+                        videoProgressContainer
+                            .getBoundingClientRect();
+
+
+                    const clickPosition =
+                        event.clientX -
+                        rect.left;
+
+
+                    const percentage =
+                        clickPosition /
+                        rect.width;
+
+
+                    if (
+                        mainVideo.duration &&
+                        !isNaN(
+                            mainVideo.duration
+                        )
+                    ) {
+
+                        mainVideo.currentTime =
+                            percentage *
+                            mainVideo.duration;
+
+                    }
+
+                }
             );
 
         }
-    );
 
 
-    /* ==========================
-       VIDEO ENDED
-    ========================== */
+        /* ==========================
+           DEBUG
+        ========================== */
 
-    mainVideo.addEventListener(
-        "ended",
-        () => {
+        console.log(
+            "Video loaded:",
+            selectedVideo
+        );
 
-            playButton.textContent =
-                "▶";
-
-            playButton.setAttribute(
-                "aria-label",
-                "Play video"
-            );
-
-        }
-    );
-
-}
+    }
 
 
-/* ==================================================
-   VIDEO PROGRESS BAR
-================================================== */
-
-if (
-    mainVideo &&
-    videoProgressContainer &&
-    videoProgress
-) {
-
-    /* ==========================
-       UPDATE PROGRESS
-    ========================== */
-
-    mainVideo.addEventListener(
-        "timeupdate",
-        () => {
-
-            if (
-                mainVideo.duration &&
-                !isNaN(mainVideo.duration)
-            ) {
-
-                const progress =
-                    (
-                        mainVideo.currentTime /
-                        mainVideo.duration
-                    ) * 100;
-
-
-                videoProgress.style.width =
-                    `${progress}%`;
-
-            }
-
-        }
-    );
-
-
-    /* ==========================
-       SEEK VIDEO
-    ========================== */
-
-    videoProgressContainer.addEventListener(
-        "click",
-        event => {
-
-            const rect =
-                videoProgressContainer
-                    .getBoundingClientRect();
-
-
-            const clickPosition =
-                event.clientX - rect.left;
-
-
-            const percentage =
-                clickPosition / rect.width;
-
-
-            if (
-                mainVideo.duration &&
-                !isNaN(mainVideo.duration)
-            ) {
-
-                mainVideo.currentTime =
-                    percentage *
-                    mainVideo.duration;
-
-            }
-
-        }
-    );
-
-}
-
-    
-
-
-    /* ==========================
+    /* ==================================================
        VIDEO NOT FOUND
-    ========================== */
+    ================================================== */
 
     else {
 
