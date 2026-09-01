@@ -332,6 +332,7 @@ function searchVideos() {
 /* Search button */
 
 if (searchButton) {
+   
 searchButton.addEventListener(
     "click",
     searchVideos
