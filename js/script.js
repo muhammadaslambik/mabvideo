@@ -834,6 +834,21 @@ watchVideoPlayer.innerHTML = `
             ▶
         </button>
 
+
+        <!-- PROGRESS BAR -->
+
+        <div
+            class="video-progress-container"
+            id="videoProgressContainer"
+        >
+
+            <div
+                class="video-progress"
+                id="videoProgress"
+            ></div>
+
+        </div>
+
     </div>
 
 `;
