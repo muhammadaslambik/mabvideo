@@ -879,7 +879,7 @@ body.dark .more-button:hover {
 }
 
 /* ==================================================
-   VIDEO PLAY BUTTON
+   VIDEO PLAY / PAUSE BUTTON
 ================================================== */
 
 .play-button {
@@ -896,7 +896,10 @@ body.dark .more-button:hover {
     border: none;
     border-radius: 50%;
 
+    /* Lingkaran hitam transparan */
     background: rgba(0, 0, 0, 0.6);
+
+    /* Ikon putih */
     color: #ffffff;
 
     font-size: 30px;
@@ -918,12 +921,23 @@ body.dark .more-button:hover {
 }
 
 
+/* ================= HOVER ================= */
+
 .play-button:hover {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.75);
 
     transform:
         translate(-50%, -50%)
         scale(1.08);
+}
+
+
+/* ================= ACTIVE ================= */
+
+.play-button:active {
+    transform:
+        translate(-50%, -50%)
+        scale(0.95);
 }
 
 /* ==================================================
