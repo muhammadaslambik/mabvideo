@@ -855,7 +855,7 @@ watchVideoPlayer.innerHTML = `
 
 
 /* ==================================================
-   PLAY / PAUSE
+   PLAY / PAUSE + PROGRESS BAR
 ================================================== */
 
 const mainVideo =
@@ -863,6 +863,21 @@ const mainVideo =
 
 const playButton =
     document.getElementById("playButton");
+
+const videoProgressContainer =
+    document.getElementById(
+        "videoProgressContainer"
+    );
+
+const videoProgress =
+    document.getElementById(
+        "videoProgress"
+    );
+
+
+/* ==================================================
+   PLAY / PAUSE
+================================================== */
 
 if (mainVideo && playButton) {
 
@@ -892,7 +907,8 @@ if (mainVideo && playButton) {
         "play",
         () => {
 
-            playButton.textContent = "❚❚";
+            playButton.textContent =
+                "❚❚";
 
             playButton.setAttribute(
                 "aria-label",
@@ -911,7 +927,8 @@ if (mainVideo && playButton) {
         "pause",
         () => {
 
-            playButton.textContent = "▶";
+            playButton.textContent =
+                "▶";
 
             playButton.setAttribute(
                 "aria-label",
@@ -930,7 +947,8 @@ if (mainVideo && playButton) {
         "ended",
         () => {
 
-            playButton.textContent = "▶";
+            playButton.textContent =
+                "▶";
 
             playButton.setAttribute(
                 "aria-label",
@@ -940,91 +958,50 @@ if (mainVideo && playButton) {
         }
     );
 
-
-    /* ==================================================
-       VIDEO PROGRESS BAR
-    ================================================== */
-
-    const videoProgressContainer =
-        document.getElementById(
-            "videoProgressContainer"
-        );
-
-    const videoProgress =
-        document.getElementById(
-            "videoProgress"
-        );
-
-
-    if (
-        videoProgressContainer &&
-        videoProgress
-    ) {
-
-        /* ==========================
-           UPDATE PROGRESS
-        ========================== */
-
-        mainVideo.addEventListener(
-            "timeupdate",
-            () => {
-
-                if (mainVideo.duration) {
-
-                    const progress =
-                        (
-                            mainVideo.currentTime /
-                            mainVideo.duration
-                        ) * 100;
-
-
-                    videoProgress.style.width =
-                        `${progress}%`;
-
-                }
-
-            }
-        );
-
-
-        /* ==========================
-           SEEK VIDEO
-        ========================== */
-
-        videoProgressContainer.addEventListener(
-            "click",
-            event => {
-
-                const rect =
-                    videoProgressContainer.getBoundingClientRect();
-
-
-                const clickPosition =
-                    event.clientX - rect.left;
-
-
-                const percentage =
-                    clickPosition / rect.width;
-
-
-                if (mainVideo.duration) {
-
-                    mainVideo.currentTime =
-                        percentage *
-                        mainVideo.duration;
-
-                }
-
-            }
-        );
-
-    }
-
 }
 
 
+/* ==================================================
+   VIDEO PROGRESS BAR
+================================================== */
+
+if (
+    mainVideo &&
+    videoProgressContainer &&
+    videoProgress
+) {
+
     /* ==========================
-       CLICK PROGRESS BAR
+       UPDATE PROGRESS
+    ========================== */
+
+    mainVideo.addEventListener(
+        "timeupdate",
+        () => {
+
+            if (
+                mainVideo.duration &&
+                !isNaN(mainVideo.duration)
+            ) {
+
+                const progress =
+                    (
+                        mainVideo.currentTime /
+                        mainVideo.duration
+                    ) * 100;
+
+
+                videoProgress.style.width =
+                    `${progress}%`;
+
+            }
+
+        }
+    );
+
+
+    /* ==========================
+       SEEK VIDEO
     ========================== */
 
     videoProgressContainer.addEventListener(
@@ -1032,7 +1009,8 @@ if (mainVideo && playButton) {
         event => {
 
             const rect =
-                videoProgressContainer.getBoundingClientRect();
+                videoProgressContainer
+                    .getBoundingClientRect();
 
 
             const clickPosition =
@@ -1043,7 +1021,10 @@ if (mainVideo && playButton) {
                 clickPosition / rect.width;
 
 
-            if (mainVideo.duration) {
+            if (
+                mainVideo.duration &&
+                !isNaN(mainVideo.duration)
+            ) {
 
                 mainVideo.currentTime =
                     percentage *
@@ -1054,8 +1035,6 @@ if (mainVideo && playButton) {
         }
     );
 
-}
-   
 }
 
     
