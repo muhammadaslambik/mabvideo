@@ -308,6 +308,38 @@ function renderVideos(videoList) {
 
 }
 
+/* ==================================================
+   VIDEO PLAYER
+================================================== */
+
+const mainVideo = document.getElementById("mainVideo");
+const playButton = document.getElementById("playButton");
+
+if (mainVideo && playButton) {
+
+    playButton.addEventListener(
+        "click",
+        () => {
+
+            if (mainVideo.paused) {
+
+                mainVideo.play();
+
+                playButton.textContent = "❚❚";
+
+            } else {
+
+                mainVideo.pause();
+
+                playButton.textContent = "▶";
+
+            }
+
+        }
+    );
+
+}
+
 
 /* ==================================================
    SEARCH
