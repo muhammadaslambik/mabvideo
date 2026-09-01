@@ -884,11 +884,11 @@ if (
             );
 
 
-        /* ==================================================
-           PLAY / PAUSE
-        ================================================== */
+/* ==================================================
+   PLAY / PAUSE
+================================================== */
 
-   if (
+if (
     mainVideo &&
     playButton
 ) {
@@ -897,16 +897,22 @@ if (
        AUTO HIDE PLAY BUTTON
     ================================================== */
 
-    let playButtonTimeout;
+    let hidePlayButtonTimer;
 
 
-    function hidePlayButton() {
+    function showPlayButton() {
 
-        clearTimeout(
-            playButtonTimeout
+        playButton.classList.remove(
+            "hidden"
         );
 
-        playButtonTimeout =
+
+        clearTimeout(
+            hidePlayButtonTimer
+        );
+
+
+        hidePlayButtonTimer =
             setTimeout(
                 () => {
 
@@ -921,24 +927,15 @@ if (
                     }
 
                 },
-                500
+                800
             );
 
     }
 
 
-    function showPlayButton() {
-
-        clearTimeout(
-            playButtonTimeout
-        );
-
-        playButton.classList.remove(
-            "hidden"
-        );
-
-    }
-
+    /* ==================================================
+       PLAY / PAUSE CLICK
+    ================================================== */
 
     playButton.addEventListener(
         "click",
@@ -950,7 +947,9 @@ if (
 
                 mainVideo.play();
 
-            } else {
+            }
+
+            else {
 
                 mainVideo.pause();
 
@@ -958,88 +957,94 @@ if (
 
         }
     );
-            playButton.addEventListener(
-                "click",
-                () => {
 
-                    if (
-                        mainVideo.paused
-                    ) {
 
-                        mainVideo.play();
+    /* ==================================================
+       VIDEO PLAY
+    ================================================== */
 
-                    } else {
+    mainVideo.addEventListener(
+        "play",
+        () => {
 
-                        mainVideo.pause();
+            playButton.textContent =
+                "❚❚";
 
-                    }
 
-                }
+            playButton.setAttribute(
+                "aria-label",
+                "Pause video"
             );
 
 
-            /* ==========================
-               VIDEO PLAY
-            ========================== */
+            showPlayButton();
 
-mainVideo.addEventListener(
-    "play",
-    () => {
+        }
+    );
 
-        playButton.textContent =
-            "❚❚";
 
-        playButton.setAttribute(
-            "aria-label",
-            "Pause video"
-        );
+    /* ==================================================
+       VIDEO PAUSE
+    ================================================== */
 
-        hidePlayButton();
+    mainVideo.addEventListener(
+        "pause",
+        () => {
 
-    }
-);
+            playButton.textContent =
+                "▶";
 
-            /* ==========================
-               VIDEO PAUSE
-            ========================== */
 
-mainVideo.addEventListener(
-    "pause",
-    () => {
+            playButton.setAttribute(
+                "aria-label",
+                "Play video"
+            );
 
-        playButton.textContent =
-            "▶";
 
-        playButton.setAttribute(
-            "aria-label",
-            "Play video"
-        );
+            playButton.classList.remove(
+                "hidden"
+            );
 
-        showPlayButton();
 
-    }
-);
-
-            /* ==========================
-               VIDEO ENDED
-            ========================== */
-
-            mainVideo.addEventListener(
-                "ended",
-                () => {
-
-                    playButton.textContent =
-                        "▶";
-
-                    playButton.setAttribute(
-                        "aria-label",
-                        "Play video"
-                    );
-
-                }
+            clearTimeout(
+                hidePlayButtonTimer
             );
 
         }
+    );
+
+
+    /* ==================================================
+       VIDEO ENDED
+    ================================================== */
+
+    mainVideo.addEventListener(
+        "ended",
+        () => {
+
+            playButton.textContent =
+                "▶";
+
+
+            playButton.setAttribute(
+                "aria-label",
+                "Play video"
+            );
+
+
+            playButton.classList.remove(
+                "hidden"
+            );
+
+
+            clearTimeout(
+                hidePlayButtonTimer
+            );
+
+        }
+    );
+
+}
 
 
         /* ==================================================
