@@ -1028,5 +1028,4 @@ body.dark .more-button:hover {
 
 .play-button.hidden {
     opacity: 0;
-    pointer-events: none;
 }
