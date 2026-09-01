@@ -46,18 +46,18 @@ const videos = [
         avatar: "G"
     },
 
-{
-    id: 4,
-    title: "I'TIROF (Syair Abu Nawas) - SABYAN",
-    channel: "MAB Music",
-    views: "3.4M views",
-    date: "3 weeks ago",
-    duration: "4:52",
-    category: "music",
-    icon: "🎵",
-    avatar: "M",
-    videoUrl: "assets/videos/itirof-sabyan.mp4"
-},
+    {
+        id: 4,
+        title: "I'TIROF (Syair Abu Nawas) - SABYAN",
+        channel: "MAB Music",
+        views: "3.4M views",
+        date: "3 weeks ago",
+        duration: "4:52",
+        category: "music",
+        icon: "🎵",
+        avatar: "M",
+        videoUrl: "assets/videos/itirof-sabyan.mp4"
+    },
 
     {
         id: 5,
@@ -193,8 +193,6 @@ const categoryButtons =
 
 function renderVideos(videoList) {
 
-    /* Jika halaman bukan homepage,
-       hentikan fungsi */
     if (!videoGrid) {
         return;
     }
@@ -203,7 +201,9 @@ function renderVideos(videoList) {
     videoGrid.innerHTML = "";
 
 
-    /* Jika tidak ada hasil */
+    /* ==========================
+       NO RESULTS
+    ========================== */
 
     if (videoList.length === 0) {
 
@@ -225,7 +225,9 @@ function renderVideos(videoList) {
     }
 
 
-    /* Buat setiap video card */
+    /* ==========================
+       CREATE VIDEO CARDS
+    ========================== */
 
     videoList.forEach(video => {
 
@@ -288,9 +290,9 @@ function renderVideos(videoList) {
         `;
 
 
-        /* ==================================================
-           VIDEO CARD CLICK
-        ================================================== */
+        /* ==========================
+           CARD CLICK
+        ========================== */
 
         videoCard.addEventListener(
             "click",
@@ -367,7 +369,7 @@ if (searchButton) {
 
 
 /* ==================================================
-   SEARCH WHILE TYPING
+   SEARCH INPUT
 ================================================== */
 
 if (searchInput) {
@@ -377,8 +379,6 @@ if (searchInput) {
         searchVideos
     );
 
-
-    /* Enter key */
 
     searchInput.addEventListener(
         "keydown",
@@ -406,34 +406,23 @@ categoryButtons.forEach(button => {
         "click",
         () => {
 
+            categoryButtons.forEach(item => {
 
-            /* Hapus active */
+                item.classList.remove(
+                    "active"
+                );
 
-            categoryButtons.forEach(
-                item => {
+            });
 
-                    item.classList.remove(
-                        "active"
-                    );
-
-                }
-            );
-
-
-            /* Tambahkan active */
 
             button.classList.add(
                 "active"
             );
 
 
-            /* Ambil category */
-
             const selectedCategory =
                 button.dataset.category;
 
-
-            /* Semua video */
 
             if (
                 selectedCategory === "all"
@@ -445,8 +434,6 @@ categoryButtons.forEach(button => {
 
             }
 
-
-            /* Filter */
 
             const filteredVideos =
                 videos.filter(video => {
@@ -476,7 +463,6 @@ if (themeButton) {
     themeButton.addEventListener(
         "click",
         () => {
-
 
             document.body.classList.toggle(
                 "dark"
@@ -560,7 +546,6 @@ if (
     menuButton.addEventListener(
         "click",
         () => {
-
 
             /* ==========================
                DESKTOP
@@ -682,8 +667,6 @@ sidebarItems.forEach(item => {
             );
 
 
-            /* Tutup mobile sidebar */
-
             if (sidebar) {
 
                 sidebar.classList.remove(
@@ -706,8 +689,9 @@ sidebarItems.forEach(item => {
 
 });
 
+
 /* ==================================================
-   WATCH PAGE
+   WATCH PAGE ELEMENTS
 ================================================== */
 
 const watchVideoPlayer =
@@ -732,7 +716,7 @@ const backButton =
 
 
 /* ==================================================
-   LOAD WATCH VIDEO
+   LOAD WATCH PAGE
 ================================================== */
 
 if (
@@ -742,13 +726,14 @@ if (
 ) {
 
     /* ==========================
-       AMBIL VIDEO ID
+       GET VIDEO ID
     ========================== */
 
     const urlParams =
         new URLSearchParams(
             window.location.search
         );
+
 
     const videoId =
         Number(
@@ -757,7 +742,7 @@ if (
 
 
     /* ==========================
-       CARI VIDEO
+       FIND VIDEO
     ========================== */
 
     const selectedVideo =
@@ -774,7 +759,7 @@ if (
     if (selectedVideo) {
 
         /* ==========================
-           JUDUL
+           TITLE
         ========================== */
 
         watchVideoTitle.textContent =
@@ -782,7 +767,7 @@ if (
 
 
         /* ==========================
-           INFORMASI
+           INFORMATION
         ========================== */
 
         watchVideoInfo.innerHTML = `
@@ -807,7 +792,7 @@ if (
 
 
         /* ==================================================
-           HTML5 VIDEO PLAYER
+           CREATE VIDEO PLAYER
         ================================================== */
 
         watchVideoPlayer.innerHTML = `
@@ -840,8 +825,6 @@ if (
                 </button>
 
 
-                <!-- PROGRESS BAR -->
-
                 <div
                     class="video-progress-container"
                     id="videoProgressContainer"
@@ -868,218 +851,150 @@ if (
                 "mainVideo"
             );
 
+
         const playButton =
             document.getElementById(
                 "playButton"
             );
+
 
         const videoProgressContainer =
             document.getElementById(
                 "videoProgressContainer"
             );
 
+
         const videoProgress =
             document.getElementById(
                 "videoProgress"
             );
 
-/* ==================================================
-   AUTO HIDE PLAY / PAUSE ICON
-================================================== */
 
-let hidePlayButtonTimer;
+        /* ==================================================
+           PLAY / PAUSE
+        ================================================== */
 
-function showPlayButton() {
+        if (
+            mainVideo &&
+            playButton
+        ) {
 
-    playButton.classList.remove("hidden");
+            /* ==================================================
+               KLIK LAYAR VIDEO
+            ================================================== */
 
-    clearTimeout(hidePlayButtonTimer);
+            mainVideo.addEventListener(
+                "click",
+                () => {
 
-    hidePlayButtonTimer = setTimeout(() => {
+                    if (mainVideo.paused) {
 
-        if (!mainVideo.paused) {
+                        mainVideo.play();
 
-            playButton.classList.add("hidden");
+                    }
 
-        }
+                    else {
 
-    }, 500);
+                        mainVideo.pause();
 
-}
-       
-/* ==================================================
-   PLAY / PAUSE
-================================================== */
+                    }
 
-if (mainVideo) {
-
-    /* ==================================================
-       AUTO HIDE PLAY / PAUSE ICON
-    ================================================== */
-
-    let hidePlayButtonTimer;
+                }
+            );
 
 
-    function showPlayButton() {
+            /* ==================================================
+               KLIK TOMBOL PLAY / PAUSE
+            ================================================== */
 
-        if (!playButton) {
-            return;
-        }
+            playButton.addEventListener(
+                "click",
+                event => {
 
-
-        playButton.classList.remove(
-            "hidden"
-        );
-
-
-        clearTimeout(
-            hidePlayButtonTimer
-        );
+                    event.stopPropagation();
 
 
-        if (!mainVideo.paused) {
+                    if (mainVideo.paused) {
 
-            hidePlayButtonTimer =
-                setTimeout(
-                    () => {
+                        mainVideo.play();
 
-                        if (!mainVideo.paused) {
+                    }
 
-                            playButton.classList.add(
-                                "hidden"
-                            );
+                    else {
 
-                        }
+                        mainVideo.pause();
 
-                    },
-                    500
-                );
+                    }
 
-        }
-
-    }
+                }
+            );
 
 
-    /* ==================================================
-       KLIK LAYAR VIDEO = PLAY / PAUSE
-    ================================================== */
+            /* ==================================================
+               VIDEO PLAY
+            ================================================== */
 
-    mainVideo.addEventListener(
-        "click",
-        () => {
+            mainVideo.addEventListener(
+                "play",
+                () => {
 
-            if (mainVideo.paused) {
-
-                mainVideo.play();
-
-            } else {
-
-                mainVideo.pause();
-
-            }
-
-        }
-    );
+                    playButton.textContent =
+                        "❚❚";
 
 
-    /* ==================================================
-       VIDEO PLAY
-    ================================================== */
+                    playButton.setAttribute(
+                        "aria-label",
+                        "Pause video"
+                    );
 
-    mainVideo.addEventListener(
-        "play",
-        () => {
-
-            if (playButton) {
-
-                playButton.textContent =
-                    "❚❚";
+                }
+            );
 
 
-                playButton.setAttribute(
-                    "aria-label",
-                    "Pause video"
-                );
+            /* ==================================================
+               VIDEO PAUSE
+            ================================================== */
+
+            mainVideo.addEventListener(
+                "pause",
+                () => {
+
+                    playButton.textContent =
+                        "▶";
 
 
-                showPlayButton();
+                    playButton.setAttribute(
+                        "aria-label",
+                        "Play video"
+                    );
 
-            }
-
-        }
-    );
-
-
-    /* ==================================================
-       VIDEO PAUSE
-    ================================================== */
-
-    mainVideo.addEventListener(
-        "pause",
-        () => {
-
-            if (playButton) {
-
-                playButton.textContent =
-                    "▶";
+                }
+            );
 
 
-                playButton.setAttribute(
-                    "aria-label",
-                    "Play video"
-                );
+            /* ==================================================
+               VIDEO ENDED
+            ================================================== */
+
+            mainVideo.addEventListener(
+                "ended",
+                () => {
+
+                    playButton.textContent =
+                        "▶";
 
 
-                playButton.classList.remove(
-                    "hidden"
-                );
+                    playButton.setAttribute(
+                        "aria-label",
+                        "Play video"
+                    );
 
-            }
-
-
-            clearTimeout(
-                hidePlayButtonTimer
+                }
             );
 
         }
-    );
 
 
-    /* ==================================================
-       VIDEO ENDED
-    ================================================== */
-
-    mainVideo.addEventListener(
-        "ended",
-        () => {
-
-            if (playButton) {
-
-                playButton.textContent =
-                    "▶";
-
-
-                playButton.setAttribute(
-                    "aria-label",
-                    "Play video"
-                );
-
-
-                playButton.classList.remove(
-                    "hidden"
-                );
-
-            }
-
-
-            clearTimeout(
-                hidePlayButtonTimer
-            );
-
-        }
-    );
-
-}
         /* ==================================================
            PROGRESS BAR
         ================================================== */
@@ -1163,9 +1078,30 @@ if (mainVideo) {
         }
 
 
-        /* ==========================
+        /* ==================================================
+           VIDEO ERROR
+        ================================================== */
+
+        if (mainVideo) {
+
+            mainVideo.addEventListener(
+                "error",
+                () => {
+
+                    console.error(
+                        "Video gagal dimuat:",
+                        selectedVideo.videoUrl
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* ==================================================
            DEBUG
-        ========================== */
+        ================================================== */
 
         console.log(
             "Video loaded:",
@@ -1235,6 +1171,7 @@ if (videoGrid) {
 console.log(
     "MAB-Video loaded successfully 🚀"
 );
+
 
 console.log(
     "Total videos:",
