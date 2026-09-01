@@ -869,131 +869,165 @@ if (
                 "videoProgress"
             );
 
+/* ==================================================
+   PLAY / PAUSE + AUTO HIDE ICON
+================================================== */
 
-        /* ==================================================
-           PLAY / PAUSE
-        ================================================== */
+if (mainVideo) {
 
-        if (
-            mainVideo &&
-            playButton
-        ) {
-
-            /* ==================================================
-               KLIK LAYAR VIDEO
-            ================================================== */
-
-            mainVideo.addEventListener(
-                "click",
-                () => {
-
-                    if (mainVideo.paused) {
-
-                        mainVideo.play();
-
-                    }
-
-                    else {
-
-                        mainVideo.pause();
-
-                    }
-
-                }
-            );
+    let hidePlayButtonTimer;
 
 
-            /* ==================================================
-               KLIK TOMBOL PLAY / PAUSE
-            ================================================== */
+    /* ==================================================
+       SHOW PLAY / PAUSE ICON
+    ================================================== */
 
-            playButton.addEventListener(
-                "click",
-                event => {
+    function showPlayButton() {
 
-                    event.stopPropagation();
+        if (!playButton) {
+            return;
+        }
 
+        playButton.classList.remove("hidden");
 
-                    if (mainVideo.paused) {
+        clearTimeout(hidePlayButtonTimer);
 
-                        mainVideo.play();
+        /* Jika video sedang berjalan,
+           sembunyikan setelah 0,5 detik */
 
-                    }
+        if (!mainVideo.paused) {
 
-                    else {
+            hidePlayButtonTimer = setTimeout(() => {
 
-                        mainVideo.pause();
+                if (!mainVideo.paused) {
 
-                    }
+                    playButton.classList.add("hidden");
 
                 }
-            );
 
-
-            /* ==================================================
-               VIDEO PLAY
-            ================================================== */
-
-            mainVideo.addEventListener(
-                "play",
-                () => {
-
-                    playButton.textContent =
-                        "❚❚";
-
-
-                    playButton.setAttribute(
-                        "aria-label",
-                        "Pause video"
-                    );
-
-                }
-            );
-
-
-            /* ==================================================
-               VIDEO PAUSE
-            ================================================== */
-
-            mainVideo.addEventListener(
-                "pause",
-                () => {
-
-                    playButton.textContent =
-                        "▶";
-
-
-                    playButton.setAttribute(
-                        "aria-label",
-                        "Play video"
-                    );
-
-                }
-            );
-
-
-            /* ==================================================
-               VIDEO ENDED
-            ================================================== */
-
-            mainVideo.addEventListener(
-                "ended",
-                () => {
-
-                    playButton.textContent =
-                        "▶";
-
-
-                    playButton.setAttribute(
-                        "aria-label",
-                        "Play video"
-                    );
-
-                }
-            );
+            }, 500);
 
         }
 
+    }
+
+
+    /* ==================================================
+       KLIK LAYAR VIDEO = PLAY / PAUSE
+    ================================================== */
+
+    mainVideo.addEventListener(
+        "click",
+        () => {
+
+            if (mainVideo.paused) {
+
+                mainVideo.play();
+
+            } else {
+
+                mainVideo.pause();
+
+            }
+
+        }
+    );
+
+
+    /* ==================================================
+       VIDEO PLAY
+    ================================================== */
+
+    mainVideo.addEventListener(
+        "play",
+        () => {
+
+            if (playButton) {
+
+                playButton.textContent = "❚❚";
+
+                playButton.setAttribute(
+                    "aria-label",
+                    "Pause video"
+                );
+
+            }
+
+            /* Tampilkan sebentar,
+               lalu hilang */
+
+            showPlayButton();
+
+        }
+    );
+
+
+    /* ==================================================
+       VIDEO PAUSE
+    ================================================== */
+
+    mainVideo.addEventListener(
+        "pause",
+        () => {
+
+            clearTimeout(
+                hidePlayButtonTimer
+            );
+
+            if (playButton) {
+
+                playButton.textContent = "▶";
+
+                playButton.setAttribute(
+                    "aria-label",
+                    "Play video"
+                );
+
+                /* Saat pause,
+                   ikon tetap terlihat */
+
+                playButton.classList.remove(
+                    "hidden"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* ==================================================
+       VIDEO ENDED
+    ================================================== */
+
+    mainVideo.addEventListener(
+        "ended",
+        () => {
+
+            clearTimeout(
+                hidePlayButtonTimer
+            );
+
+            if (playButton) {
+
+                playButton.textContent = "▶";
+
+                playButton.setAttribute(
+                    "aria-label",
+                    "Play video"
+                );
+
+                playButton.classList.remove(
+                    "hidden"
+                );
+
+            }
+
+        }
+    );
+
+}
+    
 
         /* ==================================================
            PROGRESS BAR
