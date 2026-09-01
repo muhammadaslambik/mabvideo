@@ -888,11 +888,76 @@ if (
            PLAY / PAUSE
         ================================================== */
 
-        if (
-            mainVideo &&
-            playButton
-        ) {
+   if (
+    mainVideo &&
+    playButton
+) {
 
+    /* ==================================================
+       AUTO HIDE PLAY BUTTON
+    ================================================== */
+
+    let playButtonTimeout;
+
+
+    function hidePlayButton() {
+
+        clearTimeout(
+            playButtonTimeout
+        );
+
+        playButtonTimeout =
+            setTimeout(
+                () => {
+
+                    if (
+                        !mainVideo.paused
+                    ) {
+
+                        playButton.classList.add(
+                            "hidden"
+                        );
+
+                    }
+
+                },
+                500
+            );
+
+    }
+
+
+    function showPlayButton() {
+
+        clearTimeout(
+            playButtonTimeout
+        );
+
+        playButton.classList.remove(
+            "hidden"
+        );
+
+    }
+
+
+    playButton.addEventListener(
+        "click",
+        () => {
+
+            if (
+                mainVideo.paused
+            ) {
+
+                mainVideo.play();
+
+            } else {
+
+                mainVideo.pause();
+
+            }
+
+        }
+    );
             playButton.addEventListener(
                 "click",
                 () => {
@@ -917,41 +982,43 @@ if (
                VIDEO PLAY
             ========================== */
 
-            mainVideo.addEventListener(
-                "play",
-                () => {
+mainVideo.addEventListener(
+    "play",
+    () => {
 
-                    playButton.textContent =
-                        "❚❚";
+        playButton.textContent =
+            "❚❚";
 
-                    playButton.setAttribute(
-                        "aria-label",
-                        "Pause video"
-                    );
+        playButton.setAttribute(
+            "aria-label",
+            "Pause video"
+        );
 
-                }
-            );
+        hidePlayButton();
 
+    }
+);
 
             /* ==========================
                VIDEO PAUSE
             ========================== */
 
-            mainVideo.addEventListener(
-                "pause",
-                () => {
+mainVideo.addEventListener(
+    "pause",
+    () => {
 
-                    playButton.textContent =
-                        "▶";
+        playButton.textContent =
+            "▶";
 
-                    playButton.setAttribute(
-                        "aria-label",
-                        "Play video"
-                    );
+        playButton.setAttribute(
+            "aria-label",
+            "Play video"
+        );
 
-                }
-            );
+        showPlayButton();
 
+    }
+);
 
             /* ==========================
                VIDEO ENDED
