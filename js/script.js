@@ -308,42 +308,6 @@ function renderVideos(videoList) {
 
 }
 
-/* ==================================================
-   VIDEO PLAYER
-================================================== */
-
-const mainVideo = document.getElementById("mainVideo");
-const playButton = document.getElementById("playButton");
-
-console.log("Video player:", mainVideo);
-console.log("Play button:", playButton);
-
-if (mainVideo && playButton) {
-
-    playButton.addEventListener("click", function () {
-
-        console.log("PLAY BUTTON DIKLIK");
-
-        if (mainVideo.paused) {
-
-            playButton.textContent = "❚❚";
-
-            mainVideo.play().catch(function(error) {
-                console.log("Video belum memiliki sumber:", error);
-            });
-
-        } else {
-
-            mainVideo.pause();
-
-            playButton.textContent = "▶";
-
-        }
-
-    });
-
-}
-
 
 /* ==================================================
    SEARCH
@@ -854,7 +818,46 @@ if (
 
         `;
 
+/* ==========================
+   PLAY BUTTON
+========================== */
 
+const playButton =
+    watchVideoPlayer.querySelector(".play-button");
+
+
+if (playButton) {
+
+    playButton.addEventListener(
+        "click",
+        () => {
+
+            if (playButton.textContent === "▶") {
+
+                playButton.textContent = "❚❚";
+
+                playButton.setAttribute(
+                    "aria-label",
+                    "Pause video"
+                );
+
+            } else {
+
+                playButton.textContent = "▶";
+
+                playButton.setAttribute(
+                    "aria-label",
+                    "Play video"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+       
         console.log(
             "Video loaded:",
             selectedVideo
