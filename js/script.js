@@ -1081,10 +1081,10 @@ else {
     const videoProgress =
         document.getElementById("videoProgress");
 
-   const videoProgressThumb =
-    document.getElementById(
-        "videoProgressThumb"
-    );
+    const videoProgressThumb =
+        document.getElementById(
+            "videoProgressThumb"
+        );
 
     const muteButton =
         document.getElementById("muteButton");
@@ -2053,6 +2053,28 @@ if (videoProgressThumb) {
     /* ==================================================
        SETTINGS MENU
     ================================================== */
+
+function closeSettings() {
+
+    if (!settingsMenu) {
+
+        return;
+
+    }
+
+
+    settingsMenu.classList.add(
+        "hidden"
+    );
+
+
+    settingsMenu.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+}
+
 
    function toggleSettings(event) {
 
