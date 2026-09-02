@@ -19,7 +19,9 @@ const videos = [
         duration: "12:45",
         category: "coding",
         icon: "💻",
-        avatar: "M"
+        avatar: "M",
+        subscribers: "3,2 rb subscriber",
+        description: "Belajar JavaScript dari nol sampai bisa bikin project sendiri. Cocok untuk pemula yang belum pernah coding sama sekali.\n\n#javascript #belajarcoding #mabacademy"
         // videoUrl: "assets/videos/nama-file.mp4"
     },
 
@@ -32,7 +34,9 @@ const videos = [
         duration: "18:32",
         category: "technology",
         icon: "🤖",
-        avatar: "T"
+        avatar: "T",
+        subscribers: "890 rb subscriber",
+        description: "Membahas ke mana arah perkembangan AI dalam beberapa tahun ke depan dan dampaknya bagi pekerjaan serta kehidupan sehari-hari.\n\n#ai #teknologi #techworld"
     },
 
     {
@@ -44,7 +48,9 @@ const videos = [
         duration: "24:18",
         category: "gaming",
         icon: "🎮",
-        avatar: "G"
+        avatar: "G",
+        subscribers: "2,4 jt subscriber",
+        description: "10 game terbaik yang wajib kamu coba tahun ini, dari genre aksi sampai santai. Ada rekomendasi buat semua jenis gamer.\n\n#gaming #rekomendasigame #gamezone"
     },
 
     {
@@ -57,6 +63,8 @@ const videos = [
         category: "music",
         icon: "🎵",
         avatar: "M",
+        subscribers: "156 rb subscriber",
+        description: "Cover Syair Abu Nawas \"I'TIROF\" oleh MAB Music. Terima kasih sudah mendukung channel ini, jangan lupa like dan subscribe.\n\n#itirof #sabyan #mabmusic",
         videoUrl: "assets/videos/itirof-sabyan.mp4"
     },
 
@@ -69,7 +77,9 @@ const videos = [
         duration: "15:26",
         category: "coding",
         icon: "🌐",
-        avatar: "W"
+        avatar: "W",
+        subscribers: "445 rb subscriber",
+        description: "Tutorial step-by-step membuat website pertamamu memakai HTML, CSS, dan sedikit JavaScript, tanpa perlu pengalaman sebelumnya.\n\n#webdevelopment #html #css"
     },
 
     {
@@ -81,7 +91,9 @@ const videos = [
         duration: "8:17",
         category: "news",
         icon: "📰",
-        avatar: "N"
+        avatar: "N",
+        subscribers: "78 rb subscriber",
+        description: "Rangkuman berita teknologi terbaru hari ini, dari gadget baru sampai perkembangan industri digital.\n\n#teknologi #beritahariini #dailynews"
     },
 
     {
@@ -93,7 +105,9 @@ const videos = [
         duration: "21:05",
         category: "coding",
         icon: "⚡",
-        avatar: "J"
+        avatar: "J",
+        subscribers: "210 rb subscriber",
+        description: "Kumpulan project JavaScript sederhana yang cocok buat pemula latihan logika dan DOM manipulation.\n\n#javascript #project #jsmaster"
     },
 
     {
@@ -105,7 +119,9 @@ const videos = [
         duration: "11:39",
         category: "technology",
         icon: "🚀",
-        avatar: "D"
+        avatar: "D",
+        subscribers: "1,1 jt subscriber",
+        description: "Tren web development yang perlu kamu ketahui, mulai dari framework baru sampai cara kerja developer modern.\n\n#webdev #frontend #developerhub"
     },
 
     {
@@ -117,7 +133,9 @@ const videos = [
         duration: "32:10",
         category: "education",
         icon: "📚",
-        avatar: "C"
+        avatar: "C",
+        subscribers: "650 rb subscriber",
+        description: "Kursus lengkap HTML & CSS dari dasar sampai layout responsif, disusun runtut untuk pemula.\n\n#html #css #codeschool"
     },
 
     {
@@ -129,7 +147,9 @@ const videos = [
         duration: "10:21",
         category: "gaming",
         icon: "🕹️",
-        avatar: "P"
+        avatar: "P",
+        subscribers: "980 rb subscriber",
+        description: "Momen-momen terbaik dari sesi gaming minggu ini, dari clutch epic sampai momen kocak.\n\n#gaming #highlight #progamer"
     },
 
     {
@@ -141,7 +161,9 @@ const videos = [
         duration: "1:02:14",
         category: "music",
         icon: "🎧",
-        avatar: "M"
+        avatar: "M",
+        subscribers: "156 rb subscriber",
+        description: "Kumpulan musik santai buat teman belajar atau kerja biar lebih fokus dan rileks.\n\n#musicforstudy #relaxingmusic #mabmusic"
     },
 
     {
@@ -153,10 +175,94 @@ const videos = [
         duration: "20:42",
         category: "education",
         icon: "👨‍💻",
-        avatar: "P"
+        avatar: "P",
+        subscribers: "320 rb subscriber",
+        description: "Belajar pemrograman secara bertahap, dimulai dari konsep dasar sampai membuat program sederhana.\n\n#programming #belajarcoding #programmingschool"
     }
 
 ];
+
+
+/* ==================================================
+   HELPER: PARSE & FORMAT ANGKA (VIEWS, LIKES, SUBSCRIBER)
+================================================== */
+
+function parseViewCount(text) {
+
+    if (!text) {
+
+        return 0;
+
+    }
+
+
+    const match =
+        String(text)
+            .replace(",", ".")
+            .match(/([\d.]+)\s*([KMkm]?)/);
+
+
+    if (!match) {
+
+        return 0;
+
+    }
+
+
+    let number =
+        parseFloat(match[1]);
+
+    const suffix =
+        match[2].toUpperCase();
+
+
+    if (suffix === "K") {
+
+        number *= 1000;
+
+    }
+
+    else if (suffix === "M") {
+
+        number *= 1000000;
+
+    }
+
+
+    return Math.round(number);
+
+}
+
+
+function formatCompactCount(number) {
+
+    if (number >= 1000000) {
+
+        return (
+            (Math.round((number / 1000000) * 10) / 10)
+                .toString()
+                .replace(".", ",") +
+            " jt"
+        );
+
+    }
+
+
+    if (number >= 1000) {
+
+        return (
+            (Math.round((number / 1000) * 10) / 10)
+                .toString()
+                .replace(".", ",") +
+            " rb"
+        );
+
+    }
+
+
+    return String(number);
+
+}
 
 
 /* ==================================================
@@ -749,28 +855,628 @@ const shouldAutoplay =
 
 
         /* ==================================================
-           INFORMATION
+           INFORMATION (CHANNEL, AKSI, DESKRIPSI ALA YOUTUBE)
         ================================================== */
+
+        const initialLikeCount =
+            Math.max(
+                12,
+                Math.round(
+                    parseViewCount(selectedVideo.views) * 0.045
+                )
+            );
+
+        const descriptionHtml =
+            (selectedVideo.description || "Tidak ada deskripsi.")
+                .replace(/\n/g, "<br>");
 
         watchVideoInfo.innerHTML = `
 
-            <strong>
-                ${selectedVideo.channel}
-            </strong>
+            <div class="channel-actions-row">
 
-            <br>
+                <div class="channel-block">
 
-            ${selectedVideo.views}
+                    <div class="channel-avatar-lg">
+                        ${selectedVideo.avatar}
+                    </div>
 
-            •
+                    <div class="channel-meta">
 
-            ${selectedVideo.date}
+                        <p class="channel-name-lg">
+                            ${selectedVideo.channel}
+                        </p>
 
-            •
+                        <p
+                            class="channel-subs"
+                            id="channelSubs"
+                        >
+                            ${selectedVideo.subscribers || ""}
+                        </p>
 
-            ${selectedVideo.duration}
+                    </div>
+
+                    <button
+                        class="subscribe-button"
+                        id="subscribeButton"
+                        type="button"
+                    >
+                        Subscribe
+                    </button>
+
+                    <button
+                        class="notify-bell-button"
+                        id="notifyBellButton"
+                        type="button"
+                        aria-label="Notifikasi"
+                    >
+                        🔔
+                    </button>
+
+                </div>
+
+
+                <div class="video-actions">
+
+                    <div class="like-dislike-group">
+
+                        <button
+                            class="action-pill like-button"
+                            id="likeButton"
+                            type="button"
+                        >
+                            <span class="action-icon">👍</span>
+                            <span id="likeCount">
+                                ${formatCompactCount(initialLikeCount)}
+                            </span>
+                        </button>
+
+                        <span class="pill-divider"></span>
+
+                        <button
+                            class="action-pill dislike-button"
+                            id="dislikeButton"
+                            type="button"
+                            aria-label="Tidak suka"
+                        >
+                            <span class="action-icon">👎</span>
+                        </button>
+
+                    </div>
+
+                    <button
+                        class="action-pill"
+                        id="shareButton"
+                        type="button"
+                    >
+                        <span class="action-icon">↗</span>
+                        <span>Bagikan</span>
+                    </button>
+
+                    <button
+                        class="action-pill"
+                        id="downloadButton"
+                        type="button"
+                    >
+                        <span class="action-icon">⬇</span>
+                        <span>Unduh</span>
+                    </button>
+
+                    <div class="more-menu-wrapper">
+
+                        <button
+                            class="action-pill action-pill-icon"
+                            id="moreButton"
+                            type="button"
+                            aria-label="Lainnya"
+                        >
+                            ⋮
+                        </button>
+
+                        <div
+                            class="more-menu"
+                            id="moreMenu"
+                        >
+
+                            <button
+                                class="more-menu-item"
+                                type="button"
+                            >
+                                🚩 Laporkan
+                            </button>
+
+                            <button
+                                class="more-menu-item"
+                                type="button"
+                            >
+                                💾 Simpan ke playlist
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="video-description-box"
+                id="descriptionBox"
+            >
+
+                <p class="description-meta">
+                    <strong>${selectedVideo.views}</strong>
+                    &nbsp;•&nbsp;
+                    ${selectedVideo.date}
+                </p>
+
+                <p
+                    class="description-text"
+                    id="descriptionText"
+                >
+                    ${descriptionHtml}
+                </p>
+
+                <button
+                    class="description-toggle"
+                    id="descriptionToggle"
+                    type="button"
+                >
+                    Tampilkan lebih banyak
+                </button>
+
+            </div>
 
         `;
+
+
+        /* ==================================================
+           SUBSCRIBE BUTTON
+        ================================================== */
+
+        const subscribeButton =
+            document.getElementById("subscribeButton");
+
+        const notifyBellButton =
+            document.getElementById("notifyBellButton");
+
+        const channelSubs =
+            document.getElementById("channelSubs");
+
+        let isSubscribed =
+            false;
+
+        const baseSubsCount =
+            parseViewCount(selectedVideo.subscribers);
+
+
+        if (subscribeButton) {
+
+            subscribeButton.addEventListener(
+                "click",
+                () => {
+
+                    isSubscribed =
+                        !isSubscribed;
+
+
+                    subscribeButton.textContent =
+                        isSubscribed
+                            ? "Berlangganan"
+                            : "Subscribe";
+
+
+                    subscribeButton.classList.toggle(
+                        "subscribed",
+                        isSubscribed
+                    );
+
+
+                    if (notifyBellButton) {
+
+                        notifyBellButton.classList.toggle(
+                            "visible",
+                            isSubscribed
+                        );
+
+                    }
+
+
+                    if (channelSubs) {
+
+                        const newCount =
+                            baseSubsCount +
+                            (isSubscribed ? 1 : 0);
+
+                        channelSubs.textContent =
+                            `${formatCompactCount(newCount)} subscriber`;
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        if (notifyBellButton) {
+
+            notifyBellButton.addEventListener(
+                "click",
+                () => {
+
+                    notifyBellButton.classList.toggle(
+                        "active"
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* ==================================================
+           LIKE / DISLIKE
+        ================================================== */
+
+        const likeButton =
+            document.getElementById("likeButton");
+
+        const dislikeButton =
+            document.getElementById("dislikeButton");
+
+        const likeCountEl =
+            document.getElementById("likeCount");
+
+        let likeState =
+            "none";
+
+
+        if (likeButton && dislikeButton && likeCountEl) {
+
+            likeButton.addEventListener(
+                "click",
+                () => {
+
+                    if (likeState === "liked") {
+
+                        likeState =
+                            "none";
+
+                        likeCountEl.textContent =
+                            formatCompactCount(
+                                initialLikeCount
+                            );
+
+                    }
+
+                    else {
+
+                        likeState =
+                            "liked";
+
+                        likeCountEl.textContent =
+                            formatCompactCount(
+                                initialLikeCount + 1
+                            );
+
+                    }
+
+
+                    likeButton.classList.toggle(
+                        "active",
+                        likeState === "liked"
+                    );
+
+                    dislikeButton.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+
+            dislikeButton.addEventListener(
+                "click",
+                () => {
+
+                    if (likeState === "disliked") {
+
+                        likeState =
+                            "none";
+
+                    }
+
+                    else {
+
+                        likeState =
+                            "disliked";
+
+                        likeCountEl.textContent =
+                            formatCompactCount(
+                                initialLikeCount
+                            );
+
+                    }
+
+
+                    dislikeButton.classList.toggle(
+                        "active",
+                        likeState === "disliked"
+                    );
+
+                    likeButton.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* ==================================================
+           SHARE (SALIN LINK)
+        ================================================== */
+
+        const shareButton =
+            document.getElementById("shareButton");
+
+
+        function showToast(message) {
+
+            const existingToast =
+                document.getElementById("mabToast");
+
+            if (existingToast) {
+
+                existingToast.remove();
+
+            }
+
+
+            const toast =
+                document.createElement("div");
+
+            toast.id =
+                "mabToast";
+
+            toast.className =
+                "mab-toast";
+
+            toast.textContent =
+                message;
+
+            document.body.appendChild(
+                toast
+            );
+
+
+            requestAnimationFrame(
+                () => {
+
+                    toast.classList.add(
+                        "visible"
+                    );
+
+                }
+            );
+
+
+            setTimeout(
+                () => {
+
+                    toast.classList.remove(
+                        "visible"
+                    );
+
+                    setTimeout(
+                        () => toast.remove(),
+                        300
+                    );
+
+                },
+                2200
+            );
+
+        }
+
+
+        if (shareButton) {
+
+            shareButton.addEventListener(
+                "click",
+                () => {
+
+                    const shareUrl =
+                        window.location.href;
+
+
+                    if (
+                        navigator.clipboard &&
+                        navigator.clipboard.writeText
+                    ) {
+
+                        navigator.clipboard
+                            .writeText(shareUrl)
+                            .then(
+                                () => {
+
+                                    showToast(
+                                        "Link video disalin"
+                                    );
+
+                                }
+                            )
+                            .catch(
+                                () => {
+
+                                    showToast(
+                                        "Gagal menyalin link"
+                                    );
+
+                                }
+                            );
+
+                    }
+
+                    else {
+
+                        showToast(
+                            "Link video: " + shareUrl
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* ==================================================
+           DOWNLOAD
+        ================================================== */
+
+        const downloadButton =
+            document.getElementById("downloadButton");
+
+
+        if (downloadButton) {
+
+            downloadButton.addEventListener(
+                "click",
+                () => {
+
+                    if (!selectedVideo.videoUrl) {
+
+                        showToast(
+                            "Video ini belum punya file untuk diunduh."
+                        );
+
+                        return;
+
+                    }
+
+
+                    const tempLink =
+                        document.createElement("a");
+
+                    tempLink.href =
+                        selectedVideo.videoUrl;
+
+                    tempLink.download =
+                        selectedVideo.title;
+
+                    document.body.appendChild(
+                        tempLink
+                    );
+
+                    tempLink.click();
+
+                    tempLink.remove();
+
+                }
+            );
+
+        }
+
+
+        /* ==================================================
+           MENU LAINNYA (⋮)
+        ================================================== */
+
+        const moreButton =
+            document.getElementById("moreButton");
+
+        const moreMenu =
+            document.getElementById("moreMenu");
+
+
+        if (moreButton && moreMenu) {
+
+            moreButton.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+                    moreMenu.classList.toggle(
+                        "open"
+                    );
+
+                }
+            );
+
+
+            moreMenu.querySelectorAll(
+                ".more-menu-item"
+            ).forEach(item => {
+
+                item.addEventListener(
+                    "click",
+                    () => {
+
+                        moreMenu.classList.remove(
+                            "open"
+                        );
+
+                        showToast(
+                            "Fitur ini masih dalam pengembangan."
+                        );
+
+                    }
+                );
+
+            });
+
+
+            document.addEventListener(
+                "click",
+                () => {
+
+                    moreMenu.classList.remove(
+                        "open"
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* ==================================================
+           DESKRIPSI (TAMPILKAN LEBIH BANYAK/SEDIKIT)
+        ================================================== */
+
+        const descriptionBox =
+            document.getElementById("descriptionBox");
+
+        const descriptionToggle =
+            document.getElementById("descriptionToggle");
+
+
+        if (descriptionBox && descriptionToggle) {
+
+            descriptionToggle.addEventListener(
+                "click",
+                () => {
+
+                    const isExpanded =
+                        descriptionBox.classList.toggle(
+                            "expanded"
+                        );
+
+                    descriptionToggle.textContent =
+                        isExpanded
+                            ? "Tampilkan lebih sedikit"
+                            : "Tampilkan lebih banyak";
+
+                }
+            );
+
+        }
 
 
      /* ==================================================
@@ -856,31 +1562,42 @@ else {
     id="videoProgressContainer"
 >
 
-    <!-- SEEK PREVIEW -->
+    <!-- PREVIEW FRAME (mengikuti kursor) -->
 
     <div
-        class="seek-preview hidden"
-        id="seekPreview"
+        class="video-preview"
+        id="videoPreview"
     >
 
-        <div
-            class="seek-preview-image"
-            id="seekPreviewImage"
-        ></div>
+        <div class="video-preview-frame">
 
-        <div
-            class="seek-preview-time"
-            id="seekPreviewTime"
-        >
-            0:00
+            <canvas
+                class="video-preview-canvas"
+                id="videoPreviewCanvas"
+                width="160"
+                height="90"
+            ></canvas>
+
+            <span
+                class="video-preview-time"
+                id="videoPreviewTime"
+            >0:00</span>
+
         </div>
 
-    </div>
+        <div class="video-preview-arrow"></div>
 
+    </div>
 
     <div
         class="video-progress"
         id="videoProgress"
+    ></div>
+
+
+    <div
+        class="video-progress-hover-dot"
+        id="videoProgressHoverDot"
     ></div>
 
 
@@ -890,6 +1607,7 @@ else {
     ></div>
 
 </div>
+
 
                 <!-- CONTROL BAR -->
 
@@ -1110,15 +1828,20 @@ else {
             "videoProgressThumb"
         );
 
-    const seekPreview =
-        document.getElementById("seekPreview");
+    const videoPreview =
+        document.getElementById("videoPreview");
 
-    const seekPreviewImage =
-        document.getElementById("seekPreviewImage");
+    const videoPreviewCanvas =
+        document.getElementById("videoPreviewCanvas");
 
-    const seekPreviewTime =
-        document.getElementById("seekPreviewTime");
-   
+    const videoPreviewTime =
+        document.getElementById("videoPreviewTime");
+
+    const videoProgressHoverDot =
+        document.getElementById(
+            "videoProgressHoverDot"
+        );
+
     const muteButton =
         document.getElementById("muteButton");
 
@@ -1923,383 +2646,12 @@ mainVideo.addEventListener(
     }
 
 
-/* ==================================================
-   PROGRESS SEEK
-================================================== */
-
-let isSeeking = false;
-
-
-/* ==================================================
-   SEEK TIMELINE PREVIEW
-================================================== */
-
-let previewVideo = null;
-let previewCanvas = null;
-let previewContext = null;
-
-let previewReady = false;
-let previewRequestId = 0;
-let previewMoveTimer = null;
-let previewLastClientX = null;
-
-
-/* ==================================================
-   INITIALIZE SEEK PREVIEW
-================================================== */
-
-function initializeSeekPreview() {
-
-    if (
-        !seekPreview ||
-        !seekPreviewImage ||
-        !seekPreviewTime ||
-        !selectedVideo.videoUrl
-    ) {
-
-        return;
-
-    }
-
-
-    previewVideo =
-        document.createElement("video");
-
-
-    previewVideo.preload =
-        "metadata";
-
-
-    previewVideo.muted =
-        true;
-
-
-    previewVideo.playsInline =
-        true;
-
-
-    previewVideo.src =
-        selectedVideo.videoUrl;
-
-
-    previewCanvas =
-        document.createElement("canvas");
-
-
-    previewCanvas.width =
-        320;
-
-
-    previewCanvas.height =
-        180;
-
-
-    previewContext =
-        previewCanvas.getContext("2d");
-
-
-    previewVideo.addEventListener(
-        "loadedmetadata",
-        () => {
-
-            previewReady = true;
-
-        }
-    );
-
-
-    previewVideo.load();
-
-}
-
-
-/* ==================================================
-   HIDE SEEK PREVIEW
-================================================== */
-
-function hideSeekPreview() {
-
-    if (!seekPreview) {
-
-        return;
-
-    }
-
-
-    seekPreview.classList.add(
-        "hidden"
-    );
-
-}
-
-
-/* ==================================================
-   UPDATE SEEK PREVIEW
-================================================== */
-
-function updateSeekPreview(clientX) {
-
-    if (
-        !seekPreview ||
-        !seekPreviewImage ||
-        !seekPreviewTime ||
-        !previewVideo ||
-        !previewCanvas ||
-        !previewContext ||
-        !previewReady
-    ) {
-
-        return;
-
-    }
-
-
-    if (
-        !Number.isFinite(
-            previewVideo.duration
-        ) ||
-        previewVideo.duration <= 0
-    ) {
-
-        return;
-
-    }
-
-
-    const rect =
-        videoProgressContainer
-            .getBoundingClientRect();
-
-
-    if (rect.width <= 0) {
-
-        return;
-
-    }
-
-
-    const percentage =
-        getSeekPercentage(clientX);
-
-
-    const previewTime =
-        percentage *
-        previewVideo.duration;
-
-
     /* ==================================================
-       UPDATE TIME LABEL
+       PROGRESS SEEK
     ================================================== */
 
-    if (seekPreviewTime) {
+    let isSeeking = false;
 
-        seekPreviewTime.textContent =
-            formatVideoTime(
-                previewTime
-            );
-
-    }
-
-
-    /* ==================================================
-       KEEP PREVIEW INSIDE PLAYER
-    ================================================== */
-
-    const previewWidth =
-        seekPreview.offsetWidth || 160;
-
-
-    const halfWidth =
-        previewWidth / 2;
-
-
-    const minLeft =
-        (
-            halfWidth /
-            rect.width
-        ) * 100;
-
-
-    const maxLeft =
-        100 -
-        minLeft;
-
-
-    let left =
-        percentage * 100;
-
-
-    left =
-        Math.max(
-            minLeft,
-            Math.min(
-                maxLeft,
-                left
-            )
-        );
-
-
-    seekPreview.style.left =
-        `${left}%`;
-
-
-    /* ==================================================
-       SHOW PREVIEW
-    ================================================== */
-
-    seekPreview.classList.remove(
-        "hidden"
-    );
-
-
-    /* ==================================================
-       SEEK PREVIEW VIDEO
-    ================================================== */
-
-    const requestId =
-        ++previewRequestId;
-
-
-    const drawPreview =
-        () => {
-
-            if (
-                requestId !==
-                previewRequestId
-            ) {
-
-                return;
-
-            }
-
-
-            if (
-                !previewContext ||
-                !previewVideo
-            ) {
-
-                return;
-
-            }
-
-
-            try {
-
-                previewContext.drawImage(
-                    previewVideo,
-                    0,
-                    0,
-                    previewCanvas.width,
-                    previewCanvas.height
-                );
-
-
-                const imageData =
-                    previewCanvas.toDataURL(
-                        "image/jpeg",
-                        0.75
-                    );
-
-
-                seekPreviewImage.style.backgroundImage =
-                    `url("${imageData}")`;
-
-            }
-
-            catch (error) {
-
-                console.log(
-                    "Seek preview gagal:",
-                    error
-                );
-
-            }
-
-        };
-
-
-    const handleSeeked =
-        () => {
-
-            previewVideo.removeEventListener(
-                "seeked",
-                handleSeeked
-            );
-
-
-            drawPreview();
-
-        };
-
-
-    previewVideo.addEventListener(
-        "seeked",
-        handleSeeked
-    );
-
-
-    try {
-
-        previewVideo.currentTime =
-            previewTime;
-
-    }
-
-    catch (error) {
-
-        previewVideo.removeEventListener(
-            "seeked",
-            handleSeeked
-        );
-
-    }
-
-}
-
-
-/* ==================================================
-   QUEUE SEEK PREVIEW
-================================================== */
-
-function queueSeekPreview(clientX) {
-
-    previewLastClientX =
-        clientX;
-
-
-    if (previewMoveTimer) {
-
-        return;
-
-    }
-
-
-    previewMoveTimer =
-        setTimeout(
-            () => {
-
-                previewMoveTimer =
-                    null;
-
-
-                if (
-                    previewLastClientX !==
-                    null
-                ) {
-
-                    updateSeekPreview(
-                        previewLastClientX
-                    );
-
-                }
-
-            },
-            50
-        );
-
-}
-
-   initializeSeekPreview();
 
     function getSeekPercentage(clientX) {
 
@@ -2412,59 +2764,38 @@ if (videoProgressThumb) {
                 }
 
 
-seekToPosition(
-    event.clientX
-);
+                seekToPosition(
+                    event.clientX
+                );
 
-queueSeekPreview(
-    event.clientX
-);
 
-showControls();
+                showControls();
 
             }
         );
 
-videoProgressContainer.addEventListener(
-    "pointermove",
-    event => {
 
-        event.stopPropagation();
+        videoProgressContainer.addEventListener(
+            "pointermove",
+            event => {
+
+                if (!isSeeking) {
+
+                    return;
+
+                }
 
 
-        queueSeekPreview(
-            event.clientX
+                event.stopPropagation();
+
+
+                seekToPosition(
+                    event.clientX
+                );
+
+            }
         );
 
-
-        if (!isSeeking) {
-
-            return;
-
-        }
-
-
-        seekToPosition(
-            event.clientX
-        );
-
-    }
-);
-
-videoProgressContainer.addEventListener(
-    "pointerleave",
-    () => {
-
-        if (isSeeking) {
-
-            return;
-
-        }
-
-        hideSeekPreview();
-
-    }
-);
 
         function finishSeeking(event) {
 
@@ -2538,6 +2869,282 @@ videoProgressContainer.addEventListener(
                 showControls();
 
             }
+        );
+
+    }
+
+
+    /* ==================================================
+       PREVIEW FRAME MENGIKUTI KURSOR (HOVER SCRUB)
+    ================================================== */
+
+    if (
+        videoProgressContainer &&
+        videoPreview &&
+        videoPreviewCanvas &&
+        videoPreviewTime &&
+        mainVideo &&
+        selectedVideo.videoUrl
+    ) {
+
+        const previewCtx =
+            videoPreviewCanvas.getContext("2d");
+
+        /* video tersembunyi khusus buat menangkap frame,
+           supaya video utama tidak ikut ke-seek/terganggu */
+
+        const previewVideo =
+            document.createElement("video");
+
+        previewVideo.src =
+            selectedVideo.videoUrl;
+
+        previewVideo.muted =
+            true;
+
+        previewVideo.preload =
+            "auto";
+
+        previewVideo.style.display =
+            "none";
+
+        document.body.appendChild(
+            previewVideo
+        );
+
+
+        let previewFrameReady =
+            false;
+
+        let pendingPreviewTime =
+            null;
+
+        previewVideo.addEventListener(
+            "loadedmetadata",
+            () => {
+
+                previewFrameReady =
+                    true;
+
+
+                if (pendingPreviewTime !== null) {
+
+                    previewVideo.currentTime =
+                        pendingPreviewTime;
+
+                    pendingPreviewTime =
+                        null;
+
+                }
+
+            }
+        );
+
+
+        previewVideo.addEventListener(
+            "seeked",
+            () => {
+
+                try {
+
+                    previewCtx.drawImage(
+                        previewVideo,
+                        0,
+                        0,
+                        videoPreviewCanvas.width,
+                        videoPreviewCanvas.height
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.log(
+                        "Gagal menggambar preview frame:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+
+        function updatePreviewFrame(hoverTime) {
+
+            if (!previewFrameReady) {
+
+                pendingPreviewTime =
+                    hoverTime;
+
+                return;
+
+            }
+
+
+            previewVideo.currentTime =
+                hoverTime;
+
+        }
+
+
+        function handleProgressHover(clientX) {
+
+            if (
+                !Number.isFinite(mainVideo.duration) ||
+                mainVideo.duration <= 0
+            ) {
+
+                return;
+
+            }
+
+
+            const rect =
+                videoProgressContainer.getBoundingClientRect();
+
+            const percentage =
+                getSeekPercentage(clientX);
+
+            const hoverTime =
+                percentage *
+                mainVideo.duration;
+
+
+            /* posisi horizontal preview & titik hover,
+               mengikuti posisi kursor pada progress bar */
+
+            const offsetX =
+                clientX -
+                rect.left;
+
+            const clampedOffsetX =
+                Math.max(
+                    0,
+                    Math.min(
+                        rect.width,
+                        offsetX
+                    )
+                );
+
+
+            videoPreview.style.left =
+                `${clampedOffsetX}px`;
+
+
+            /* jaga agar kotak preview tidak terpotong
+               di ujung kiri/kanan progress bar */
+
+            const previewWidth =
+                videoPreview.offsetWidth || 160;
+
+            const halfPreviewWidth =
+                previewWidth / 2;
+
+            let previewLeft =
+                clampedOffsetX;
+
+            if (previewLeft < halfPreviewWidth) {
+
+                previewLeft =
+                    halfPreviewWidth;
+
+            }
+
+            else if (
+                previewLeft >
+                rect.width - halfPreviewWidth
+            ) {
+
+                previewLeft =
+                    rect.width -
+                    halfPreviewWidth;
+
+            }
+
+            videoPreview.style.left =
+                `${previewLeft}px`;
+
+            if (videoProgressHoverDot) {
+
+                videoProgressHoverDot.style.left =
+                    `${percentage * 100}%`;
+
+            }
+
+
+            videoPreviewTime.textContent =
+                formatVideoTime(hoverTime);
+
+
+            updatePreviewFrame(hoverTime);
+
+
+            videoPreview.classList.add(
+                "visible"
+            );
+
+            if (videoProgressHoverDot) {
+
+                videoProgressHoverDot.classList.add(
+                    "visible"
+                );
+
+            }
+
+        }
+
+
+        function hideProgressHover() {
+
+            videoPreview.classList.remove(
+                "visible"
+            );
+
+            if (videoProgressHoverDot) {
+
+                videoProgressHoverDot.classList.remove(
+                    "visible"
+                );
+
+            }
+
+        }
+
+
+        videoProgressContainer.addEventListener(
+            "pointermove",
+            event => {
+
+                handleProgressHover(
+                    event.clientX
+                );
+
+            }
+        );
+
+
+        videoProgressContainer.addEventListener(
+            "pointerenter",
+            event => {
+
+                handleProgressHover(
+                    event.clientX
+                );
+
+            }
+        );
+
+
+        videoProgressContainer.addEventListener(
+            "pointerleave",
+            hideProgressHover
+        );
+
+
+        videoProgressContainer.addEventListener(
+            "pointercancel",
+            hideProgressHover
         );
 
     }
