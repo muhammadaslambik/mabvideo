@@ -811,13 +811,13 @@ else {
             id="youtubePlayer"
         >
 
-            <video
-                id="mainVideo"
-                class="main-video"
-                preload="metadata"
-                autoplay
-                playsinline
-            >
+<video
+    id="mainVideo"
+    class="main-video"
+    preload="metadata"
+    autoplay
+    playsinline
+>
 
                 <source
                     src="${selectedVideo.videoUrl}"
@@ -2750,78 +2750,67 @@ if (mainVideo) {
     mainVideo.playbackRate =
         1;
 
+   
+if (mainVideo) {
 
-if (shouldAutoplay) {
+    mainVideo.volume =
+        1;
 
-    const startAutoplay = () => {
+    mainVideo.muted =
+        true;
 
-        mainVideo.muted = false;
+    mainVideo.playbackRate =
+        1;
 
-        const playPromise =
-            mainVideo.play();
 
-        if (
-            playPromise !== undefined
-        ) {
+    if (shouldAutoplay) {
 
-            playPromise.catch(
-                error => {
+        const startAutoplay = () => {
 
-                    console.log(
-                        "Autoplay dengan suara diblokir, mencoba muted:",
-                        error
-                    );
+            const playPromise =
+                mainVideo.play();
 
-                    mainVideo.muted = true;
+            if (
+                playPromise !== undefined
+            ) {
 
-                    const mutedPlayPromise =
-                        mainVideo.play();
+                playPromise.catch(
+                    error => {
 
-                    if (
-                        mutedPlayPromise !== undefined
-                    ) {
-
-                        mutedPlayPromise.catch(
-                            mutedError => {
-
-                                console.log(
-                                    "Autoplay muted juga gagal:",
-                                    mutedError
-                                );
-
-                            }
+                        console.log(
+                            "Autoplay diblokir browser:",
+                            error
                         );
 
                     }
+                );
 
+            }
+
+        };
+
+
+        if (
+            mainVideo.readyState >= 2
+        ) {
+
+            startAutoplay();
+
+        }
+
+        else {
+
+            mainVideo.addEventListener(
+                "canplay",
+                startAutoplay,
+                {
+                    once: true
                 }
             );
 
         }
 
-    };
-
-
-    if (
-        mainVideo.readyState >= 2
-    ) {
-
-        startAutoplay();
-
     }
-    else {
-
-        mainVideo.addEventListener(
-            "canplay",
-            startAutoplay,
-            {
-                once: true
-            }
-        );
-
-    }
-
-}
 
 
     updatePlayButtons();
@@ -2833,6 +2822,8 @@ if (shouldAutoplay) {
     updateProgress();
 
     showControls();
+}
+
 
 
     /* ==================================================
