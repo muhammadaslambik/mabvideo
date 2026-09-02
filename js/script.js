@@ -949,7 +949,7 @@ else {
 
                         <div
                             id="settingsMenu"
-                            class="settings-menu"
+                             class="settings-menu hidden"
                             aria-hidden="true"
                         >
 
