@@ -927,9 +927,9 @@ else {
                     <!-- SETTINGS -->
 
                     <div
-                        class="settings-container"
-                        id="settingsContainer"
-                    >
+    class="settings-wrapper"
+    id="settingsWrapper"
+>
 
                         <button
                             id="settingsButton"
@@ -1386,26 +1386,21 @@ else {
     }
 
 
-    function closeSettings() {
+function closeSettings() {
 
-        if (!settingsMenu) {
-
-            return;
-
-        }
-
-
-        settingsMenu.classList.remove(
-            "show"
-        );
-
-
-        settingsMenu.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
+    if (!settingsMenu) {
+        return;
     }
+
+    settingsMenu.classList.add(
+        "hidden"
+    );
+
+    settingsMenu.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+}
 
 
     function hideControls() {
@@ -2084,18 +2079,17 @@ else {
 
         else {
 
-            settingsMenu.classList.add(
-                "show"
-            );
+    settingsMenu.classList.remove(
+        "hidden"
+    );
 
 
-            settingsMenu.setAttribute(
-                "aria-hidden",
-                "false"
-            );
+    settingsMenu.setAttribute(
+        "aria-hidden",
+        "false"
+    );
 
-        }
-
+}
 
         showControls();
 
