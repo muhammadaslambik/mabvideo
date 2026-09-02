@@ -856,6 +856,28 @@ else {
     id="videoProgressContainer"
 >
 
+    <!-- SEEK PREVIEW -->
+
+    <div
+        class="seek-preview hidden"
+        id="seekPreview"
+    >
+
+        <div
+            class="seek-preview-image"
+            id="seekPreviewImage"
+        ></div>
+
+        <div
+            class="seek-preview-time"
+            id="seekPreviewTime"
+        >
+            0:00
+        </div>
+
+    </div>
+
+
     <div
         class="video-progress"
         id="videoProgress"
@@ -868,7 +890,6 @@ else {
     ></div>
 
 </div>
-
 
                 <!-- CONTROL BAR -->
 
