@@ -771,82 +771,106 @@ if (
         `;
 
 
-        /* ==================================================
-           VIDEO WITHOUT FILE
-        ================================================== */
+     /* ==================================================
+   VIDEO WITHOUT FILE
+================================================== */
 
-        if (!selectedVideo.videoUrl) {
+if (!selectedVideo.videoUrl) {
 
-            watchVideoPlayer.innerHTML = `
+    watchVideoPlayer.innerHTML = `
+        <div class="video-container video-error-state">
 
-                <div class="video-container">
+            <div class="video-message">
+
+                Video ini belum memiliki file (videoUrl).
+
+                <br>
+
+                Tambahkan properti "videoUrl"
+                pada data video ini di script.js.
+
+            </div>
+
+        </div>
+    `;
+
+}
+
+else {
+
+    /* ==================================================
+       CREATE YOUTUBE-STYLE VIDEO PLAYER
+    ================================================== */
+
+    watchVideoPlayer.innerHTML = `
+
+        <div
+            class="video-container youtube-player"
+            id="youtubePlayer"
+        >
+
+            <video
+                id="mainVideo"
+                class="main-video"
+                preload="metadata"
+                playsinline
+            >
+
+                <source
+                    src="${selectedVideo.videoUrl}"
+                    type="video/mp4"
+                >
+
+                Browser kamu tidak mendukung
+                video HTML5.
+
+            </video>
+
+
+            <!-- CENTER PLAY BUTTON -->
+
+            <button
+                id="playButton"
+                class="play-button"
+                aria-label="Play video"
+                type="button"
+            >
+                ▶
+            </button>
+
+
+            <!-- VIDEO CONTROLS -->
+
+            <div
+                class="video-controls"
+                id="videoControls"
+            >
+
+                <!-- PROGRESS BAR -->
+
+                <div
+                    class="video-progress-container"
+                    id="videoProgressContainer"
+                >
 
                     <div
-                        style="
-                            width:100%;
-                            height:100%;
-                            display:flex;
-                            align-items:center;
-                            justify-content:center;
-                            color:#ffffff;
-                            font-size:14px;
-                            text-align:center;
-                            padding:20px;
-                        "
-                    >
-
-                        Video ini belum memiliki
-                        file (videoUrl).
-
-                        <br>
-
-                        Tambahkan properti
-                        "videoUrl" pada data video
-                        ini di script.js.
-
-                    </div>
+                        class="video-progress"
+                        id="videoProgress"
+                    ></div>
 
                 </div>
 
-            `;
 
-        }
+                <!-- CONTROL BAR -->
 
-        else {
-
-            /* ==================================================
-               CREATE VIDEO PLAYER
-            ================================================== */
-
-            watchVideoPlayer.innerHTML = `
-
-                <div class="video-container">
-
-                    <video
-                        id="mainVideo"
-                        class="main-video"
-                        preload="metadata"
-                        playsinline
-                    >
-
-                        <source
-                            src="${selectedVideo.videoUrl}"
-                            type="video/mp4"
-                        >
-
-                        Browser kamu tidak mendukung
-                        video HTML5.
-
-                    </video>
+                <div class="control-bar">
 
 
-                    <!-- ==================================================
-                         PLAY BUTTON
-                    ================================================== -->
+                    <!-- PLAY / PAUSE -->
 
                     <button
-                        id="playButton"
-                        class="play-button"
+                        id="controlPlayButton"
+                        class="control-button"
                         aria-label="Play video"
                         type="button"
                     >
@@ -854,9 +878,7 @@ if (
                     </button>
 
 
-                    <!-- ==================================================
-                         VOLUME CONTROLS
-                    ================================================== -->
+                    <!-- VOLUME -->
 
                     <div
                         class="volume-controls"
@@ -865,7 +887,7 @@ if (
 
                         <button
                             id="muteButton"
-                            class="mute-button"
+                            class="mute-button control-button"
                             aria-label="Mute video"
                             type="button"
                         >
@@ -887,955 +909,354 @@ if (
                     </div>
 
 
-                    <!-- ==================================================
-                         FULLSCREEN BUTTON
-                    ================================================== -->
+                    <!-- TIME -->
+
+                    <div
+                        class="video-time"
+                        id="videoTime"
+                    >
+                        0:00 / 0:00
+                    </div>
+
+
+                    <!-- SPACER -->
+
+                    <div class="controls-spacer"></div>
+
+
+                    <!-- SETTINGS -->
+
+                    <div
+                        class="settings-container"
+                        id="settingsContainer"
+                    >
+
+                        <button
+                            id="settingsButton"
+                            class="control-button"
+                            aria-label="Settings"
+                            type="button"
+                        >
+                            ⚙
+                        </button>
+
+
+                        <div
+                            id="settingsMenu"
+                            class="settings-menu"
+                            aria-hidden="true"
+                        >
+
+                            <div class="settings-title">
+                                Playback speed
+                            </div>
+
+
+                            <button
+                                class="speed-option"
+                                data-speed="0.25"
+                                type="button"
+                            >
+                                0.25x
+                            </button>
+
+
+                            <button
+                                class="speed-option"
+                                data-speed="0.5"
+                                type="button"
+                            >
+                                0.5x
+                            </button>
+
+
+                            <button
+                                class="speed-option"
+                                data-speed="0.75"
+                                type="button"
+                            >
+                                0.75x
+                            </button>
+
+
+                            <button
+                                class="speed-option active"
+                                data-speed="1"
+                                type="button"
+                            >
+                                Normal
+                            </button>
+
+
+                            <button
+                                class="speed-option"
+                                data-speed="1.25"
+                                type="button"
+                            >
+                                1.25x
+                            </button>
+
+
+                            <button
+                                class="speed-option"
+                                data-speed="1.5"
+                                type="button"
+                            >
+                                1.5x
+                            </button>
+
+
+                            <button
+                                class="speed-option"
+                                data-speed="1.75"
+                                type="button"
+                            >
+                                1.75x
+                            </button>
+
+
+                            <button
+                                class="speed-option"
+                                data-speed="2"
+                                type="button"
+                            >
+                                2x
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FULLSCREEN -->
 
                     <button
                         id="fullscreenButton"
-                        class="fullscreen-button"
+                        class="control-button fullscreen-button"
                         aria-label="Fullscreen"
                         type="button"
                     >
                         ⛶
                     </button>
 
-
-                    <!-- ==================================================
-                         PROGRESS BAR
-                    ================================================== -->
-
-                    <div
-                        class="video-progress-container"
-                        id="videoProgressContainer"
-                    >
-
-                        <div
-                            class="video-progress"
-                            id="videoProgress"
-                        ></div>
-
-                    </div>
-
                 </div>
 
-            `;
+            </div>
+
+        </div>
+
+    `;
 
 
-            /* ==================================================
-               VIDEO ELEMENTS
-            ================================================== */
+    /* ==================================================
+       VIDEO ELEMENTS
+    ================================================== */
 
-            const mainVideo =
-                document.getElementById(
-                    "mainVideo"
-                );
+    const mainVideo =
+        document.getElementById("mainVideo");
+
+    const youtubePlayer =
+        document.getElementById("youtubePlayer");
+
+    const videoControls =
+        document.getElementById("videoControls");
+
+    const playButton =
+        document.getElementById("playButton");
+
+    const controlPlayButton =
+        document.getElementById("controlPlayButton");
+
+    const videoProgressContainer =
+        document.getElementById(
+            "videoProgressContainer"
+        );
+
+    const videoProgress =
+        document.getElementById("videoProgress");
+
+    const muteButton =
+        document.getElementById("muteButton");
+
+    const volumeSlider =
+        document.getElementById("volumeSlider");
+
+    const videoTime =
+        document.getElementById("videoTime");
+
+    const settingsButton =
+        document.getElementById("settingsButton");
+
+    const settingsMenu =
+        document.getElementById("settingsMenu");
+
+    const fullscreenButton =
+        document.getElementById(
+            "fullscreenButton"
+        );
+
+    const speedOptions =
+        document.querySelectorAll(
+            ".speed-option"
+        );
 
 
-            const playButton =
-                document.getElementById(
-                    "playButton"
-                );
+    /* ==================================================
+       TIME FORMAT
+    ================================================== */
+
+    function formatVideoTime(seconds) {
+
+        if (!Number.isFinite(seconds)) {
+
+            return "0:00";
+
+        }
 
 
-            const videoProgressContainer =
-                document.getElementById(
-                    "videoProgressContainer"
-                );
+        seconds =
+            Math.max(
+                0,
+                Math.floor(seconds)
+            );
 
 
-            const videoProgress =
-                document.getElementById(
-                    "videoProgress"
-                );
+        const hours =
+            Math.floor(
+                seconds / 3600
+            );
 
 
-            const muteButton =
-                document.getElementById(
-                    "muteButton"
-                );
+        const minutes =
+            Math.floor(
+                (seconds % 3600) / 60
+            );
 
 
-            const volumeSlider =
-                document.getElementById(
-                    "volumeSlider"
-                );
+        const remainingSeconds =
+            seconds % 60;
 
 
-            const fullscreenButton =
-                document.getElementById(
-                    "fullscreenButton"
-                );
+        if (hours > 0) {
+
+            return (
+                hours +
+                ":" +
+                String(minutes).padStart(2, "0") +
+                ":" +
+                String(remainingSeconds).padStart(2, "0")
+            );
+
+        }
 
 
-            /* ==================================================
-               PLAY / PAUSE
-            ================================================== */
+        return (
+            minutes +
+            ":" +
+            String(remainingSeconds).padStart(2, "0")
+        );
+
+    }
+
+
+    /* ==================================================
+       UPDATE VIDEO TIME
+    ================================================== */
+
+    function updateVideoTime() {
+
+        if (
+            !mainVideo ||
+            !videoTime
+        ) {
+
+            return;
+
+        }
+
+
+        const currentTime =
+            formatVideoTime(
+                mainVideo.currentTime
+            );
+
+
+        const duration =
+            formatVideoTime(
+                mainVideo.duration
+            );
+
+
+        videoTime.textContent =
+            `${currentTime} / ${duration}`;
+
+    }
+
+
+    /* ==================================================
+       UPDATE PROGRESS
+    ================================================== */
+
+    function updateProgress() {
+
+        if (
+            !mainVideo ||
+            !videoProgress ||
+            !Number.isFinite(mainVideo.duration) ||
+            mainVideo.duration <= 0
+        ) {
+
+            return;
+
+        }
+
+
+        const percentage =
+            (
+                mainVideo.currentTime /
+                mainVideo.duration
+            ) * 100;
+
+
+        videoProgress.style.width =
+            `${percentage}%`;
+
+    }
+
+
+    /* ==================================================
+       PLAY / PAUSE
+    ================================================== */
+
+    function togglePlayPause() {
+
+        if (!mainVideo) {
+
+            return;
+
+        }
+
+
+        if (
+            mainVideo.paused ||
+            mainVideo.ended
+        ) {
+
+            const playPromise =
+                mainVideo.play();
+
 
             if (
-                mainVideo &&
-                playButton
+                playPromise !== undefined
             ) {
 
-                let hidePlayButtonTimer;
+                playPromise.catch(
+                    error => {
 
-
-                function togglePlayPause() {
-
-                    if (mainVideo.paused) {
-
-                        const playPromise =
-                            mainVideo.play();
-
-
-                        if (
-                            playPromise !== undefined
-                        ) {
-
-                            playPromise.catch(
-                                error => {
-
-                                    console.log(
-                                        "Play dibatalkan:",
-                                        error
-                                    );
-
-                                }
-                            );
-
-                        }
-
-                    }
-
-                    else {
-
-                        mainVideo.pause();
-
-                    }
-
-                }
-
-
-                function flashPlayButton() {
-
-                    playButton.classList.remove(
-                        "hidden"
-                    );
-
-
-                    clearTimeout(
-                        hidePlayButtonTimer
-                    );
-
-
-                    hidePlayButtonTimer =
-                        setTimeout(
-                            () => {
-
-                                playButton.classList.add(
-                                    "hidden"
-                                );
-
-                            },
-                            350
+                        console.log(
+                            "Play dibatalkan:",
+                            error
                         );
-
-                }
-
-
-                /* ==================================================
-                   CLICK VIDEO
-                ================================================== */
-
-                mainVideo.addEventListener(
-                    "click",
-                    () => {
-
-                        togglePlayPause();
-
-                        flashPlayButton();
-
-                    }
-                );
-
-
-                /* ==================================================
-                   CLICK PLAY BUTTON
-                ================================================== */
-
-                playButton.addEventListener(
-                    "click",
-                    event => {
-
-                        event.stopPropagation();
-
-
-                        togglePlayPause();
-
-                        flashPlayButton();
-
-                    }
-                );
-
-
-                /* ==================================================
-                   PLAY EVENT
-                ================================================== */
-
-                mainVideo.addEventListener(
-                    "play",
-                    () => {
-
-                        playButton.textContent =
-                            "❚❚";
-
-
-                        playButton.setAttribute(
-                            "aria-label",
-                            "Pause video"
-                        );
-
-                    }
-                );
-
-
-                /* ==================================================
-                   PAUSE EVENT
-                ================================================== */
-
-                mainVideo.addEventListener(
-                    "pause",
-                    () => {
-
-                        playButton.textContent =
-                            "▶";
-
-
-                        playButton.setAttribute(
-                            "aria-label",
-                            "Play video"
-                        );
-
-                    }
-                );
-
-
-                /* ==================================================
-                   ENDED EVENT
-                ================================================== */
-
-                mainVideo.addEventListener(
-                    "ended",
-                    () => {
-
-                        clearTimeout(
-                            hidePlayButtonTimer
-                        );
-
-
-                        playButton.textContent =
-                            "▶";
-
-
-                        playButton.setAttribute(
-                            "aria-label",
-                            "Play video"
-                        );
-
-
-                        playButton.classList.remove(
-                            "hidden"
-                        );
-
-                    }
-                );
-
-            }
-
-
-            /* ==================================================
-               VOLUME + MUTE
-            ================================================== */
-
-            if (
-                mainVideo &&
-                muteButton &&
-                volumeSlider
-            ) {
-
-                /* ==================================================
-                   SET VOLUME
-                ================================================== */
-
-                function setVideoVolume(
-                    volume
-                ) {
-
-                    volume = Math.max(
-                        0,
-                        Math.min(
-                            1,
-                            volume
-                        )
-                    );
-
-
-                    mainVideo.volume =
-                        volume;
-
-
-                    volumeSlider.value =
-                        volume;
-
-
-                    if (volume <= 0) {
-
-                        mainVideo.muted =
-                            true;
-
-
-                        muteButton.textContent =
-                            "🔇";
-
-
-                        muteButton.setAttribute(
-                            "aria-label",
-                            "Unmute video"
-                        );
-
-                    }
-
-                    else {
-
-                        mainVideo.muted =
-                            false;
-
-
-                        muteButton.textContent =
-                            "🔊";
-
-
-                        muteButton.setAttribute(
-                            "aria-label",
-                            "Mute video"
-                        );
-
-                    }
-
-                }
-
-
-                /* ==================================================
-                   VOLUME SLIDER - INPUT
-                   REAL-TIME MOUSE + TOUCH
-                ================================================== */
-
-                volumeSlider.addEventListener(
-                    "input",
-                    event => {
-
-                        event.stopPropagation();
-
-
-                        const volume =
-                            Number(
-                                event.target.value
-                            );
-
-
-                        setVideoVolume(
-                            volume
-                        );
-
-                    }
-                );
-
-
-                /* ==================================================
-                   VOLUME SLIDER
-                   POINTER EVENTS
-                ================================================== */
-
-                volumeSlider.addEventListener(
-                    "pointerdown",
-                    event => {
-
-                        event.stopPropagation();
-
-
-                        if (
-                            volumeSlider.setPointerCapture
-                        ) {
-
-                            volumeSlider.setPointerCapture(
-                                event.pointerId
-                            );
-
-                        }
-
-                    }
-                );
-
-
-                volumeSlider.addEventListener(
-                    "pointermove",
-                    event => {
-
-                        if (
-                            event.buttons !== 0
-                        ) {
-
-                            event.stopPropagation();
-
-                        }
-
-                    }
-                );
-
-
-                /* ==================================================
-                   MUTE BUTTON
-                ================================================== */
-
-                muteButton.addEventListener(
-                    "click",
-                    event => {
-
-                        event.stopPropagation();
-
-
-                        if (
-                            mainVideo.muted ||
-                            mainVideo.volume === 0
-                        ) {
-
-                            const restoredVolume =
-                                mainVideo.volume > 0
-                                    ? mainVideo.volume
-                                    : 1;
-
-
-                            mainVideo.muted =
-                                false;
-
-
-                            mainVideo.volume =
-                                restoredVolume;
-
-
-                            volumeSlider.value =
-                                restoredVolume;
-
-
-                            muteButton.textContent =
-                                "🔊";
-
-
-                            muteButton.setAttribute(
-                                "aria-label",
-                                "Mute video"
-                            );
-
-                        }
-
-                        else {
-
-                            mainVideo.muted =
-                                true;
-
-
-                            muteButton.textContent =
-                                "🔇";
-
-
-                            muteButton.setAttribute(
-                                "aria-label",
-                                "Unmute video"
-                            );
-
-                        }
-
-                    }
-                );
-
-
-                /* ==================================================
-                   VOLUME CHANGE
-                ================================================== */
-
-                mainVideo.addEventListener(
-                    "volumechange",
-                    () => {
-
-                        if (
-                            mainVideo.muted ||
-                            mainVideo.volume === 0
-                        ) {
-
-                            muteButton.textContent =
-                                "🔇";
-
-
-                            muteButton.setAttribute(
-                                "aria-label",
-                                "Unmute video"
-                            );
-
-                        }
-
-                        else {
-
-                            muteButton.textContent =
-                                "🔊";
-
-
-                            muteButton.setAttribute(
-                                "aria-label",
-                                "Mute video"
-                            );
-
-
-                            volumeSlider.value =
-                                mainVideo.volume;
-
-                        }
-
-                    }
-                );
-
-            }
-
-
-            /* ==================================================
-               PROGRESS BAR
-               REAL-TIME SEEK
-            ================================================== */
-
-            if (
-                mainVideo &&
-                videoProgressContainer &&
-                videoProgress
-            ) {
-
-                let isSeeking =
-                    false;
-
-
-                /* ==================================================
-                   UPDATE PROGRESS
-                ================================================== */
-
-                function updateProgress() {
-
-                    if (
-                        !mainVideo.duration ||
-                        isNaN(
-                            mainVideo.duration
-                        )
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    const progress =
-                        (
-                            mainVideo.currentTime /
-                            mainVideo.duration
-                        ) * 100;
-
-
-                    videoProgress.style.width =
-                        `${progress}%`;
-
-                }
-
-
-                /* ==================================================
-                   GET SEEK POSITION
-                ================================================== */
-
-                function getSeekPosition(
-                    clientX
-                ) {
-
-                    const rect =
-                        videoProgressContainer
-                            .getBoundingClientRect();
-
-
-                    let percentage =
-                        (
-                            clientX -
-                            rect.left
-                        ) /
-                        rect.width;
-
-
-                    /* ==========================
-                       LIMIT 0 - 100%
-                    ========================== */
-
-                    percentage =
-                        Math.max(
-                            0,
-                            Math.min(
-                                1,
-                                percentage
-                            )
-                        );
-
-
-                    return percentage;
-
-                }
-
-
-                /* ==================================================
-                   SEEK TO POSITION
-                ================================================== */
-
-                function seekToPosition(
-                    clientX
-                ) {
-
-                    if (
-                        !mainVideo.duration ||
-                        isNaN(
-                            mainVideo.duration
-                        )
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    const percentage =
-                        getSeekPosition(
-                            clientX
-                        );
-
-
-                    mainVideo.currentTime =
-                        percentage *
-                        mainVideo.duration;
-
-
-                    videoProgress.style.width =
-                        `${percentage * 100}%`;
-
-                }
-
-
-                /* ==================================================
-                   TIME UPDATE
-                ================================================== */
-
-                mainVideo.addEventListener(
-                    "timeupdate",
-                    () => {
-
-                        if (!isSeeking) {
-
-                            updateProgress();
-
-                        }
-
-                    }
-                );
-
-
-                /* ==================================================
-                   POINTER DOWN
-                   MOUSE + TOUCH
-                ================================================== */
-
-                videoProgressContainer.addEventListener(
-                    "pointerdown",
-                    event => {
-
-                        event.stopPropagation();
-
-
-                        isSeeking =
-                            true;
-
-
-                        if (
-                            videoProgressContainer.setPointerCapture
-                        ) {
-
-                            videoProgressContainer.setPointerCapture(
-                                event.pointerId
-                            );
-
-                        }
-
-
-                        seekToPosition(
-                            event.clientX
-                        );
-
-                    }
-                );
-
-
-                /* ==================================================
-                   POINTER MOVE
-                   REAL-TIME SEEK
-                ================================================== */
-
-                videoProgressContainer.addEventListener(
-                    "pointermove",
-                    event => {
-
-                        if (!isSeeking) {
-
-                            return;
-
-                        }
-
-
-                        event.stopPropagation();
-
-
-                        seekToPosition(
-                            event.clientX
-                        );
-
-                    }
-                );
-
-
-                /* ==================================================
-                   POINTER UP
-                ================================================== */
-
-                function finishSeeking(
-                    event
-                ) {
-
-                    if (!isSeeking) {
-
-                        return;
-
-                    }
-
-
-                    event.stopPropagation();
-
-
-                    seekToPosition(
-                        event.clientX
-                    );
-
-
-                    isSeeking =
-                        false;
-
-                }
-
-
-                videoProgressContainer.addEventListener(
-                    "pointerup",
-                    finishSeeking
-                );
-
-
-                videoProgressContainer.addEventListener(
-                    "pointercancel",
-                    finishSeeking
-                );
-
-
-                /* ==================================================
-                   CLICK
-                   FALLBACK DESKTOP
-                ================================================== */
-
-                videoProgressContainer.addEventListener(
-                    "click",
-                    event => {
-
-                        event.stopPropagation();
-
-
-                        /*
-                         * Pointer events sudah menangani
-                         * sebagian besar interaksi.
-                         *
-                         * Event click tetap dipertahankan
-                         * sebagai fallback.
-                         */
-
-                        seekToPosition(
-                            event.clientX
-                        );
-
-                    }
-                );
-
-            }
-
-
-            /* ==================================================
-               FULLSCREEN
-            ================================================== */
-
-            if (
-                mainVideo &&
-                fullscreenButton
-            ) {
-
-                fullscreenButton.addEventListener(
-                    "click",
-                    event => {
-
-                        event.stopPropagation();
-
-
-                        const videoContainer =
-                            mainVideo.closest(
-                                ".video-container"
-                            );
-
-
-                        if (!videoContainer) {
-
-                            return;
-
-                        }
-
-
-                        /* ==========================
-                           ENTER FULLSCREEN
-                        ========================== */
-
-                        if (
-                            !document.fullscreenElement
-                        ) {
-
-                            if (
-                                videoContainer.requestFullscreen
-                            ) {
-
-                                videoContainer.requestFullscreen();
-
-                            }
-
-                        }
-
-                        /* ==========================
-                           EXIT FULLSCREEN
-                        ========================== */
-
-                        else {
-
-                            if (
-                                document.exitFullscreen
-                            ) {
-
-                                document.exitFullscreen();
-
-                            }
-
-                        }
-
-                    }
-                );
-
-
-                /* ==================================================
-                   FULLSCREEN CHANGE
-                ================================================== */
-
-                document.addEventListener(
-                    "fullscreenchange",
-                    () => {
-
-                        if (
-                            document.fullscreenElement
-                        ) {
-
-                            fullscreenButton.textContent =
-                                "⛶";
-
-
-                            fullscreenButton.setAttribute(
-                                "aria-label",
-                                "Exit fullscreen"
-                            );
-
-                        }
-
-                        else {
-
-                            fullscreenButton.textContent =
-                                "⛶";
-
-
-                            fullscreenButton.setAttribute(
-                                "aria-label",
-                                "Fullscreen"
-                            );
-
-                        }
-
-                    }
-                );
-
-            }
-
-
-            /* ==================================================
-               VIDEO ERROR
-            ================================================== */
-
-            if (mainVideo) {
-
-                mainVideo.addEventListener(
-                    "error",
-                    () => {
-
-                        console.error(
-                            "Video gagal dimuat:",
-                            selectedVideo.videoUrl
-                        );
-
-
-                        watchVideoPlayer.innerHTML = `
-
-                            <div class="video-container">
-
-                                <div
-                                    style="
-                                        width:100%;
-                                        height:100%;
-                                        display:flex;
-                                        align-items:center;
-                                        justify-content:center;
-                                        color:#ffffff;
-                                        font-size:14px;
-                                        text-align:center;
-                                        padding:20px;
-                                    "
-                                >
-
-                                    Video gagal dimuat.
-
-                                    <br>
-
-                                    Pastikan file
-                                    "${selectedVideo.videoUrl}"
-                                    ada di folder yang benar.
-
-                                </div>
-
-                            </div>
-
-                        `;
 
                     }
                 );
@@ -1844,6 +1265,1464 @@ if (
 
         }
 
+        else {
+
+            mainVideo.pause();
+
+        }
+
+    }
+
+
+    /* ==================================================
+       UPDATE PLAY BUTTONS
+    ================================================== */
+
+    function updatePlayButtons() {
+
+        if (!mainVideo) {
+
+            return;
+
+        }
+
+
+        const isPlaying =
+            !mainVideo.paused &&
+            !mainVideo.ended;
+
+
+        const buttonText =
+            isPlaying
+                ? "❚❚"
+                : "▶";
+
+
+        const buttonLabel =
+            isPlaying
+                ? "Pause video"
+                : "Play video";
+
+
+        if (playButton) {
+
+            playButton.textContent =
+                buttonText;
+
+
+            playButton.setAttribute(
+                "aria-label",
+                buttonLabel
+            );
+
+        }
+
+
+        if (controlPlayButton) {
+
+            controlPlayButton.textContent =
+                buttonText;
+
+
+            controlPlayButton.setAttribute(
+                "aria-label",
+                buttonLabel
+            );
+
+        }
+
+    }
+
+
+    /* ==================================================
+       AUTO HIDE TIMER
+    ================================================== */
+
+    let hideControlsTimer = null;
+
+
+    function clearHideControlsTimer() {
+
+        if (hideControlsTimer) {
+
+            clearTimeout(
+                hideControlsTimer
+            );
+
+
+            hideControlsTimer =
+                null;
+
+        }
+
+    }
+
+
+    function showControls() {
+
+        if (!youtubePlayer) {
+
+            return;
+
+        }
+
+
+        youtubePlayer.classList.add(
+            "controls-visible"
+        );
+
+
+        if (videoControls) {
+
+            videoControls.classList.remove(
+                "hidden"
+            );
+
+        }
+
+
+        clearHideControlsTimer();
+
+    }
+
+
+    function closeSettings() {
+
+        if (!settingsMenu) {
+
+            return;
+
+        }
+
+
+        settingsMenu.classList.remove(
+            "show"
+        );
+
+
+        settingsMenu.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+
+
+    function hideControls() {
+
+        if (
+            !youtubePlayer ||
+            !mainVideo ||
+            mainVideo.paused
+        ) {
+
+            return;
+
+        }
+
+
+        closeSettings();
+
+
+        youtubePlayer.classList.remove(
+            "controls-visible"
+        );
+
+
+        if (videoControls) {
+
+            videoControls.classList.add(
+                "hidden"
+            );
+
+        }
+
+    }
+
+
+    function scheduleHideControls() {
+
+        clearHideControlsTimer();
+
+
+        if (
+            !mainVideo ||
+            mainVideo.paused
+        ) {
+
+            return;
+
+        }
+
+
+        hideControlsTimer =
+            setTimeout(
+                hideControls,
+                3000
+            );
+
+    }
+
+
+    /* ==================================================
+       CENTER PLAY BUTTON
+    ================================================== */
+
+    if (
+        mainVideo &&
+        playButton
+    ) {
+
+        playButton.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                togglePlayPause();
+
+                showControls();
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
+       CONTROL BAR PLAY BUTTON
+    ================================================== */
+
+    if (
+        mainVideo &&
+        controlPlayButton
+    ) {
+
+        controlPlayButton.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                togglePlayPause();
+
+                showControls();
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
+       CLICK VIDEO
+    ================================================== */
+
+    if (mainVideo) {
+
+        mainVideo.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                togglePlayPause();
+
+                showControls();
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
+       VIDEO EVENTS
+    ================================================== */
+
+    if (mainVideo) {
+
+        mainVideo.addEventListener(
+            "play",
+            () => {
+
+                updatePlayButtons();
+
+                showControls();
+
+                scheduleHideControls();
+
+            }
+        );
+
+
+        mainVideo.addEventListener(
+            "pause",
+            () => {
+
+                updatePlayButtons();
+
+                showControls();
+
+                clearHideControlsTimer();
+
+            }
+        );
+
+
+        mainVideo.addEventListener(
+            "ended",
+            () => {
+
+                updatePlayButtons();
+
+                showControls();
+
+                clearHideControlsTimer();
+
+            }
+        );
+
+
+        mainVideo.addEventListener(
+            "loadedmetadata",
+            () => {
+
+                updateVideoTime();
+
+                updateProgress();
+
+            }
+        );
+
+
+        mainVideo.addEventListener(
+            "durationchange",
+            () => {
+
+                updateVideoTime();
+
+            }
+        );
+
+
+        mainVideo.addEventListener(
+            "timeupdate",
+            () => {
+
+                updateVideoTime();
+
+                updateProgress();
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
+       VOLUME
+    ================================================== */
+
+    function updateVolumeButton() {
+
+        if (
+            !mainVideo ||
+            !muteButton
+        ) {
+
+            return;
+
+        }
+
+
+        if (
+            mainVideo.muted ||
+            mainVideo.volume === 0
+        ) {
+
+            muteButton.textContent =
+                "🔇";
+
+
+            muteButton.setAttribute(
+                "aria-label",
+                "Unmute video"
+            );
+
+        }
+
+        else {
+
+            muteButton.textContent =
+                "🔊";
+
+
+            muteButton.setAttribute(
+                "aria-label",
+                "Mute video"
+            );
+
+        }
+
+    }
+
+
+    function setVideoVolume(volume) {
+
+        if (!mainVideo) {
+
+            return;
+
+        }
+
+
+        volume =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    Number(volume)
+                )
+            );
+
+
+        mainVideo.volume =
+            volume;
+
+
+        if (
+            volume > 0 &&
+            mainVideo.muted
+        ) {
+
+            mainVideo.muted =
+                false;
+
+        }
+
+
+        if (volume === 0) {
+
+            mainVideo.muted =
+                true;
+
+        }
+
+
+        if (volumeSlider) {
+
+            volumeSlider.value =
+                volume;
+
+        }
+
+
+        updateVolumeButton();
+
+    }
+
+
+    if (
+        mainVideo &&
+        volumeSlider
+    ) {
+
+        volumeSlider.addEventListener(
+            "input",
+            event => {
+
+                event.stopPropagation();
+
+                setVideoVolume(
+                    event.target.value
+                );
+
+                showControls();
+
+            }
+        );
+
+    }
+
+
+    if (
+        mainVideo &&
+        muteButton
+    ) {
+
+        muteButton.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+
+                if (
+                    mainVideo.muted ||
+                    mainVideo.volume === 0
+                ) {
+
+                    const restoredVolume =
+                        mainVideo.volume > 0
+                            ? mainVideo.volume
+                            : 1;
+
+
+                    mainVideo.muted =
+                        false;
+
+
+                    mainVideo.volume =
+                        restoredVolume;
+
+
+                    if (volumeSlider) {
+
+                        volumeSlider.value =
+                            restoredVolume;
+
+                    }
+
+                }
+
+                else {
+
+                    mainVideo.muted =
+                        true;
+
+                }
+
+
+                updateVolumeButton();
+
+                showControls();
+
+            }
+        );
+
+    }
+
+
+    if (mainVideo) {
+
+        mainVideo.addEventListener(
+            "volumechange",
+            () => {
+
+                updateVolumeButton();
+
+
+                if (
+                    volumeSlider &&
+                    !mainVideo.muted
+                ) {
+
+                    volumeSlider.value =
+                        mainVideo.volume;
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
+       PROGRESS SEEK
+    ================================================== */
+
+    let isSeeking = false;
+
+
+    function getSeekPercentage(clientX) {
+
+        if (
+            !videoProgressContainer
+        ) {
+
+            return 0;
+
+        }
+
+
+        const rect =
+            videoProgressContainer
+                .getBoundingClientRect();
+
+
+        if (rect.width <= 0) {
+
+            return 0;
+
+        }
+
+
+        let percentage =
+            (
+                clientX -
+                rect.left
+            ) /
+            rect.width;
+
+
+        percentage =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    percentage
+                )
+            );
+
+
+        return percentage;
+
+    }
+
+
+    function seekToPosition(clientX) {
+
+        if (
+            !mainVideo ||
+            !Number.isFinite(mainVideo.duration) ||
+            mainVideo.duration <= 0
+        ) {
+
+            return;
+
+        }
+
+
+        const percentage =
+            getSeekPercentage(clientX);
+
+
+        mainVideo.currentTime =
+            percentage *
+            mainVideo.duration;
+
+
+        if (videoProgress) {
+
+            videoProgress.style.width =
+                `${percentage * 100}%`;
+
+        }
+
+
+        updateVideoTime();
+
+    }
+
+
+    if (videoProgressContainer) {
+
+        videoProgressContainer.addEventListener(
+            "pointerdown",
+            event => {
+
+                event.stopPropagation();
+
+                isSeeking =
+                    true;
+
+
+                if (
+                    videoProgressContainer.setPointerCapture
+                ) {
+
+                    videoProgressContainer.setPointerCapture(
+                        event.pointerId
+                    );
+
+                }
+
+
+                seekToPosition(
+                    event.clientX
+                );
+
+
+                showControls();
+
+            }
+        );
+
+
+        videoProgressContainer.addEventListener(
+            "pointermove",
+            event => {
+
+                if (!isSeeking) {
+
+                    return;
+
+                }
+
+
+                event.stopPropagation();
+
+
+                seekToPosition(
+                    event.clientX
+                );
+
+            }
+        );
+
+
+        function finishSeeking(event) {
+
+            if (!isSeeking) {
+
+                return;
+
+            }
+
+
+            event.stopPropagation();
+
+
+            seekToPosition(
+                event.clientX
+            );
+
+
+            isSeeking =
+                false;
+
+
+            scheduleHideControls();
+
+        }
+
+
+        videoProgressContainer.addEventListener(
+            "pointerup",
+            finishSeeking
+        );
+
+
+        videoProgressContainer.addEventListener(
+            "pointercancel",
+            finishSeeking
+        );
+
+
+        videoProgressContainer.addEventListener(
+            "lostpointercapture",
+            () => {
+
+                if (!isSeeking) {
+
+                    return;
+
+                }
+
+
+                isSeeking =
+                    false;
+
+
+                scheduleHideControls();
+
+            }
+        );
+
+
+        videoProgressContainer.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                seekToPosition(
+                    event.clientX
+                );
+
+                showControls();
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
+       SETTINGS MENU
+    ================================================== */
+
+    function toggleSettings(event) {
+
+        if (event) {
+
+            event.stopPropagation();
+
+        }
+
+
+        if (!settingsMenu) {
+
+            return;
+
+        }
+
+
+        const isOpen =
+            settingsMenu.classList.contains(
+                "show"
+            );
+
+
+        if (isOpen) {
+
+            closeSettings();
+
+        }
+
+        else {
+
+            settingsMenu.classList.add(
+                "show"
+            );
+
+
+            settingsMenu.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+        }
+
+
+        showControls();
+
+    }
+
+
+    if (settingsButton) {
+
+        settingsButton.addEventListener(
+            "click",
+            toggleSettings
+        );
+
+    }
+
+
+    if (settingsMenu) {
+
+        settingsMenu.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
+       PLAYBACK SPEED
+    ================================================== */
+
+    speedOptions.forEach(
+        option => {
+
+            option.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+
+                    if (!mainVideo) {
+
+                        return;
+
+                    }
+
+
+                    const speed =
+                        Number(
+                            option.dataset.speed
+                        );
+
+
+                    if (
+                        !Number.isFinite(speed)
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    mainVideo.playbackRate =
+                        speed;
+
+
+                    speedOptions.forEach(
+                        item => {
+
+                            item.classList.remove(
+                                "active"
+                            );
+
+                        }
+                    );
+
+
+                    option.classList.add(
+                        "active"
+                    );
+
+
+                    closeSettings();
+
+                    showControls();
+
+                }
+            );
+
+        }
+    );
+
+
+    /* ==================================================
+       CLICK OUTSIDE SETTINGS
+    ================================================== */
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            if (
+                !settingsMenu ||
+                !settingsButton
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                !settingsMenu.contains(
+                    event.target
+                ) &&
+                !settingsButton.contains(
+                    event.target
+                )
+            ) {
+
+                closeSettings();
+
+            }
+
+        }
+    );
+
+
+    /* ==================================================
+       AUTO HIDE CONTROLS
+    ================================================== */
+
+    if (youtubePlayer) {
+
+        youtubePlayer.addEventListener(
+            "mousemove",
+            () => {
+
+                showControls();
+
+                scheduleHideControls();
+
+            }
+        );
+
+
+        youtubePlayer.addEventListener(
+            "touchstart",
+            () => {
+
+                showControls();
+
+                scheduleHideControls();
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        youtubePlayer.addEventListener(
+            "mouseenter",
+            () => {
+
+                showControls();
+
+            }
+        );
+
+
+        youtubePlayer.addEventListener(
+            "mouseleave",
+            () => {
+
+                scheduleHideControls();
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
+       KEYBOARD CONTROLS
+    ================================================== */
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (!mainVideo) {
+
+                return;
+
+            }
+
+
+            const activeElement =
+                document.activeElement;
+
+
+            const tagName =
+                activeElement
+                    ? activeElement.tagName
+                    : "";
+
+
+            if (
+                tagName === "INPUT" ||
+                tagName === "TEXTAREA" ||
+                tagName === "SELECT"
+            ) {
+
+                return;
+
+            }
+
+
+            switch (
+                event.key.toLowerCase()
+            ) {
+
+                case " ":
+                case "k":
+
+                    event.preventDefault();
+
+                    togglePlayPause();
+
+                    showControls();
+
+
+                    if (
+                        !mainVideo.paused
+                    ) {
+
+                        scheduleHideControls();
+
+                    }
+
+                    break;
+
+
+                case "m":
+
+                    event.preventDefault();
+
+
+                    if (
+                        mainVideo.muted ||
+                        mainVideo.volume === 0
+                    ) {
+
+                        mainVideo.muted =
+                            false;
+
+
+                        if (
+                            mainVideo.volume === 0
+                        ) {
+
+                            mainVideo.volume =
+                                1;
+
+                        }
+
+                    }
+
+                    else {
+
+                        mainVideo.muted =
+                            true;
+
+                    }
+
+
+                    updateVolumeButton();
+
+                    showControls();
+
+                    break;
+
+
+                case "f":
+
+                    event.preventDefault();
+
+                    toggleFullscreen();
+
+                    break;
+
+
+                case "arrowleft":
+                case "j":
+
+                    event.preventDefault();
+
+
+                    mainVideo.currentTime =
+                        Math.max(
+                            0,
+                            mainVideo.currentTime - 5
+                        );
+
+
+                    updateVideoTime();
+
+                    updateProgress();
+
+                    showControls();
+
+                    break;
+
+
+                case "arrowright":
+                case "l":
+
+                    event.preventDefault();
+
+
+                    mainVideo.currentTime =
+                        Math.min(
+                            mainVideo.duration || 0,
+                            mainVideo.currentTime + 5
+                        );
+
+
+                    updateVideoTime();
+
+                    updateProgress();
+
+                    showControls();
+
+                    break;
+
+
+                case "arrowup":
+
+                    event.preventDefault();
+
+
+                    setVideoVolume(
+                        mainVideo.volume + 0.05
+                    );
+
+
+                    showControls();
+
+                    break;
+
+
+                case "arrowdown":
+
+                    event.preventDefault();
+
+
+                    setVideoVolume(
+                        mainVideo.volume - 0.05
+                    );
+
+
+                    showControls();
+
+                    break;
+
+
+                case "home":
+
+                    event.preventDefault();
+
+
+                    mainVideo.currentTime =
+                        0;
+
+
+                    updateVideoTime();
+
+                    updateProgress();
+
+                    showControls();
+
+                    break;
+
+
+                case "end":
+
+                    event.preventDefault();
+
+
+                    if (
+                        Number.isFinite(
+                            mainVideo.duration
+                        )
+                    ) {
+
+                        mainVideo.currentTime =
+                            mainVideo.duration;
+
+                    }
+
+
+                    updateVideoTime();
+
+                    updateProgress();
+
+                    showControls();
+
+                    break;
+
+            }
+
+        }
+    );
+
+
+    /* ==================================================
+       FULLSCREEN
+    ================================================== */
+
+    function toggleFullscreen() {
+
+        if (!youtubePlayer) {
+
+            return;
+
+        }
+
+
+        if (
+            !document.fullscreenElement
+        ) {
+
+            if (
+                youtubePlayer.requestFullscreen
+            ) {
+
+                youtubePlayer
+                    .requestFullscreen()
+                    .catch(
+                        error => {
+
+                            console.log(
+                                "Fullscreen gagal:",
+                                error
+                            );
+
+                        }
+                    );
+
+            }
+
+        }
+
+        else {
+
+            if (
+                document.exitFullscreen
+            ) {
+
+                document
+                    .exitFullscreen()
+                    .catch(
+                        error => {
+
+                            console.log(
+                                "Keluar fullscreen gagal:",
+                                error
+                            );
+
+                        }
+                    );
+
+            }
+
+        }
+
+    }
+
+
+    if (fullscreenButton) {
+
+        fullscreenButton.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                toggleFullscreen();
+
+                showControls();
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
+       FULLSCREEN CHANGE
+    ================================================== */
+
+    document.addEventListener(
+        "fullscreenchange",
+        () => {
+
+            if (!fullscreenButton) {
+
+                return;
+
+            }
+
+
+            if (
+                document.fullscreenElement
+            ) {
+
+                fullscreenButton.setAttribute(
+                    "aria-label",
+                    "Exit fullscreen"
+                );
+
+            }
+
+            else {
+
+                fullscreenButton.setAttribute(
+                    "aria-label",
+                    "Fullscreen"
+                );
+
+            }
+
+
+            showControls();
+
+        }
+    );
+
+
+    /* ==================================================
+       INITIAL PLAYER STATE
+    ================================================== */
+
+    if (mainVideo) {
+
+        mainVideo.volume =
+            1;
+
+
+        mainVideo.muted =
+            false;
+
+
+        mainVideo.playbackRate =
+            1;
+
+    }
+
+
+    updatePlayButtons();
+
+    updateVolumeButton();
+
+    updateVideoTime();
+
+    updateProgress();
+
+    showControls();
+
+
+    /* ==================================================
+       VIDEO ERROR
+    ================================================== */
+
+    if (mainVideo) {
+
+        mainVideo.addEventListener(
+            "error",
+            () => {
+
+                console.error(
+                    "Video gagal dimuat:",
+                    selectedVideo.videoUrl
+                );
+
+
+                watchVideoPlayer.innerHTML = `
+
+                    <div class="video-container video-error-state">
+
+                        <div class="video-message">
+
+                            Video gagal dimuat.
+
+                            <br>
+
+                            Pastikan file
+                            "${selectedVideo.videoUrl}"
+                            ada di folder yang benar.
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
+       PLAYER DEBUG
+    ================================================== */
+
+    console.log(
+        "YouTube-style player loaded:",
+        selectedVideo.title
+    );
+
+}
 
         /* ==================================================
            DEBUG
