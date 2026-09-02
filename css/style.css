@@ -1024,6 +1024,47 @@ body.dark .more-button:hover {
     isolation: isolate;
 }
 
+.unmute-prompt {
+    position: absolute;
+
+    left: 16px;
+    bottom: 60px;
+
+    z-index: 20;
+
+    padding: 8px 14px;
+
+    border: none;
+    border-radius: 20px;
+
+    background: rgba(0, 0, 0, 0.75);
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    animation: unmutePulse 1.6s ease-in-out infinite;
+}
+
+.unmute-prompt:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+@keyframes unmutePulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.04);
+    }
+}
+
 .youtube-player:fullscreen {
     width: 100vw;
     height: 100vh;
