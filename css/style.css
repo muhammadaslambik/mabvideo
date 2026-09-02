@@ -1014,59 +1014,271 @@ body.dark .more-button:hover {
     pointer-events: none;
 }
 
-
 /* ==================================================
-   VOLUME CONTROLS
+   MAB-VIDEO YOUTUBE-STYLE PLAYER
 ================================================== */
 
-.volume-controls {
-    position: absolute;
-
-    left: 16px;
-    bottom: 28px;
-
-    z-index: 20;
-
-    display: flex;
-    align-items: center;
-
-    gap: 8px;
-
-    padding: 6px 8px;
-
-    background: rgba(0, 0, 0, 0.55);
-
-    border-radius: 8px;
+.youtube-player {
+    position: relative;
+    background: #000;
+    isolation: isolate;
 }
 
+.youtube-player:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    border-radius: 0;
+    background: #000;
+}
 
-/* ================= MUTE BUTTON ================= */
+.youtube-player:-webkit-full-screen {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    background: #000;
+}
 
-.mute-button {
-    width: 40px;
-    height: 40px;
+.youtube-player .main-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
 
-    border: none;
-    border-radius: 6px;
+.youtube-player .play-button {
+    width: 68px;
+    height: 68px;
+    z-index: 20;
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
 
-    background: transparent;
+.youtube-player.controls-visible .play-button.hidden,
+.youtube-player .play-button.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
 
-    color: #ffffff;
+.video-controls {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    padding: 0 12px 8px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.88));
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
 
-    font-size: 20px;
+.video-controls.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
 
+.video-progress-container {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    height: 4px;
+    margin: 0 0 6px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
     cursor: pointer;
+    z-index: 35;
+    touch-action: none;
+}
 
+.video-progress-container:hover,
+.video-progress-container:focus-visible {
+    height: 6px;
+}
+
+.video-progress {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0;
+    height: 100%;
+    background: #fff;
+    border-radius: inherit;
+    transition: width 0.05s linear;
+}
+
+.video-progress-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+}
+
+.video-progress-container:hover .video-progress-thumb,
+.video-progress-container:focus-visible .video-progress-thumb {
+    opacity: 1;
+}
+
+.control-bar {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.control-left,
+.control-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.control-button {
+    width: 38px;
+    height: 38px;
+    border: 0;
+    background: transparent;
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
 }
 
+.control-button:hover,
+.control-button:focus-visible {
+    background: rgba(255, 255, 255, 0.15);
+    outline: none;
+}
 
-/* ================= VOLUME SLIDER ================= */
+.volume-controls {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
 
 .volume-slider {
-    width: 90px;
-
+    width: 72px;
+    height: 4px;
+    accent-color: #fff;
     cursor: pointer;
 }
+
+.video-time {
+    color: #fff;
+    font-size: 13px;
+    line-height: 1;
+    white-space: nowrap;
+    margin-left: 4px;
+}
+
+.settings-wrapper {
+    position: relative;
+}
+
+.settings-menu {
+    position: absolute;
+    right: 0;
+    bottom: 44px;
+    width: 170px;
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(24, 24, 24, 0.98);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+    color: #fff;
+}
+
+.settings-title {
+    padding: 8px 10px;
+    font-size: 12px;
+    color: #aaa;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    margin-bottom: 4px;
+}
+
+.speed-option {
+    display: block;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    text-align: left;
+    padding: 9px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.speed-option:hover,
+.speed-option.active {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+@media (max-width: 800px) {
+    .youtube-player {
+        border-radius: 0;
+    }
+
+    .video-controls {
+        padding: 0 7px 6px;
+    }
+
+    .control-bar {
+        min-height: 34px;
+        gap: 4px;
+    }
+
+    .control-button {
+        width: 34px;
+        height: 34px;
+        font-size: 18px;
+    }
+
+    .volume-slider {
+        width: 58px;
+    }
+
+    .video-time {
+        font-size: 12px;
+        margin-left: 2px;
+    }
+
+    .video-progress-container {
+        height: 4px;
+        margin-bottom: 3px;
+    }
+
+    .video-progress-thumb {
+        width: 11px;
+        height: 11px;
+    }
+
+    .settings-menu {
+        right: -4px;
+        bottom: 40px;
+        width: 155px;
+    }
+}
+
+@media (max-width: 480px) {
+    .volume-slider {
+        display: none;
+    }
+
+    .video-time {
+        font-size: 11px;
+    }
+}
+
