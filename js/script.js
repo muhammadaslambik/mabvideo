@@ -288,7 +288,7 @@ function renderVideos(videoList) {
             () => {
 
                 window.location.href =
-                    `watch.html?id=${video.id}`;
+                    `watch.html?id=${video.id}&autoplay=1`;
 
             }
         );
@@ -709,18 +709,20 @@ if (
        GET VIDEO ID
     ================================================== */
 
-    const urlParams =
-        new URLSearchParams(
-            window.location.search
-        );
+const urlParams =
+    new URLSearchParams(
+        window.location.search
+    );
 
+const videoId =
+    Number(
+        urlParams.get("id")
+    );
 
-    const videoId =
-        Number(
-            urlParams.get("id")
-        );
+const shouldAutoplay =
+    urlParams.get("autoplay") === "1";
 
-
+    
     /* ==================================================
        FIND VIDEO
     ================================================== */
@@ -2736,20 +2738,67 @@ case "f":
        INITIAL PLAYER STATE
     ================================================== */
 
-    if (mainVideo) {
+if (mainVideo) {
 
-        mainVideo.volume =
-            1;
+    mainVideo.volume =
+        1;
+
+    mainVideo.muted =
+        false;
+
+    mainVideo.playbackRate =
+        1;
 
 
-        mainVideo.muted =
-            false;
+    if (shouldAutoplay) {
+
+        const startAutoplay = () => {
+
+            const playPromise =
+                mainVideo.play();
+
+            if (
+                playPromise !== undefined
+            ) {
+
+                playPromise.catch(
+                    error => {
+
+                        console.log(
+                            "Autoplay diblokir browser:",
+                            error
+                        );
+
+                    }
+                );
+
+            }
+
+        };
 
 
-        mainVideo.playbackRate =
-            1;
+        if (
+            mainVideo.readyState >= 2
+        ) {
+
+            startAutoplay();
+
+        }
+        else {
+
+            mainVideo.addEventListener(
+                "canplay",
+                startAutoplay,
+                {
+                    once: true
+                }
+            );
+
+        }
 
     }
+
+}
 
 
     updatePlayButtons();
