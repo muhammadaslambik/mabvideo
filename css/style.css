@@ -1369,3 +1369,13 @@ body.dark .more-button:hover {
         font-size: 14px;
     }
 }
+
+
+/* ==================================================
+   CURSOR AUTO HIDE
+================================================== */
+
+.youtube-player.cursor-hidden,
+.youtube-player.cursor-hidden * {
+    cursor: none !important;
+}
