@@ -1166,6 +1166,81 @@ body.dark .more-button:hover {
     opacity: 1;
 }
 
+/* ==================================================
+   SEEK TIMELINE PREVIEW
+================================================== */
+
+.seek-preview {
+    position: absolute;
+
+    left: 0;
+    bottom: 14px;
+
+    width: 160px;
+    height: 90px;
+
+    transform: translateX(-50%);
+
+    background: #000;
+
+    border: 2px solid rgba(255, 255, 255, 0.9);
+
+    border-radius: 6px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.5);
+
+    pointer-events: none;
+
+    z-index: 50;
+
+    opacity: 1;
+
+    transition: opacity 0.12s ease;
+}
+
+.seek-preview.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.seek-preview-image {
+    width: 100%;
+    height: 100%;
+
+    background: #111;
+
+    background-size: cover;
+    background-position: center;
+
+    background-repeat: no-repeat;
+}
+
+.seek-preview-time {
+    position: absolute;
+
+    left: 50%;
+    bottom: 4px;
+
+    transform: translateX(-50%);
+
+    padding: 3px 6px;
+
+    border-radius: 4px;
+
+    background: rgba(0, 0, 0, 0.8);
+
+    color: #ffffff;
+
+    font-size: 11px;
+
+    line-height: 1;
+
+    white-space: nowrap;
+}
+
 .control-bar {
     min-height: 38px;
     display: flex;
@@ -1306,6 +1381,16 @@ body.dark .more-button:hover {
         height: 11px;
     }
 
+     .seek-preview {
+        width: 128px;
+        height: 72px;
+        bottom: 14px;
+    }
+
+    .seek-preview-time {
+        font-size: 10px;
+    }
+   
     .settings-menu {
         right: -4px;
         bottom: 40px;
