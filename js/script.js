@@ -1110,6 +1110,15 @@ else {
             "videoProgressThumb"
         );
 
+    const seekPreview =
+        document.getElementById("seekPreview");
+
+    const seekPreviewImage =
+        document.getElementById("seekPreviewImage");
+
+    const seekPreviewTime =
+        document.getElementById("seekPreviewTime");
+   
     const muteButton =
         document.getElementById("muteButton");
 
@@ -1914,12 +1923,383 @@ mainVideo.addEventListener(
     }
 
 
+/* ==================================================
+   PROGRESS SEEK
+================================================== */
+
+let isSeeking = false;
+
+
+/* ==================================================
+   SEEK TIMELINE PREVIEW
+================================================== */
+
+let previewVideo = null;
+let previewCanvas = null;
+let previewContext = null;
+
+let previewReady = false;
+let previewRequestId = 0;
+let previewMoveTimer = null;
+let previewLastClientX = null;
+
+
+/* ==================================================
+   INITIALIZE SEEK PREVIEW
+================================================== */
+
+function initializeSeekPreview() {
+
+    if (
+        !seekPreview ||
+        !seekPreviewImage ||
+        !seekPreviewTime ||
+        !selectedVideo.videoUrl
+    ) {
+
+        return;
+
+    }
+
+
+    previewVideo =
+        document.createElement("video");
+
+
+    previewVideo.preload =
+        "metadata";
+
+
+    previewVideo.muted =
+        true;
+
+
+    previewVideo.playsInline =
+        true;
+
+
+    previewVideo.src =
+        selectedVideo.videoUrl;
+
+
+    previewCanvas =
+        document.createElement("canvas");
+
+
+    previewCanvas.width =
+        320;
+
+
+    previewCanvas.height =
+        180;
+
+
+    previewContext =
+        previewCanvas.getContext("2d");
+
+
+    previewVideo.addEventListener(
+        "loadedmetadata",
+        () => {
+
+            previewReady = true;
+
+        }
+    );
+
+
+    previewVideo.load();
+
+}
+
+
+/* ==================================================
+   HIDE SEEK PREVIEW
+================================================== */
+
+function hideSeekPreview() {
+
+    if (!seekPreview) {
+
+        return;
+
+    }
+
+
+    seekPreview.classList.add(
+        "hidden"
+    );
+
+}
+
+
+/* ==================================================
+   UPDATE SEEK PREVIEW
+================================================== */
+
+function updateSeekPreview(clientX) {
+
+    if (
+        !seekPreview ||
+        !seekPreviewImage ||
+        !seekPreviewTime ||
+        !previewVideo ||
+        !previewCanvas ||
+        !previewContext ||
+        !previewReady
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        !Number.isFinite(
+            previewVideo.duration
+        ) ||
+        previewVideo.duration <= 0
+    ) {
+
+        return;
+
+    }
+
+
+    const rect =
+        videoProgressContainer
+            .getBoundingClientRect();
+
+
+    if (rect.width <= 0) {
+
+        return;
+
+    }
+
+
+    const percentage =
+        getSeekPercentage(clientX);
+
+
+    const previewTime =
+        percentage *
+        previewVideo.duration;
+
+
     /* ==================================================
-       PROGRESS SEEK
+       UPDATE TIME LABEL
     ================================================== */
 
-    let isSeeking = false;
+    if (seekPreviewTime) {
 
+        seekPreviewTime.textContent =
+            formatVideoTime(
+                previewTime
+            );
+
+    }
+
+
+    /* ==================================================
+       KEEP PREVIEW INSIDE PLAYER
+    ================================================== */
+
+    const previewWidth =
+        seekPreview.offsetWidth || 160;
+
+
+    const halfWidth =
+        previewWidth / 2;
+
+
+    const minLeft =
+        (
+            halfWidth /
+            rect.width
+        ) * 100;
+
+
+    const maxLeft =
+        100 -
+        minLeft;
+
+
+    let left =
+        percentage * 100;
+
+
+    left =
+        Math.max(
+            minLeft,
+            Math.min(
+                maxLeft,
+                left
+            )
+        );
+
+
+    seekPreview.style.left =
+        `${left}%`;
+
+
+    /* ==================================================
+       SHOW PREVIEW
+    ================================================== */
+
+    seekPreview.classList.remove(
+        "hidden"
+    );
+
+
+    /* ==================================================
+       SEEK PREVIEW VIDEO
+    ================================================== */
+
+    const requestId =
+        ++previewRequestId;
+
+
+    const drawPreview =
+        () => {
+
+            if (
+                requestId !==
+                previewRequestId
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                !previewContext ||
+                !previewVideo
+            ) {
+
+                return;
+
+            }
+
+
+            try {
+
+                previewContext.drawImage(
+                    previewVideo,
+                    0,
+                    0,
+                    previewCanvas.width,
+                    previewCanvas.height
+                );
+
+
+                const imageData =
+                    previewCanvas.toDataURL(
+                        "image/jpeg",
+                        0.75
+                    );
+
+
+                seekPreviewImage.style.backgroundImage =
+                    `url("${imageData}")`;
+
+            }
+
+            catch (error) {
+
+                console.log(
+                    "Seek preview gagal:",
+                    error
+                );
+
+            }
+
+        };
+
+
+    const handleSeeked =
+        () => {
+
+            previewVideo.removeEventListener(
+                "seeked",
+                handleSeeked
+            );
+
+
+            drawPreview();
+
+        };
+
+
+    previewVideo.addEventListener(
+        "seeked",
+        handleSeeked
+    );
+
+
+    try {
+
+        previewVideo.currentTime =
+            previewTime;
+
+    }
+
+    catch (error) {
+
+        previewVideo.removeEventListener(
+            "seeked",
+            handleSeeked
+        );
+
+    }
+
+}
+
+
+/* ==================================================
+   QUEUE SEEK PREVIEW
+================================================== */
+
+function queueSeekPreview(clientX) {
+
+    previewLastClientX =
+        clientX;
+
+
+    if (previewMoveTimer) {
+
+        return;
+
+    }
+
+
+    previewMoveTimer =
+        setTimeout(
+            () => {
+
+                previewMoveTimer =
+                    null;
+
+
+                if (
+                    previewLastClientX !==
+                    null
+                ) {
+
+                    updateSeekPreview(
+                        previewLastClientX
+                    );
+
+                }
+
+            },
+            50
+        );
+
+}
+
+   initializeSeekPreview();
 
     function getSeekPercentage(clientX) {
 
@@ -2032,38 +2412,59 @@ if (videoProgressThumb) {
                 }
 
 
-                seekToPosition(
-                    event.clientX
-                );
+seekToPosition(
+    event.clientX
+);
 
+queueSeekPreview(
+    event.clientX
+);
 
-                showControls();
-
-            }
-        );
-
-
-        videoProgressContainer.addEventListener(
-            "pointermove",
-            event => {
-
-                if (!isSeeking) {
-
-                    return;
-
-                }
-
-
-                event.stopPropagation();
-
-
-                seekToPosition(
-                    event.clientX
-                );
+showControls();
 
             }
         );
 
+videoProgressContainer.addEventListener(
+    "pointermove",
+    event => {
+
+        event.stopPropagation();
+
+
+        queueSeekPreview(
+            event.clientX
+        );
+
+
+        if (!isSeeking) {
+
+            return;
+
+        }
+
+
+        seekToPosition(
+            event.clientX
+        );
+
+    }
+);
+
+videoProgressContainer.addEventListener(
+    "pointerleave",
+    () => {
+
+        if (isSeeking) {
+
+            return;
+
+        }
+
+        hideSeekPreview();
+
+    }
+);
 
         function finishSeeking(event) {
 
