@@ -2745,11 +2745,68 @@ if (mainVideo) {
         1;
 
     mainVideo.muted =
-        true;
+        false;
 
     mainVideo.playbackRate =
         1;
-  
+
+
+    /* ==================================================
+       PROMPT "AKTIFKAN SUARA" JIKA AUTOPLAY BERSUARA DIBLOKIR
+    ================================================== */
+
+    function showUnmutePrompt() {
+
+        if (
+            !youtubePlayer ||
+            document.getElementById("unmutePrompt")
+        ) {
+
+            return;
+
+        }
+
+        const unmutePrompt =
+            document.createElement("button");
+
+        unmutePrompt.id =
+            "unmutePrompt";
+
+        unmutePrompt.type =
+            "button";
+
+        unmutePrompt.className =
+            "unmute-prompt";
+
+        unmutePrompt.textContent =
+            "🔇 Ketuk untuk aktifkan suara";
+
+        unmutePrompt.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                mainVideo.muted =
+                    false;
+
+                mainVideo.play().catch(
+                    () => {}
+                );
+
+                updateVolumeButton();
+
+                unmutePrompt.remove();
+
+            }
+        );
+
+        youtubePlayer.appendChild(
+            unmutePrompt
+        );
+
+    }
+
 
     if (shouldAutoplay) {
 
@@ -2766,9 +2823,35 @@ if (mainVideo) {
                     error => {
 
                         console.log(
-                            "Autoplay diblokir browser:",
+                            "Autoplay bersuara diblokir browser, coba mode senyap:",
                             error
                         );
+
+                        /* ==================================================
+                           FALLBACK: AUTOPLAY SENYAP + TOMBOL AKTIFKAN SUARA
+                        ================================================== */
+
+                        mainVideo.muted =
+                            true;
+
+                        mainVideo.play()
+                            .then(
+                                () => {
+
+                                    showUnmutePrompt();
+
+                                }
+                            )
+                            .catch(
+                                fallbackError => {
+
+                                    console.log(
+                                        "Autoplay senyap juga diblokir browser:",
+                                        fallbackError
+                                    );
+
+                                }
+                            );
 
                     }
                 );
@@ -2873,7 +2956,9 @@ if (mainVideo) {
             "Video loaded:",
             selectedVideo
         );
-   
+
+    }
+
     }
 
 
