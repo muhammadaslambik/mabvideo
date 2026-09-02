@@ -2049,52 +2049,52 @@ function closeSettings() {
        SETTINGS MENU
     ================================================== */
 
-    function toggleSettings(event) {
+   function toggleSettings(event) {
 
-        if (event) {
+    if (event) {
 
-            event.stopPropagation();
-
-        }
-
-
-        if (!settingsMenu) {
-
-            return;
-
-        }
-
-
-        const isOpen =
-            settingsMenu.classList.contains(
-                "show"
-            );
-
-
-        if (isOpen) {
-
-            closeSettings();
-
-        }
-
-        else {
-
-    settingsMenu.classList.remove(
-        "hidden"
-    );
-
-
-    settingsMenu.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
-}
-
-        showControls();
+        event.stopPropagation();
 
     }
 
+
+    if (!settingsMenu) {
+
+        return;
+
+    }
+
+
+    const isOpen =
+        !settingsMenu.classList.contains(
+            "hidden"
+        );
+
+
+    if (isOpen) {
+
+        closeSettings();
+
+    }
+
+    else {
+
+        settingsMenu.classList.remove(
+            "hidden"
+        );
+
+
+        settingsMenu.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+    }
+
+
+    showControls();
+
+}
 
     if (settingsButton) {
 
