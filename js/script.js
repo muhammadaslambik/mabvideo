@@ -846,19 +846,25 @@ else {
                 id="videoControls"
             >
 
-                <!-- PROGRESS BAR -->
+               <!-- PROGRESS BAR -->
 
-                <div
-                    class="video-progress-container"
-                    id="videoProgressContainer"
-                >
+<div
+    class="video-progress-container"
+    id="videoProgressContainer"
+>
 
-                    <div
-                        class="video-progress"
-                        id="videoProgress"
-                    ></div>
+    <div
+        class="video-progress"
+        id="videoProgress"
+    ></div>
 
-                </div>
+
+    <div
+        class="video-progress-thumb"
+        id="videoProgressThumb"
+    ></div>
+
+</div>
 
 
                 <!-- CONTROL BAR -->
@@ -1075,6 +1081,11 @@ else {
     const videoProgress =
         document.getElementById("videoProgress");
 
+   const videoProgressThumb =
+    document.getElementById(
+        "videoProgressThumb"
+    );
+
     const muteButton =
         document.getElementById("muteButton");
 
@@ -1218,8 +1229,13 @@ else {
             ) * 100;
 
 
-        videoProgress.style.width =
-            `${percentage}%`;
+videoProgress.style.width =
+    `${percentage}%`;
+
+if (videoProgressThumb) {
+    videoProgressThumb.style.left =
+        `${percentage}%`;
+}
 
     }
 
