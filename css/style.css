@@ -1013,3 +1013,60 @@ body.dark .more-button:hover {
     opacity: 0;
     pointer-events: none;
 }
+
+
+/* ==================================================
+   VOLUME CONTROLS
+================================================== */
+
+.volume-controls {
+    position: absolute;
+
+    left: 16px;
+    bottom: 28px;
+
+    z-index: 20;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 6px 8px;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    border-radius: 8px;
+}
+
+
+/* ================= MUTE BUTTON ================= */
+
+.mute-button {
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ================= VOLUME SLIDER ================= */
+
+.volume-slider {
+    width: 90px;
+
+    cursor: pointer;
+}
