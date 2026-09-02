@@ -815,6 +815,7 @@ else {
                 id="mainVideo"
                 class="main-video"
                 preload="metadata"
+                autoplay
                 playsinline
             >
 
@@ -2744,7 +2745,7 @@ if (mainVideo) {
         1;
 
     mainVideo.muted =
-        false;
+        true;
 
     mainVideo.playbackRate =
         1;
