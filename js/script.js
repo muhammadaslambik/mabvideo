@@ -553,50 +553,64 @@ categoryButtons.forEach(button => {
    DARK MODE
 ================================================== */
 
+function applyThemeIcon() {
+
+    const darkMode =
+        document.body.classList.contains("dark");
+
+    const icon =
+        darkMode ? "☀️" : "🌙";
+
+
+    if (themeButton) {
+
+        themeButton.textContent =
+            icon;
+
+    }
+
+
+    const playerThemeButton =
+        document.getElementById("playerThemeButton");
+
+    if (playerThemeButton) {
+
+        playerThemeButton.textContent =
+            icon;
+
+    }
+
+}
+
+
+function toggleThemeMode() {
+
+    document.body.classList.toggle(
+        "dark"
+    );
+
+
+    const darkMode =
+        document.body.classList.contains(
+            "dark"
+        );
+
+    localStorage.setItem(
+        "mab-video-theme",
+        darkMode ? "dark" : "light"
+    );
+
+
+    applyThemeIcon();
+
+}
+
+
 if (themeButton) {
 
     themeButton.addEventListener(
         "click",
-        () => {
-
-            document.body.classList.toggle(
-                "dark"
-            );
-
-
-            const darkMode =
-                document.body.classList.contains(
-                    "dark"
-                );
-
-
-            if (darkMode) {
-
-                themeButton.textContent =
-                    "☀️";
-
-
-                localStorage.setItem(
-                    "mab-video-theme",
-                    "dark"
-                );
-
-            }
-
-            else {
-
-                themeButton.textContent =
-                    "🌙";
-
-
-                localStorage.setItem(
-                    "mab-video-theme",
-                    "light"
-                );
-
-            }
-
-        }
+        toggleThemeMode
     );
 
 }
@@ -618,15 +632,10 @@ if (savedTheme === "dark") {
         "dark"
     );
 
-
-    if (themeButton) {
-
-        themeButton.textContent =
-            "☀️";
-
-    }
-
 }
+
+
+applyThemeIcon();
 
 
 /* ==================================================
@@ -1479,6 +1488,1115 @@ const shouldAutoplay =
         }
 
 
+        /* ==================================================
+           KOLOM KOMENTAR ALA YOUTUBE
+        ================================================== */
+
+        const commentsSection =
+            document.getElementById("commentsSection");
+
+
+        if (commentsSection) {
+
+            const commentsStorageKey =
+                `mab-video-comments-${selectedVideo.id}`;
+
+
+            function escapeHtml(text) {
+
+                const div =
+                    document.createElement("div");
+
+                div.textContent =
+                    text;
+
+                return div.innerHTML;
+
+            }
+
+
+            function defaultComments() {
+
+                return [
+
+                    {
+                        id: "seed-1",
+                        author: "Rizky Pratama",
+                        avatar: "R",
+                        time: "2 hari yang lalu",
+                        text: "Videonya keren banget, penjelasannya gampang dipahami buat pemula kayak saya!",
+                        likes: 128,
+                        liked: false,
+                        disliked: false,
+                        replies: [
+                            {
+                                id: "seed-1-r1",
+                                author: selectedVideo.channel,
+                                avatar: selectedVideo.avatar,
+                                time: "1 hari yang lalu",
+                                text: "Terima kasih sudah nonton! 🙏",
+                                likes: 14,
+                                liked: false,
+                                disliked: false
+                            }
+                        ]
+                    },
+
+                    {
+                        id: "seed-2",
+                        author: "Dewi Anjani",
+                        avatar: "D",
+                        time: "5 hari yang lalu",
+                        text: "Request dong bahas topik lanjutannya, ditunggu part 2 nya kak.",
+                        likes: 46,
+                        liked: false,
+                        disliked: false,
+                        replies: []
+                    },
+
+                    {
+                        id: "seed-3",
+                        author: "Bagas Setiawan",
+                        avatar: "B",
+                        time: "1 minggu yang lalu",
+                        text: "Kualitas videonya makin ke sini makin bagus, semangat terus min 🔥",
+                        likes: 302,
+                        liked: false,
+                        disliked: false,
+                        replies: [
+                            {
+                                id: "seed-3-r1",
+                                author: "Nadia Kusuma",
+                                avatar: "N",
+                                time: "6 hari yang lalu",
+                                text: "Setuju banget!",
+                                likes: 5,
+                                liked: false,
+                                disliked: false
+                            },
+                            {
+                                id: "seed-3-r2",
+                                author: "Yoga Pratama",
+                                avatar: "Y",
+                                time: "5 hari yang lalu",
+                                text: "Iya, konsisten terus kontennya.",
+                                likes: 2,
+                                liked: false,
+                                disliked: false
+                            }
+                        ]
+                    }
+
+                ];
+
+            }
+
+
+            function loadComments() {
+
+                try {
+
+                    const raw =
+                        localStorage.getItem(
+                            commentsStorageKey
+                        );
+
+                    if (!raw) {
+
+                        return defaultComments();
+
+                    }
+
+
+                    const parsed =
+                        JSON.parse(raw);
+
+                    return Array.isArray(parsed)
+                        ? parsed
+                        : defaultComments();
+
+                }
+
+                catch (error) {
+
+                    return defaultComments();
+
+                }
+
+            }
+
+
+            function saveComments() {
+
+                try {
+
+                    localStorage.setItem(
+                        commentsStorageKey,
+                        JSON.stringify(commentsData)
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.log(
+                        "Gagal menyimpan komentar:",
+                        error
+                    );
+
+                }
+
+            }
+
+
+            let commentsData =
+                loadComments();
+
+            let sortMode =
+                "top";
+
+            const expandedReplies =
+                new Set();
+
+
+            function findCommentById(id) {
+
+                for (const comment of commentsData) {
+
+                    if (comment.id === id) {
+
+                        return comment;
+
+                    }
+
+
+                    if (comment.replies) {
+
+                        for (const reply of comment.replies) {
+
+                            if (reply.id === id) {
+
+                                return reply;
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                return null;
+
+            }
+
+
+            function totalCommentCount() {
+
+                return commentsData.reduce(
+                    (sum, comment) =>
+                        sum +
+                        1 +
+                        (comment.replies
+                            ? comment.replies.length
+                            : 0),
+                    0
+                );
+
+            }
+
+
+            function getSortedComments() {
+
+                if (sortMode === "top") {
+
+                    return [...commentsData].sort(
+                        (a, b) => b.likes - a.likes
+                    );
+
+                }
+
+
+                return commentsData;
+
+            }
+
+
+            function renderCommentItem(comment, isReply) {
+
+                const likeLabel =
+                    comment.likes > 0
+                        ? formatCompactCount(comment.likes)
+                        : "";
+
+                return `
+
+                    <div
+                        class="comment-item${isReply ? " comment-reply" : ""}"
+                        data-comment-id="${comment.id}"
+                    >
+
+                        <div class="comment-avatar">
+                            ${comment.avatar}
+                        </div>
+
+                        <div class="comment-body">
+
+                            <p class="comment-meta">
+                                <span class="comment-author">
+                                    ${escapeHtml(comment.author)}
+                                </span>
+                                <span class="comment-time">
+                                    ${comment.time}
+                                </span>
+                            </p>
+
+                            <p class="comment-text">
+                                ${escapeHtml(comment.text).replace(/\n/g, "<br>")}
+                            </p>
+
+                            <div class="comment-actions">
+
+                                <button
+                                    class="comment-like-button${comment.liked ? " active" : ""}"
+                                    id="like-btn-${comment.id}"
+                                    data-action="like"
+                                    data-comment-id="${comment.id}"
+                                    type="button"
+                                >
+                                    👍
+                                    <span
+                                        class="comment-like-count"
+                                        id="like-count-${comment.id}"
+                                    >${likeLabel}</span>
+                                </button>
+
+                                <button
+                                    class="comment-dislike-button${comment.disliked ? " active" : ""}"
+                                    id="dislike-btn-${comment.id}"
+                                    data-action="dislike"
+                                    data-comment-id="${comment.id}"
+                                    type="button"
+                                >
+                                    👎
+                                </button>
+
+                                ${!isReply ? `
+                                    <button
+                                        class="comment-reply-button"
+                                        data-action="reply"
+                                        data-comment-id="${comment.id}"
+                                        type="button"
+                                    >
+                                        Balas
+                                    </button>
+                                ` : ""}
+
+                            </div>
+
+                            ${!isReply && comment.replies && comment.replies.length > 0 ? `
+                                <button
+                                    class="comment-replies-toggle"
+                                    data-action="toggle-replies"
+                                    data-comment-id="${comment.id}"
+                                    type="button"
+                                >
+                                    <span class="chevron">▾</span>
+                                    ${comment.replies.length} balasan
+                                </button>
+
+                                <div
+                                    class="comment-replies"
+                                    id="replies-${comment.id}"
+                                ></div>
+                            ` : ""}
+
+                            ${!isReply ? `
+                                <div
+                                    class="comment-reply-box"
+                                    id="reply-box-${comment.id}"
+                                ></div>
+                            ` : ""}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            function renderReplyBox(commentId) {
+
+                return `
+
+                    <div class="add-comment-row comment-reply-row">
+
+                        <div class="comment-avatar">M</div>
+
+                        <div class="add-comment-input-wrap focused">
+
+                            <textarea
+                                class="add-comment-input"
+                                id="reply-input-${commentId}"
+                                placeholder="Tambahkan balasan..."
+                                rows="1"
+                            ></textarea>
+
+                            <div class="add-comment-buttons visible">
+
+                                <button
+                                    class="comment-cancel-button"
+                                    data-action="cancel-reply"
+                                    data-comment-id="${commentId}"
+                                    type="button"
+                                >
+                                    Batal
+                                </button>
+
+                                <button
+                                    class="comment-submit-button"
+                                    data-action="submit-reply"
+                                    data-comment-id="${commentId}"
+                                    type="button"
+                                    disabled
+                                >
+                                    Balas
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            function renderComments() {
+
+                const sorted =
+                    getSortedComments();
+
+                commentsSection.innerHTML = `
+
+                    <div class="comments-header">
+
+                        <h2 class="comments-count">
+                            ${totalCommentCount()} Komentar
+                        </h2>
+
+                        <div class="sort-menu-wrapper">
+
+                            <button
+                                class="sort-button"
+                                id="sortButton"
+                                type="button"
+                            >
+                                <span>⇅</span> Urutkan
+                            </button>
+
+                            <div
+                                class="sort-menu"
+                                id="sortMenu"
+                            >
+
+                                <button
+                                    class="sort-menu-item${sortMode === "top" ? " active" : ""}"
+                                    data-sort="top"
+                                    type="button"
+                                >
+                                    Teratas
+                                </button>
+
+                                <button
+                                    class="sort-menu-item${sortMode === "newest" ? " active" : ""}"
+                                    data-sort="newest"
+                                    type="button"
+                                >
+                                    Terbaru
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="add-comment-row">
+
+                        <div class="comment-avatar">M</div>
+
+                        <div
+                            class="add-comment-input-wrap"
+                            id="addCommentWrap"
+                        >
+
+                            <textarea
+                                class="add-comment-input"
+                                id="addCommentInput"
+                                placeholder="Tambahkan komentar..."
+                                rows="1"
+                            ></textarea>
+
+                            <div
+                                class="add-comment-buttons"
+                                id="addCommentButtons"
+                            >
+
+                                <button
+                                    class="comment-cancel-button"
+                                    id="cancelCommentButton"
+                                    type="button"
+                                >
+                                    Batal
+                                </button>
+
+                                <button
+                                    class="comment-submit-button"
+                                    id="submitCommentButton"
+                                    type="button"
+                                    disabled
+                                >
+                                    Komentar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="comments-list" id="commentsList">
+                        ${sorted.map(
+                            comment =>
+                                renderCommentItem(comment, false)
+                        ).join("")}
+                    </div>
+
+                `;
+
+
+                /* munculkan kembali balasan yang sedang terbuka */
+
+                expandedReplies.forEach(id => {
+
+                    const comment =
+                        findCommentById(id);
+
+                    const container =
+                        document.getElementById(`replies-${id}`);
+
+                    const toggleBtn =
+                        commentsSection.querySelector(
+                            `[data-action="toggle-replies"][data-comment-id="${id}"]`
+                        );
+
+                    if (comment && container) {
+
+                        container.innerHTML =
+                            comment.replies
+                                .map(reply => renderCommentItem(reply, true))
+                                .join("");
+
+                        container.classList.add(
+                            "open"
+                        );
+
+
+                        if (toggleBtn) {
+
+                            toggleBtn.classList.add(
+                                "open"
+                            );
+
+                        }
+
+                    }
+
+                });
+
+            }
+
+
+            renderComments();
+
+
+            /* ==================================================
+               INPUT KOMENTAR BARU
+            ================================================== */
+
+            function wireAddCommentInput() {
+
+                const addCommentInput =
+                    document.getElementById("addCommentInput");
+
+                const addCommentWrap =
+                    document.getElementById("addCommentWrap");
+
+                const addCommentButtons =
+                    document.getElementById("addCommentButtons");
+
+                const submitCommentButton =
+                    document.getElementById("submitCommentButton");
+
+                const cancelCommentButton =
+                    document.getElementById("cancelCommentButton");
+
+
+                if (!addCommentInput) {
+
+                    return;
+
+                }
+
+
+                addCommentInput.addEventListener(
+                    "focus",
+                    () => {
+
+                        addCommentWrap.classList.add(
+                            "focused"
+                        );
+
+                        addCommentButtons.classList.add(
+                            "visible"
+                        );
+
+                    }
+                );
+
+
+                addCommentInput.addEventListener(
+                    "input",
+                    () => {
+
+                        submitCommentButton.disabled =
+                            addCommentInput.value.trim().length === 0;
+
+                        addCommentInput.style.height =
+                            "auto";
+
+                        addCommentInput.style.height =
+                            `${addCommentInput.scrollHeight}px`;
+
+                    }
+                );
+
+
+                cancelCommentButton.addEventListener(
+                    "click",
+                    () => {
+
+                        addCommentInput.value =
+                            "";
+
+                        addCommentInput.style.height =
+                            "auto";
+
+                        submitCommentButton.disabled =
+                            true;
+
+                        addCommentWrap.classList.remove(
+                            "focused"
+                        );
+
+                        addCommentButtons.classList.remove(
+                            "visible"
+                        );
+
+                        addCommentInput.blur();
+
+                    }
+                );
+
+
+                submitCommentButton.addEventListener(
+                    "click",
+                    () => {
+
+                        const text =
+                            addCommentInput.value.trim();
+
+                        if (!text) {
+
+                            return;
+
+                        }
+
+
+                        commentsData.unshift({
+                            id: `user-${Date.now()}`,
+                            author: "Kamu",
+                            avatar: "M",
+                            time: "Baru saja",
+                            text: text,
+                            likes: 0,
+                            liked: false,
+                            disliked: false,
+                            replies: []
+                        });
+
+
+                        saveComments();
+
+                        renderComments();
+
+                        wireAddCommentInput();
+
+                    }
+                );
+
+            }
+
+
+            wireAddCommentInput();
+
+
+            /* ==================================================
+               DELEGASI KLIK: LIKE, DISLIKE, BALAS, SORT
+            ================================================== */
+
+            commentsSection.addEventListener(
+                "click",
+                event => {
+
+                    const sortButtonEl =
+                        event.target.closest("#sortButton");
+
+                    if (sortButtonEl) {
+
+                        event.stopPropagation();
+
+                        document
+                            .getElementById("sortMenu")
+                            .classList.toggle("open");
+
+                        return;
+
+                    }
+
+
+                    const sortItem =
+                        event.target.closest(".sort-menu-item");
+
+                    if (sortItem) {
+
+                        sortMode =
+                            sortItem.dataset.sort;
+
+                        renderComments();
+
+                        wireAddCommentInput();
+
+                        return;
+
+                    }
+
+
+                    const likeBtn =
+                        event.target.closest("[data-action='like']");
+
+                    if (likeBtn) {
+
+                        const id =
+                            likeBtn.dataset.commentId;
+
+                        const comment =
+                            findCommentById(id);
+
+                        if (comment) {
+
+                            if (comment.liked) {
+
+                                comment.likes -= 1;
+
+                                comment.liked =
+                                    false;
+
+                            }
+
+                            else {
+
+                                if (comment.disliked) {
+
+                                    comment.disliked =
+                                        false;
+
+                                }
+
+                                comment.likes += 1;
+
+                                comment.liked =
+                                    true;
+
+                            }
+
+
+                            saveComments();
+
+
+                            const dislikeBtnEl =
+                                document.getElementById(`dislike-btn-${id}`);
+
+                            const countEl =
+                                document.getElementById(`like-count-${id}`);
+
+                            likeBtn.classList.toggle(
+                                "active",
+                                comment.liked
+                            );
+
+                            if (dislikeBtnEl) {
+
+                                dislikeBtnEl.classList.toggle(
+                                    "active",
+                                    comment.disliked
+                                );
+
+                            }
+
+                            if (countEl) {
+
+                                countEl.textContent =
+                                    comment.likes > 0
+                                        ? formatCompactCount(comment.likes)
+                                        : "";
+
+                            }
+
+                        }
+
+                        return;
+
+                    }
+
+
+                    const dislikeBtn =
+                        event.target.closest("[data-action='dislike']");
+
+                    if (dislikeBtn) {
+
+                        const id =
+                            dislikeBtn.dataset.commentId;
+
+                        const comment =
+                            findCommentById(id);
+
+                        if (comment) {
+
+                            if (comment.disliked) {
+
+                                comment.disliked =
+                                    false;
+
+                            }
+
+                            else {
+
+                                if (comment.liked) {
+
+                                    comment.liked =
+                                        false;
+
+                                    comment.likes -= 1;
+
+                                }
+
+                                comment.disliked =
+                                    true;
+
+                            }
+
+
+                            saveComments();
+
+
+                            const likeBtnEl =
+                                document.getElementById(`like-btn-${id}`);
+
+                            const countEl =
+                                document.getElementById(`like-count-${id}`);
+
+                            dislikeBtn.classList.toggle(
+                                "active",
+                                comment.disliked
+                            );
+
+                            if (likeBtnEl) {
+
+                                likeBtnEl.classList.toggle(
+                                    "active",
+                                    comment.liked
+                                );
+
+                            }
+
+                            if (countEl) {
+
+                                countEl.textContent =
+                                    comment.likes > 0
+                                        ? formatCompactCount(comment.likes)
+                                        : "";
+
+                            }
+
+                        }
+
+                        return;
+
+                    }
+
+
+                    const toggleRepliesBtn =
+                        event.target.closest(
+                            "[data-action='toggle-replies']"
+                        );
+
+                    if (toggleRepliesBtn) {
+
+                        const id =
+                            toggleRepliesBtn.dataset.commentId;
+
+                        const container =
+                            document.getElementById(`replies-${id}`);
+
+                        const comment =
+                            findCommentById(id);
+
+                        if (!container || !comment) {
+
+                            return;
+
+                        }
+
+
+                        if (expandedReplies.has(id)) {
+
+                            expandedReplies.delete(id);
+
+                            container.innerHTML =
+                                "";
+
+                            container.classList.remove(
+                                "open"
+                            );
+
+                            toggleRepliesBtn.classList.remove(
+                                "open"
+                            );
+
+                        }
+
+                        else {
+
+                            expandedReplies.add(id);
+
+                            container.innerHTML =
+                                comment.replies
+                                    .map(reply => renderCommentItem(reply, true))
+                                    .join("");
+
+                            container.classList.add(
+                                "open"
+                            );
+
+                            toggleRepliesBtn.classList.add(
+                                "open"
+                            );
+
+                        }
+
+                        return;
+
+                    }
+
+
+                    const replyBtn =
+                        event.target.closest("[data-action='reply']");
+
+                    if (replyBtn) {
+
+                        const id =
+                            replyBtn.dataset.commentId;
+
+                        const box =
+                            document.getElementById(`reply-box-${id}`);
+
+                        if (!box) {
+
+                            return;
+
+                        }
+
+
+                        if (box.innerHTML.trim() !== "") {
+
+                            box.innerHTML =
+                                "";
+
+                            return;
+
+                        }
+
+
+                        box.innerHTML =
+                            renderReplyBox(id);
+
+
+                        const replyInput =
+                            document.getElementById(`reply-input-${id}`);
+
+                        if (replyInput) {
+
+                            replyInput.focus();
+
+
+                            replyInput.addEventListener(
+                                "input",
+                                () => {
+
+                                    const submitBtn =
+                                        box.querySelector(
+                                            "[data-action='submit-reply']"
+                                        );
+
+                                    if (submitBtn) {
+
+                                        submitBtn.disabled =
+                                            replyInput.value.trim().length === 0;
+
+                                    }
+
+                                }
+                            );
+
+                        }
+
+                        return;
+
+                    }
+
+
+                    const cancelReplyBtn =
+                        event.target.closest(
+                            "[data-action='cancel-reply']"
+                        );
+
+                    if (cancelReplyBtn) {
+
+                        const id =
+                            cancelReplyBtn.dataset.commentId;
+
+                        const box =
+                            document.getElementById(`reply-box-${id}`);
+
+                        if (box) {
+
+                            box.innerHTML =
+                                "";
+
+                        }
+
+                        return;
+
+                    }
+
+
+                    const submitReplyBtn =
+                        event.target.closest(
+                            "[data-action='submit-reply']"
+                        );
+
+                    if (submitReplyBtn) {
+
+                        const id =
+                            submitReplyBtn.dataset.commentId;
+
+                        const replyInput =
+                            document.getElementById(`reply-input-${id}`);
+
+                        const parentComment =
+                            findCommentById(id);
+
+                        if (
+                            !replyInput ||
+                            !parentComment
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        const text =
+                            replyInput.value.trim();
+
+                        if (!text) {
+
+                            return;
+
+                        }
+
+
+                        if (!parentComment.replies) {
+
+                            parentComment.replies =
+                                [];
+
+                        }
+
+
+                        parentComment.replies.push({
+                            id: `user-reply-${Date.now()}`,
+                            author: "Kamu",
+                            avatar: "M",
+                            time: "Baru saja",
+                            text: text,
+                            likes: 0,
+                            liked: false,
+                            disliked: false
+                        });
+
+
+                        saveComments();
+
+                        expandedReplies.add(id);
+
+                        renderComments();
+
+                        wireAddCommentInput();
+
+                    }
+
+                }
+            );
+
+
+            document.addEventListener(
+                "click",
+                () => {
+
+                    const sortMenu =
+                        document.getElementById("sortMenu");
+
+                    if (sortMenu) {
+
+                        sortMenu.classList.remove(
+                            "open"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
      /* ==================================================
    VIDEO WITHOUT FILE
 ================================================== */
@@ -1534,6 +2652,36 @@ else {
                 video HTML5.
 
             </video>
+
+
+            <!-- TOP OVERLAY (ALA YOUTUBE) -->
+
+            <div
+                class="player-top-overlay"
+                id="playerTopOverlay"
+            >
+
+                <button
+                    class="player-top-button"
+                    id="playerThemeButton"
+                    type="button"
+                    aria-label="Ganti mode gelap/terang"
+                    title="Mode gelap/terang"
+                >
+                    🌙
+                </button>
+
+                <button
+                    class="player-top-button"
+                    id="playerInfoButton"
+                    type="button"
+                    aria-label="Info video"
+                    title="Info lainnya"
+                >
+                    ⓘ
+                </button>
+
+            </div>
 
 
             <!-- CENTER PLAY BUTTON -->
@@ -1672,12 +2820,25 @@ else {
                     <div class="controls-spacer"></div>
 
 
+                    <!-- CAPTIONS -->
+
+                    <button
+                        id="captionsButton"
+                        class="control-button"
+                        aria-label="Teks (CC)"
+                        title="Teks"
+                        type="button"
+                    >
+                        <span class="cc-icon">CC</span>
+                    </button>
+
+
                     <!-- SETTINGS -->
 
                     <div
-    class="settings-wrapper"
-    id="settingsWrapper"
->
+                        class="settings-wrapper"
+                        id="settingsWrapper"
+                    >
 
                         <button
                             id="settingsButton"
@@ -1691,89 +2852,197 @@ else {
 
                         <div
                             id="settingsMenu"
-                             class="settings-menu hidden"
+                            class="settings-menu hidden"
                             aria-hidden="true"
                         >
 
-                            <div class="settings-title">
-                                Playback speed
+                            <!-- HALAMAN UTAMA -->
+
+                            <div
+                                class="settings-page active"
+                                data-page="main"
+                            >
+
+                                <div
+                                    class="settings-row settings-toggle-row"
+                                    data-toggle="stable-volume"
+                                >
+                                    <span>Volume Stabil</span>
+                                    <span class="settings-switch"></span>
+                                </div>
+
+                                <div
+                                    class="settings-row settings-toggle-row"
+                                    data-toggle="audio-boost"
+                                >
+                                    <span>Penguat suara</span>
+                                    <span class="settings-switch"></span>
+                                </div>
+
+                                <div
+                                    class="settings-row settings-toggle-row"
+                                    data-toggle="cinematic"
+                                >
+                                    <span>Pencahayaan sinematik</span>
+                                    <span class="settings-switch"></span>
+                                </div>
+
+                                <div
+                                    class="settings-row settings-toggle-row"
+                                    data-toggle="annotations"
+                                >
+                                    <span>Anotasi</span>
+                                    <span class="settings-switch"></span>
+                                </div>
+
+                                <div class="settings-divider"></div>
+
+                                <button
+                                    class="settings-row settings-nav-row"
+                                    data-goto="sleep"
+                                    type="button"
+                                >
+                                    <span>Timer tidur</span>
+                                    <span class="settings-row-value">
+                                        <span id="sleepTimerValue">Nonaktif</span>
+                                        <span class="chevron-right">›</span>
+                                    </span>
+                                </button>
+
+                                <button
+                                    class="settings-row settings-nav-row"
+                                    data-goto="speed"
+                                    type="button"
+                                >
+                                    <span>Kecepatan pemutaran</span>
+                                    <span class="settings-row-value">
+                                        <span id="speedValue">Normal</span>
+                                        <span class="chevron-right">›</span>
+                                    </span>
+                                </button>
+
+                                <button
+                                    class="settings-row settings-nav-row"
+                                    data-goto="quality"
+                                    type="button"
+                                >
+                                    <span>Kualitas</span>
+                                    <span class="settings-row-value">
+                                        <span id="qualityValue">Otomatis (1080p)</span>
+                                        <span class="chevron-right">›</span>
+                                    </span>
+                                </button>
+
                             </div>
 
 
-                            <button
-                                class="speed-option"
-                                data-speed="0.25"
-                                type="button"
+                            <!-- HALAMAN KECEPATAN -->
+
+                            <div
+                                class="settings-page"
+                                data-page="speed"
                             >
-                                0.25x
-                            </button>
+
+                                <button
+                                    class="settings-page-header"
+                                    data-back="main"
+                                    type="button"
+                                >
+                                    <span class="chevron-left">‹</span>
+                                    Kecepatan pemutaran
+                                </button>
+
+                                <button class="speed-option" data-speed="0.25" type="button">0.25x</button>
+                                <button class="speed-option" data-speed="0.5" type="button">0.5x</button>
+                                <button class="speed-option" data-speed="0.75" type="button">0.75x</button>
+                                <button class="speed-option active" data-speed="1" type="button">Normal</button>
+                                <button class="speed-option" data-speed="1.25" type="button">1.25x</button>
+                                <button class="speed-option" data-speed="1.5" type="button">1.5x</button>
+                                <button class="speed-option" data-speed="1.75" type="button">1.75x</button>
+                                <button class="speed-option" data-speed="2" type="button">2x</button>
+
+                            </div>
 
 
-                            <button
-                                class="speed-option"
-                                data-speed="0.5"
-                                type="button"
+                            <!-- HALAMAN KUALITAS -->
+
+                            <div
+                                class="settings-page"
+                                data-page="quality"
                             >
-                                0.5x
-                            </button>
+
+                                <button
+                                    class="settings-page-header"
+                                    data-back="main"
+                                    type="button"
+                                >
+                                    <span class="chevron-left">‹</span>
+                                    Kualitas
+                                </button>
+
+                                <button class="quality-option active" data-quality="Otomatis (1080p)" type="button">Otomatis (1080p)</button>
+                                <button class="quality-option" data-quality="1080p HD" type="button">1080p HD</button>
+                                <button class="quality-option" data-quality="720p" type="button">720p</button>
+                                <button class="quality-option" data-quality="480p" type="button">480p</button>
+                                <button class="quality-option" data-quality="360p" type="button">360p</button>
+
+                            </div>
 
 
-                            <button
-                                class="speed-option"
-                                data-speed="0.75"
-                                type="button"
+                            <!-- HALAMAN TIMER TIDUR -->
+
+                            <div
+                                class="settings-page"
+                                data-page="sleep"
                             >
-                                0.75x
-                            </button>
 
+                                <button
+                                    class="settings-page-header"
+                                    data-back="main"
+                                    type="button"
+                                >
+                                    <span class="chevron-left">‹</span>
+                                    Timer tidur
+                                </button>
 
-                            <button
-                                class="speed-option active"
-                                data-speed="1"
-                                type="button"
-                            >
-                                Normal
-                            </button>
+                                <button class="sleep-option active" data-sleep="0" type="button">Nonaktif</button>
+                                <button class="sleep-option" data-sleep="10" type="button">10 menit</button>
+                                <button class="sleep-option" data-sleep="20" type="button">20 menit</button>
+                                <button class="sleep-option" data-sleep="30" type="button">30 menit</button>
+                                <button class="sleep-option" data-sleep="60" type="button">1 jam</button>
+                                <button class="sleep-option" data-sleep="end" type="button">Akhir video ini</button>
 
-
-                            <button
-                                class="speed-option"
-                                data-speed="1.25"
-                                type="button"
-                            >
-                                1.25x
-                            </button>
-
-
-                            <button
-                                class="speed-option"
-                                data-speed="1.5"
-                                type="button"
-                            >
-                                1.5x
-                            </button>
-
-
-                            <button
-                                class="speed-option"
-                                data-speed="1.75"
-                                type="button"
-                            >
-                                1.75x
-                            </button>
-
-
-                            <button
-                                class="speed-option"
-                                data-speed="2"
-                                type="button"
-                            >
-                                2x
-                            </button>
+                            </div>
 
                         </div>
 
                     </div>
+
+
+                    <!-- MINIPLAYER (PICTURE-IN-PICTURE) -->
+
+                    <button
+                        id="miniplayerButton"
+                        class="control-button"
+                        aria-label="Miniplayer"
+                        title="Miniplayer"
+                        type="button"
+                    >
+                        ⧉
+                    </button>
+
+
+                    <!-- THEATER MODE -->
+
+                    <button
+                        id="theaterButton"
+                        class="control-button"
+                        aria-label="Mode teater"
+                        title="Mode teater"
+                        type="button"
+                    >
+                        ▭
+                    </button>
 
 
                     <!-- FULLSCREEN -->
@@ -1789,6 +3058,16 @@ else {
 
                 </div>
 
+            </div>
+
+
+            <!-- BUBBLE ANOTASI (COSMETIC) -->
+
+            <div
+                class="annotation-bubble"
+                id="annotationBubble"
+            >
+                🔔 Jangan lupa subscribe ya!
             </div>
 
         </div>
@@ -1866,6 +3145,24 @@ else {
         document.querySelectorAll(
             ".speed-option"
         );
+
+    const captionsButton =
+        document.getElementById("captionsButton");
+
+    const miniplayerButton =
+        document.getElementById("miniplayerButton");
+
+    const theaterButton =
+        document.getElementById("theaterButton");
+
+    const playerThemeButton =
+        document.getElementById("playerThemeButton");
+
+    const playerInfoButton =
+        document.getElementById("playerInfoButton");
+
+    const annotationBubble =
+        document.getElementById("annotationBubble");
 
     /* ==================================================
        CENTER BUTTON INITIAL STATE
@@ -3173,6 +4470,34 @@ function closeSettings() {
         "true"
     );
 
+
+    goToSettingsPage(
+        "main"
+    );
+
+}
+
+
+function goToSettingsPage(pageName) {
+
+    if (!settingsMenu) {
+
+        return;
+
+    }
+
+
+    settingsMenu.querySelectorAll(
+        ".settings-page"
+    ).forEach(page => {
+
+        page.classList.toggle(
+            "active",
+            page.dataset.page === pageName
+        );
+
+    });
+
 }
 
 
@@ -3315,8 +4640,558 @@ function closeSettings() {
 
 
     /* ==================================================
-       CLICK OUTSIDE SETTINGS
+       NAVIGASI SUBMENU SETTINGS (SLIDE ALA YOUTUBE)
     ================================================== */
+
+    if (settingsMenu) {
+
+        settingsMenu.querySelectorAll(
+            "[data-goto]"
+        ).forEach(navButton => {
+
+            navButton.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+                    goToSettingsPage(
+                        navButton.dataset.goto
+                    );
+
+                }
+            );
+
+        });
+
+
+        settingsMenu.querySelectorAll(
+            "[data-back]"
+        ).forEach(backButton => {
+
+            backButton.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+                    goToSettingsPage(
+                        backButton.dataset.back
+                    );
+
+                }
+            );
+
+        });
+
+    }
+
+
+    /* ==================================================
+       KUALITAS (COSMETIC — TIDAK MENGUBAH FILE VIDEO)
+    ================================================== */
+
+    const qualityValueLabel =
+        document.getElementById("qualityValue");
+
+    if (settingsMenu) {
+
+        settingsMenu.querySelectorAll(
+            ".quality-option"
+        ).forEach(option => {
+
+            option.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+
+                    settingsMenu.querySelectorAll(
+                        ".quality-option"
+                    ).forEach(item => {
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    });
+
+
+                    option.classList.add(
+                        "active"
+                    );
+
+
+                    if (qualityValueLabel) {
+
+                        qualityValueLabel.textContent =
+                            option.dataset.quality;
+
+                    }
+
+
+                    goToSettingsPage(
+                        "main"
+                    );
+
+                    closeSettings();
+
+                    showControls();
+
+                }
+            );
+
+        });
+
+    }
+
+
+    /* ==================================================
+       TIMER TIDUR (BENERAN MENJEDA VIDEO)
+    ================================================== */
+
+    const sleepTimerValueLabel =
+        document.getElementById("sleepTimerValue");
+
+    let sleepTimeoutId =
+        null;
+
+    let sleepAtVideoEnd =
+        false;
+
+
+    function clearSleepTimer() {
+
+        if (sleepTimeoutId) {
+
+            clearTimeout(
+                sleepTimeoutId
+            );
+
+            sleepTimeoutId =
+                null;
+
+        }
+
+
+        sleepAtVideoEnd =
+            false;
+
+    }
+
+
+    if (mainVideo) {
+
+        mainVideo.addEventListener(
+            "ended",
+            () => {
+
+                if (sleepAtVideoEnd) {
+
+                    mainVideo.pause();
+
+                    sleepAtVideoEnd =
+                        false;
+
+                }
+
+            }
+        );
+
+    }
+
+
+    if (settingsMenu) {
+
+        settingsMenu.querySelectorAll(
+            ".sleep-option"
+        ).forEach(option => {
+
+            option.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+
+                    settingsMenu.querySelectorAll(
+                        ".sleep-option"
+                    ).forEach(item => {
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    });
+
+
+                    option.classList.add(
+                        "active"
+                    );
+
+
+                    clearSleepTimer();
+
+
+                    const value =
+                        option.dataset.sleep;
+
+
+                    if (value === "0") {
+
+                        if (sleepTimerValueLabel) {
+
+                            sleepTimerValueLabel.textContent =
+                                "Nonaktif";
+
+                        }
+
+                    }
+
+                    else if (value === "end") {
+
+                        sleepAtVideoEnd =
+                            true;
+
+                        if (sleepTimerValueLabel) {
+
+                            sleepTimerValueLabel.textContent =
+                                "Akhir video ini";
+
+                        }
+
+                    }
+
+                    else {
+
+                        const minutes =
+                            Number(value);
+
+                        sleepTimeoutId =
+                            setTimeout(
+                                () => {
+
+                                    if (mainVideo) {
+
+                                        mainVideo.pause();
+
+                                    }
+
+                                },
+                                minutes * 60 * 1000
+                            );
+
+
+                        if (sleepTimerValueLabel) {
+
+                            sleepTimerValueLabel.textContent =
+                                `${minutes} menit`;
+
+                        }
+
+                    }
+
+
+                    goToSettingsPage(
+                        "main"
+                    );
+
+                    closeSettings();
+
+                    showControls();
+
+                }
+            );
+
+        });
+
+    }
+
+
+    /* ==================================================
+       TOGGLE FITUR (VOLUME STABIL, PENGUAT SUARA,
+       PENCAHAYAAN SINEMATIK, ANOTASI)
+    ================================================== */
+
+    let audioContext =
+        null;
+
+    let gainNode =
+        null;
+
+
+    function ensureAudioGraph() {
+
+        if (audioContext || !mainVideo) {
+
+            return;
+
+        }
+
+
+        try {
+
+            audioContext =
+                new (window.AudioContext ||
+                    window.webkitAudioContext)();
+
+            const source =
+                audioContext.createMediaElementSource(
+                    mainVideo
+                );
+
+            gainNode =
+                audioContext.createGain();
+
+            source.connect(gainNode);
+
+            gainNode.connect(
+                audioContext.destination
+            );
+
+        }
+
+        catch (error) {
+
+            console.log(
+                "Audio boost tidak tersedia:",
+                error
+            );
+
+        }
+
+    }
+
+
+    if (settingsMenu) {
+
+        settingsMenu.querySelectorAll(
+            ".settings-toggle-row"
+        ).forEach(row => {
+
+            row.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+
+                    const isOn =
+                        row.classList.toggle(
+                            "on"
+                        );
+
+                    const toggleName =
+                        row.dataset.toggle;
+
+
+                    if (toggleName === "audio-boost") {
+
+                        ensureAudioGraph();
+
+
+                        if (audioContext && audioContext.state === "suspended") {
+
+                            audioContext.resume();
+
+                        }
+
+
+                        if (gainNode) {
+
+                            gainNode.gain.value =
+                                isOn ? 1.8 : 1;
+
+                        }
+
+                    }
+
+
+                    else if (toggleName === "cinematic") {
+
+                        if (youtubePlayer) {
+
+                            youtubePlayer.classList.toggle(
+                                "cinematic-mode",
+                                isOn
+                            );
+
+                        }
+
+                    }
+
+
+                    else if (toggleName === "annotations") {
+
+                        if (annotationBubble) {
+
+                            annotationBubble.classList.toggle(
+                                "visible",
+                                isOn
+                            );
+
+                        }
+
+                    }
+
+                }
+            );
+
+        });
+
+    }
+
+
+    /* ==================================================
+       CAPTIONS (CC) — COSMETIC (BELUM ADA FILE SUBTITLE)
+    ================================================== */
+
+    if (captionsButton) {
+
+        captionsButton.addEventListener(
+            "click",
+            () => {
+
+                const isActive =
+                    captionsButton.classList.toggle(
+                        "active"
+                    );
+
+                showToast(
+                    isActive
+                        ? "Teks diaktifkan (video ini belum memiliki file subtitle)."
+                        : "Teks dinonaktifkan."
+                );
+
+                showControls();
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
+       MINIPLAYER (PICTURE-IN-PICTURE ASLI)
+    ================================================== */
+
+    if (miniplayerButton && mainVideo) {
+
+        miniplayerButton.addEventListener(
+            "click",
+            async () => {
+
+                try {
+
+                    if (document.pictureInPictureElement) {
+
+                        await document.exitPictureInPicture();
+
+                    }
+
+                    else if (
+                        document.pictureInPictureEnabled
+                    ) {
+
+                        await mainVideo.requestPictureInPicture();
+
+                    }
+
+                    else {
+
+                        showToast(
+                            "Miniplayer tidak didukung browser ini."
+                        );
+
+                    }
+
+                }
+
+                catch (error) {
+
+                    showToast(
+                        "Tidak bisa membuka miniplayer."
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
+       MODE TEATER
+    ================================================== */
+
+    if (theaterButton) {
+
+        theaterButton.addEventListener(
+            "click",
+            () => {
+
+                const isTheater =
+                    document.body.classList.toggle(
+                        "theater-mode"
+                    );
+
+                theaterButton.classList.toggle(
+                    "active",
+                    isTheater
+                );
+
+                showControls();
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
+       TOMBOL ATAS: TEMA & INFO
+    ================================================== */
+
+    if (playerThemeButton) {
+
+        playerThemeButton.textContent =
+            document.body.classList.contains("dark")
+                ? "☀️"
+                : "🌙";
+
+
+        playerThemeButton.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                toggleThemeMode();
+
+            }
+        );
+
+    }
+
+
+    if (playerInfoButton) {
+
+        playerInfoButton.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                showToast(
+                    `${selectedVideo.title} • ${selectedVideo.channel}`
+                );
+
+            }
+        );
+
+    }
 
     document.addEventListener(
         "click",
