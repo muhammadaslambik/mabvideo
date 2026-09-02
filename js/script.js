@@ -1350,130 +1350,112 @@ if (videoProgressThumb) {
     }
 
 
-    /* ==================================================
-       AUTO HIDE TIMER
-    ================================================== */
+/* ==================================================
+   AUTO HIDE TIMER
+================================================== */
 
-    let hideControlsTimer = null;
-
-
-    function clearHideControlsTimer() {
-
-        if (hideControlsTimer) {
-
-            clearTimeout(
-                hideControlsTimer
-            );
+let hideControlsTimer = null;
 
 
-            hideControlsTimer =
-                null;
+function clearHideControlsTimer() {
 
-        }
+    if (hideControlsTimer) {
 
-    }
-
-
-    function showControls() {
-
-        if (!youtubePlayer) {
-
-            return;
-
-        }
-
-
-        youtubePlayer.classList.add(
-            "controls-visible"
+        clearTimeout(
+            hideControlsTimer
         );
-
-
-        if (videoControls) {
-
-            videoControls.classList.remove(
-                "hidden"
-            );
-
-        }
-
-
-        clearHideControlsTimer();
-
-    }
-
-
-function closeSettings() {
-
-    if (!settingsMenu) {
-        return;
-    }
-
-    settingsMenu.classList.add(
-        "hidden"
-    );
-
-    settingsMenu.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-}
-
-
-    function hideControls() {
-
-        if (
-            !youtubePlayer ||
-            !mainVideo ||
-            mainVideo.paused
-        ) {
-
-            return;
-
-        }
-
-
-        closeSettings();
-
-
-        youtubePlayer.classList.remove(
-            "controls-visible"
-        );
-
-
-        if (videoControls) {
-
-            videoControls.classList.add(
-                "hidden"
-            );
-
-        }
-
-    }
-
-
-    function scheduleHideControls() {
-
-        clearHideControlsTimer();
-
-
-        if (
-            !mainVideo ||
-            mainVideo.paused
-        ) {
-
-            return;
-
-        }
 
 
         hideControlsTimer =
-            setTimeout(
-                hideControls,
-                3000
-            );
+            null;
 
     }
 
+}
+
+
+function showControls() {
+
+    if (!youtubePlayer) {
+
+        return;
+
+    }
+
+
+    youtubePlayer.classList.add(
+        "controls-visible"
+    );
+
+
+    if (videoControls) {
+
+        videoControls.classList.remove(
+            "hidden"
+        );
+
+    }
+
+
+    clearHideControlsTimer();
+
+}
+
+
+function hideControls() {
+
+    if (
+        !youtubePlayer ||
+        !mainVideo ||
+        mainVideo.paused
+    ) {
+
+        return;
+
+    }
+
+
+    closeSettings();
+
+
+    youtubePlayer.classList.remove(
+        "controls-visible"
+    );
+
+
+    if (videoControls) {
+
+        videoControls.classList.add(
+            "hidden"
+        );
+
+    }
+
+}
+
+
+function scheduleHideControls() {
+
+    clearHideControlsTimer();
+
+
+    if (
+        !mainVideo ||
+        mainVideo.paused
+    ) {
+
+        return;
+
+    }
+
+
+    hideControlsTimer =
+        setTimeout(
+            hideControls,
+            3000
+        );
+
+}
 
     /* ==================================================
        CENTER PLAY BUTTON
@@ -1915,12 +1897,19 @@ function closeSettings() {
             mainVideo.duration;
 
 
-        if (videoProgress) {
+if (videoProgress) {
 
-            videoProgress.style.width =
-                `${percentage * 100}%`;
+    videoProgress.style.width =
+        `${percentage * 100}%`;
 
-        }
+}
+
+if (videoProgressThumb) {
+
+    videoProgressThumb.style.left =
+        `${percentage * 100}%`;
+
+}
 
 
         updateVideoTime();
@@ -2394,13 +2383,15 @@ function closeSettings() {
                     break;
 
 
-                case "f":
+case "f":
 
-                    event.preventDefault();
+    event.preventDefault();
 
-                    toggleFullscreen();
+    toggleFullscreen();
 
-                    break;
+    showControls();
+
+    break;
 
 
                 case "arrowleft":
