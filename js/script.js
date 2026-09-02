@@ -2751,51 +2751,73 @@ if (mainVideo) {
         1;
 
 
-    if (shouldAutoplay) {
+if (shouldAutoplay) {
 
-        const startAutoplay = () => {
+    const startAutoplay = () => {
 
-            const playPromise =
-                mainVideo.play();
+        mainVideo.muted = false;
 
-            if (
-                playPromise !== undefined
-            ) {
+        const playPromise =
+            mainVideo.play();
 
-                playPromise.catch(
-                    error => {
+        if (
+            playPromise !== undefined
+        ) {
 
-                        console.log(
-                            "Autoplay diblokir browser:",
-                            error
+            playPromise.catch(
+                error => {
+
+                    console.log(
+                        "Autoplay dengan suara diblokir, mencoba muted:",
+                        error
+                    );
+
+                    mainVideo.muted = true;
+
+                    const mutedPlayPromise =
+                        mainVideo.play();
+
+                    if (
+                        mutedPlayPromise !== undefined
+                    ) {
+
+                        mutedPlayPromise.catch(
+                            mutedError => {
+
+                                console.log(
+                                    "Autoplay muted juga gagal:",
+                                    mutedError
+                                );
+
+                            }
                         );
 
                     }
-                );
 
-            }
-
-        };
-
-
-        if (
-            mainVideo.readyState >= 2
-        ) {
-
-            startAutoplay();
-
-        }
-        else {
-
-            mainVideo.addEventListener(
-                "canplay",
-                startAutoplay,
-                {
-                    once: true
                 }
             );
 
         }
+
+    };
+
+
+    if (
+        mainVideo.readyState >= 2
+    ) {
+
+        startAutoplay();
+
+    }
+    else {
+
+        mainVideo.addEventListener(
+            "canplay",
+            startAutoplay,
+            {
+                once: true
+            }
+        );
 
     }
 
