@@ -1384,7 +1384,6 @@ function clearHideControlsTimer() {
 
 }
 
-
 function showControls() {
 
     if (!youtubePlayer) {
@@ -1396,6 +1395,11 @@ function showControls() {
 
     youtubePlayer.classList.add(
         "controls-visible"
+    );
+
+
+    youtubePlayer.classList.remove(
+        "cursor-hidden"
     );
 
 
@@ -1415,11 +1419,7 @@ function showControls() {
 
 function hideControls() {
 
-    if (
-        !youtubePlayer ||
-        !mainVideo ||
-        mainVideo.paused
-    ) {
+    if (!youtubePlayer) {
 
         return;
 
@@ -1431,6 +1431,11 @@ function hideControls() {
 
     youtubePlayer.classList.remove(
         "controls-visible"
+    );
+
+
+    youtubePlayer.classList.add(
+        "cursor-hidden"
     );
 
 
@@ -1450,20 +1455,10 @@ function scheduleHideControls() {
     clearHideControlsTimer();
 
 
-    if (
-        !mainVideo ||
-        mainVideo.paused
-    ) {
-
-        return;
-
-    }
-
-
     hideControlsTimer =
         setTimeout(
             hideControls,
-            3000
+            2000
         );
 
 }
@@ -1630,7 +1625,7 @@ mainVideo.addEventListener(
 
         showControls();
 
-        clearHideControlsTimer();
+         scheduleHideControls();
 
     }
 );
@@ -1644,7 +1639,7 @@ mainVideo.addEventListener(
 
                 showControls();
 
-                clearHideControlsTimer();
+                scheduleHideControls();
 
             }
         );
@@ -2322,60 +2317,61 @@ function closeSettings() {
     );
 
 
-    /* ==================================================
-       AUTO HIDE CONTROLS
-    ================================================== */
+ /* ==================================================
+   AUTO HIDE CONTROLS + CURSOR
+================================================== */
 
-    if (youtubePlayer) {
+if (youtubePlayer) {
 
-        youtubePlayer.addEventListener(
-            "mousemove",
-            () => {
+    youtubePlayer.addEventListener(
+        "mousemove",
+        () => {
 
-                showControls();
+            showControls();
 
-                scheduleHideControls();
+            scheduleHideControls();
 
-            }
-        );
-
-
-        youtubePlayer.addEventListener(
-            "touchstart",
-            () => {
-
-                showControls();
-
-                scheduleHideControls();
-
-            },
-            {
-                passive: true
-            }
-        );
+        }
+    );
 
 
-        youtubePlayer.addEventListener(
-            "mouseenter",
-            () => {
+    youtubePlayer.addEventListener(
+        "touchstart",
+        () => {
 
-                showControls();
+            showControls();
 
-            }
-        );
+            scheduleHideControls();
+
+        },
+        {
+            passive: true
+        }
+    );
 
 
-        youtubePlayer.addEventListener(
-            "mouseleave",
-            () => {
+    youtubePlayer.addEventListener(
+        "mouseenter",
+        () => {
 
-                scheduleHideControls();
+            showControls();
 
-            }
-        );
+            scheduleHideControls();
 
-    }
+        }
+    );
 
+
+    youtubePlayer.addEventListener(
+        "mouseleave",
+        () => {
+
+            scheduleHideControls();
+
+        }
+    );
+
+}
 
     /* ==================================================
        KEYBOARD CONTROLS
