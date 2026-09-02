@@ -1111,6 +1111,17 @@ else {
             ".speed-option"
         );
 
+    /* ==================================================
+       CENTER BUTTON INITIAL STATE
+    ================================================== */
+
+    if (playButton) {
+
+        playButton.classList.add(
+            "hidden"
+        );
+
+    }
 
     /* ==================================================
        TIME FORMAT
@@ -1457,29 +1468,87 @@ function scheduleHideControls() {
 
 }
 
-    /* ==================================================
-       CENTER PLAY BUTTON
-    ================================================== */
+/* ==================================================
+   TRANSIENT CENTER PLAY / PAUSE BUTTON
+================================================== */
 
-    if (
-        mainVideo &&
-        playButton
-    ) {
+let centerPlayButtonTimer = null;
 
-        playButton.addEventListener(
-            "click",
-            event => {
 
-                event.stopPropagation();
+function clearCenterPlayButtonTimer() {
 
-                togglePlayPause();
+    if (centerPlayButtonTimer) {
 
-                showControls();
-
-            }
+        clearTimeout(
+            centerPlayButtonTimer
         );
 
+        centerPlayButtonTimer =
+            null;
+
     }
+
+}
+
+
+function showCenterPlayButtonBriefly() {
+
+    if (!playButton) {
+
+        return;
+
+    }
+
+
+    clearCenterPlayButtonTimer();
+
+
+    playButton.classList.remove(
+        "hidden"
+    );
+
+
+    centerPlayButtonTimer =
+        setTimeout(
+            () => {
+
+                playButton.classList.add(
+                    "hidden"
+                );
+
+                centerPlayButtonTimer =
+                    null;
+
+            },
+            500
+        );
+
+}
+
+   
+/* ==================================================
+   CENTER PLAY BUTTON
+================================================== */
+
+if (
+    mainVideo &&
+    playButton
+) {
+
+    playButton.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+            togglePlayPause();
+
+            showControls();
+
+        }
+    );
+
+}
 
 
     /* ==================================================
@@ -1535,32 +1604,36 @@ function scheduleHideControls() {
 
     if (mainVideo) {
 
-        mainVideo.addEventListener(
-            "play",
-            () => {
+mainVideo.addEventListener(
+    "play",
+    () => {
 
-                updatePlayButtons();
+        updatePlayButtons();
 
-                showControls();
+        showCenterPlayButtonBriefly();
 
-                scheduleHideControls();
+        showControls();
 
-            }
-        );
+        scheduleHideControls();
+
+    }
+);
 
 
-        mainVideo.addEventListener(
-            "pause",
-            () => {
+mainVideo.addEventListener(
+    "pause",
+    () => {
 
-                updatePlayButtons();
+        updatePlayButtons();
 
-                showControls();
+        showCenterPlayButtonBriefly();
 
-                clearHideControlsTimer();
+        showControls();
 
-            }
-        );
+        clearHideControlsTimer();
+
+    }
+);
 
 
         mainVideo.addEventListener(
