@@ -2749,19 +2749,7 @@ if (mainVideo) {
 
     mainVideo.playbackRate =
         1;
-
-   
-if (mainVideo) {
-
-    mainVideo.volume =
-        1;
-
-    mainVideo.muted =
-        true;
-
-    mainVideo.playbackRate =
-        1;
-
+  
 
     if (shouldAutoplay) {
 
