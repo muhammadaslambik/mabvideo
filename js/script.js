@@ -787,10 +787,135 @@ if (notificationButton && notificationMenu) {
 
 
 /* ==================================================
-   AKUN / PROFIL
+   AKUN / PROFIL (MENU LENGKAP ALA YOUTUBE)
 ================================================== */
 
 if (profileButton && profileMenu) {
+
+    profileMenu.innerHTML = `
+
+        <div class="profile-card">
+
+            <div class="profile-avatar-lg">M</div>
+
+            <div class="profile-card-meta">
+
+                <p class="profile-card-name">
+                    Muhammad Aslambik
+                </p>
+
+                <p class="profile-card-handle">
+                    @muhammadaslambik3072
+                </p>
+
+                <button
+                    class="profile-card-link"
+                    data-action="toast"
+                    type="button"
+                >
+                    Lihat channel Anda
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="profile-menu-divider"></div>
+
+        <button class="profile-menu-item" data-action="toast" type="button">
+            <span class="profile-menu-icon">🅖</span>
+            <span>Akun Google</span>
+        </button>
+
+        <button class="profile-menu-item profile-menu-item-nav" data-action="toast" type="button">
+            <span class="profile-menu-icon">⇄</span>
+            <span>Ganti akun</span>
+            <span class="chevron-right">›</span>
+        </button>
+
+        <button class="profile-menu-item" data-action="toast" type="button">
+            <span class="profile-menu-icon">⎋</span>
+            <span>Logout</span>
+        </button>
+
+        <div class="profile-menu-divider"></div>
+
+        <button class="profile-menu-item" data-action="toast" type="button">
+            <span class="profile-menu-icon">▶</span>
+            <span>MAB-Video Studio</span>
+        </button>
+
+        <button class="profile-menu-item" data-action="toast" type="button">
+            <span class="profile-menu-icon">💳</span>
+            <span>Pembelian dan langganan</span>
+        </button>
+
+        <button class="profile-menu-item" data-action="toast" type="button">
+            <span class="profile-menu-icon">ⓘ</span>
+            <span>Data Anda di MAB-Video</span>
+        </button>
+
+        <button class="profile-menu-item profile-menu-item-nav" data-action="theme" type="button">
+            <span class="profile-menu-icon">🌗</span>
+            <span>Tampilan: <span id="profileThemeValue">Terang</span></span>
+            <span class="chevron-right">›</span>
+        </button>
+
+        <button class="profile-menu-item profile-menu-item-nav" data-action="toast" type="button">
+            <span class="profile-menu-icon">文A</span>
+            <span>Bahasa tampilan: Indonesia</span>
+            <span class="chevron-right">›</span>
+        </button>
+
+        <button class="profile-menu-item profile-menu-item-nav" data-action="restricted" type="button">
+            <span class="profile-menu-icon">🛡</span>
+            <span>Mode Terbatas: <span id="profileRestrictedValue">Nonaktif</span></span>
+            <span class="chevron-right">›</span>
+        </button>
+
+        <button class="profile-menu-item profile-menu-item-nav" data-action="toast" type="button">
+            <span class="profile-menu-icon">📍</span>
+            <span>Lokasi: Indonesia</span>
+            <span class="chevron-right">›</span>
+        </button>
+
+        <button class="profile-menu-item" data-action="toast" type="button">
+            <span class="profile-menu-icon">⌨</span>
+            <span>Pintasan keyboard</span>
+        </button>
+
+        <div class="profile-menu-divider"></div>
+
+        <button class="profile-menu-item" data-action="toast" type="button">
+            <span class="profile-menu-icon">⚙</span>
+            <span>Setelan</span>
+        </button>
+
+        <button class="profile-menu-item" data-action="toast" type="button">
+            <span class="profile-menu-icon">❓</span>
+            <span>Bantuan</span>
+        </button>
+
+        <button class="profile-menu-item" data-action="toast" type="button">
+            <span class="profile-menu-icon">✉</span>
+            <span>Kirim masukan</span>
+        </button>
+
+    `;
+
+
+    const profileThemeValue =
+        document.getElementById("profileThemeValue");
+
+    if (profileThemeValue) {
+
+        profileThemeValue.textContent =
+            document.body.classList.contains("dark")
+                ? "Gelap"
+                : "Terang";
+
+    }
+
 
     profileButton.addEventListener(
         "click",
@@ -821,40 +946,80 @@ if (profileButton && profileMenu) {
 
             event.stopPropagation();
 
-        }
-    );
 
-
-    profileMenu.querySelectorAll(
-        ".profile-menu-item"
-    ).forEach((item, index) => {
-
-        item.addEventListener(
-            "click",
-            () => {
-
-                profileMenu.classList.remove(
-                    "open"
+            const item =
+                event.target.closest(
+                    "[data-action]"
                 );
 
+            if (!item) {
 
-                if (index === 1) {
+                return;
 
-                    toggleThemeMode();
+            }
 
-                    return;
+
+            const action =
+                item.dataset.action;
+
+
+            if (action === "theme") {
+
+                toggleThemeMode();
+
+
+                const valueEl =
+                    document.getElementById(
+                        "profileThemeValue"
+                    );
+
+                if (valueEl) {
+
+                    valueEl.textContent =
+                        document.body.classList.contains("dark")
+                            ? "Gelap"
+                            : "Terang";
 
                 }
 
 
-                showGlobalToast(
-                    "Fitur ini masih dalam pengembangan."
-                );
+                return;
 
             }
-        );
 
-    });
+
+            if (action === "restricted") {
+
+                const valueEl =
+                    document.getElementById(
+                        "profileRestrictedValue"
+                    );
+
+                if (valueEl) {
+
+                    valueEl.textContent =
+                        valueEl.textContent === "Nonaktif"
+                            ? "Aktif"
+                            : "Nonaktif";
+
+                }
+
+
+                return;
+
+            }
+
+
+            profileMenu.classList.remove(
+                "open"
+            );
+
+            showGlobalToast(
+                "Fitur ini masih dalam pengembangan."
+            );
+
+        }
+    );
 
 }
 
@@ -1039,6 +1204,12 @@ applyThemeIcon();
    MENU
 ================================================== */
 
+const isWatchPage =
+    document.body.classList.contains(
+        "watch-page"
+    );
+
+
 if (
     menuButton &&
     sidebar
@@ -1047,6 +1218,27 @@ if (
     menuButton.addEventListener(
         "click",
         () => {
+
+            if (isWatchPage) {
+
+                sidebar.classList.toggle(
+                    "open"
+                );
+
+
+                if (sidebarOverlay) {
+
+                    sidebarOverlay.classList.toggle(
+                        "active"
+                    );
+
+                }
+
+
+                return;
+
+            }
+
 
             if (
                 window.innerWidth > 800
