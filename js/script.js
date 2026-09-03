@@ -265,6 +265,65 @@ function formatCompactCount(number) {
 }
 
 
+function showGlobalToast(message) {
+
+    const existingToast =
+        document.getElementById("mabToast");
+
+    if (existingToast) {
+
+        existingToast.remove();
+
+    }
+
+
+    const toast =
+        document.createElement("div");
+
+    toast.id =
+        "mabToast";
+
+    toast.className =
+        "mab-toast";
+
+    toast.textContent =
+        message;
+
+    document.body.appendChild(
+        toast
+    );
+
+
+    requestAnimationFrame(
+        () => {
+
+            toast.classList.add(
+                "visible"
+            );
+
+        }
+    );
+
+
+    setTimeout(
+        () => {
+
+            toast.classList.remove(
+                "visible"
+            );
+
+            setTimeout(
+                () => toast.remove(),
+                300
+            );
+
+        },
+        2200
+    );
+
+}
+
+
 /* ==================================================
    DOM ELEMENTS
 ================================================== */
@@ -292,6 +351,24 @@ const sidebarOverlay =
 
 const categoryButtons =
     document.querySelectorAll(".category-button");
+
+const voiceSearchButton =
+    document.getElementById("voiceSearchButton");
+
+const createButton =
+    document.getElementById("createButton");
+
+const notificationButton =
+    document.getElementById("notificationButton");
+
+const notificationMenu =
+    document.getElementById("notificationMenu");
+
+const profileButton =
+    document.getElementById("profileButton");
+
+const profileMenu =
+    document.getElementById("profileMenu");
 
 
 /* ==================================================
@@ -450,6 +527,38 @@ function searchVideos() {
 
 
 /* ==================================================
+   SUBMIT SEARCH (REDIRECT KE INDEX JIKA TIDAK ADA GRID)
+================================================== */
+
+function submitSearch() {
+
+    if (!searchInput) {
+
+        return;
+
+    }
+
+
+    const term =
+        searchInput.value.trim();
+
+
+    if (videoGrid) {
+
+        searchVideos();
+
+        return;
+
+    }
+
+
+    window.location.href =
+        `index.html?search=${encodeURIComponent(term)}`;
+
+}
+
+
+/* ==================================================
    SEARCH BUTTON
 ================================================== */
 
@@ -457,7 +566,7 @@ if (searchButton) {
 
     searchButton.addEventListener(
         "click",
-        searchVideos
+        submitSearch
     );
 
 }
@@ -481,7 +590,7 @@ if (searchInput) {
 
             if (event.key === "Enter") {
 
-                searchVideos();
+                submitSearch();
 
             }
 
@@ -489,6 +598,294 @@ if (searchInput) {
     );
 
 }
+
+
+/* ==================================================
+   PENCARIAN DARI URL (?search=...) DI HALAMAN INDEX
+================================================== */
+
+if (videoGrid && searchInput) {
+
+    const urlParams =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const searchFromUrl =
+        urlParams.get("search");
+
+
+    if (searchFromUrl) {
+
+        searchInput.value =
+            searchFromUrl;
+
+        searchVideos();
+
+    }
+
+}
+
+
+/* ==================================================
+   TELUSURI DENGAN SUARA (VOICE SEARCH)
+================================================== */
+
+if (voiceSearchButton) {
+
+    const SpeechRecognitionApi =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+
+    voiceSearchButton.addEventListener(
+        "click",
+        () => {
+
+            if (!SpeechRecognitionApi) {
+
+                showGlobalToast(
+                    "Pencarian suara tidak didukung browser ini."
+                );
+
+                return;
+
+            }
+
+
+            const recognition =
+                new SpeechRecognitionApi();
+
+            recognition.lang =
+                "id-ID";
+
+            recognition.interimResults =
+                false;
+
+            recognition.maxAlternatives =
+                1;
+
+
+            voiceSearchButton.classList.add(
+                "listening"
+            );
+
+
+            recognition.addEventListener(
+                "result",
+                event => {
+
+                    const transcript =
+                        event.results[0][0].transcript;
+
+
+                    if (searchInput) {
+
+                        searchInput.value =
+                            transcript;
+
+                    }
+
+
+                    submitSearch();
+
+                }
+            );
+
+
+            recognition.addEventListener(
+                "error",
+                () => {
+
+                    showGlobalToast(
+                        "Tidak bisa menangkap suara, coba lagi."
+                    );
+
+                }
+            );
+
+
+            recognition.addEventListener(
+                "end",
+                () => {
+
+                    voiceSearchButton.classList.remove(
+                        "listening"
+                    );
+
+                }
+            );
+
+
+            recognition.start();
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+   TOMBOL BUAT / UNGGAH VIDEO
+================================================== */
+
+if (createButton) {
+
+    createButton.addEventListener(
+        "click",
+        () => {
+
+            showGlobalToast(
+                "Fitur unggah video belum tersedia di demo ini."
+            );
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+   NOTIFIKASI
+================================================== */
+
+if (notificationButton && notificationMenu) {
+
+    notificationButton.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+            notificationMenu.classList.toggle(
+                "open"
+            );
+
+
+            if (profileMenu) {
+
+                profileMenu.classList.remove(
+                    "open"
+                );
+
+            }
+
+        }
+    );
+
+
+    notificationMenu.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+   AKUN / PROFIL
+================================================== */
+
+if (profileButton && profileMenu) {
+
+    profileButton.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+            profileMenu.classList.toggle(
+                "open"
+            );
+
+
+            if (notificationMenu) {
+
+                notificationMenu.classList.remove(
+                    "open"
+                );
+
+            }
+
+        }
+    );
+
+
+    profileMenu.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+        }
+    );
+
+
+    profileMenu.querySelectorAll(
+        ".profile-menu-item"
+    ).forEach((item, index) => {
+
+        item.addEventListener(
+            "click",
+            () => {
+
+                profileMenu.classList.remove(
+                    "open"
+                );
+
+
+                if (index === 1) {
+
+                    toggleThemeMode();
+
+                    return;
+
+                }
+
+
+                showGlobalToast(
+                    "Fitur ini masih dalam pengembangan."
+                );
+
+            }
+        );
+
+    });
+
+}
+
+
+/* ==================================================
+   TUTUP DROPDOWN HEADER SAAT KLIK DI LUAR
+================================================== */
+
+document.addEventListener(
+    "click",
+    () => {
+
+        if (notificationMenu) {
+
+            notificationMenu.classList.remove(
+                "open"
+            );
+
+        }
+
+
+        if (profileMenu) {
+
+            profileMenu.classList.remove(
+                "open"
+            );
+
+        }
+
+    }
+);
 
 
 /* ==================================================
