@@ -145,8 +145,16 @@ a {
 
 /* ================= SEARCH ================= */
 
+.search-wrapper {
+    width: min(650px, 50%);
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
 .search-container {
-    width: min(600px, 45%);
+    flex: 1;
 
     display: flex;
 
@@ -185,6 +193,47 @@ a {
 
 .search-button:hover {
     background: #eeeeee;
+}
+
+.voice-search-button {
+    flex-shrink: 0;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #f2f2f2;
+
+    font-size: 17px;
+
+    cursor: pointer;
+
+    transition: background 0.15s ease;
+}
+
+.voice-search-button:hover {
+    background: #e5e5e5;
+}
+
+.voice-search-button.listening {
+    background: #d93025;
+    color: #ffffff;
+    animation: voicePulse 1.2s ease-in-out infinite;
+}
+
+@keyframes voicePulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(217, 48, 37, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(217, 48, 37, 0);
+    }
 }
 
 
@@ -597,6 +646,44 @@ body.dark .search-button {
     border-color: #3a3a3a;
 }
 
+body.dark .voice-search-button {
+    background: #222222;
+    color: #ffffff;
+}
+
+body.dark .voice-search-button:hover {
+    background: #333333;
+}
+
+body.dark .create-button {
+    background: #222222;
+    border-color: #3a3a3a;
+    color: #ffffff;
+}
+
+body.dark .create-button:hover {
+    background: #333333;
+}
+
+body.dark .notification-menu,
+body.dark .profile-menu {
+    background: #212121;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+body.dark .notification-title,
+body.dark .profile-menu-item {
+    color: #ffffff;
+}
+
+body.dark .notification-empty {
+    color: #aaaaaa;
+}
+
+body.dark .profile-menu-item:hover {
+    background: #333333;
+}
+
 body.dark .icon-button:hover,
 body.dark .sidebar-item:hover {
     background: #272727;
@@ -854,7 +941,7 @@ body.dark .description-toggle {
 
 .watch-main {
     padding: 30px;
-    margin-left: 0;
+    padding-top: 94px;
 }
 
 .watch-container {
@@ -1241,6 +1328,7 @@ body.dark .description-toggle {
 
     .watch-main {
         padding: 15px;
+        padding-top: 73px;
     }
 
     .video-player {
@@ -2195,6 +2283,146 @@ body.theater-mode .youtube-player {
         font-size: 12px;
         max-width: 170px;
         top: 46px;
+    }
+
+}
+
+
+/* ==================================================
+   TOMBOL "BUAT" (UNGGAH VIDEO)
+================================================== */
+
+.create-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 9px 16px;
+
+    border: 1px solid #d3d3d3;
+    border-radius: 20px;
+
+    background: #f8f8f8;
+    color: #0f0f0f;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition: background 0.15s ease;
+}
+
+.create-button:hover {
+    background: #eeeeee;
+}
+
+.create-icon {
+    font-size: 17px;
+    line-height: 1;
+}
+
+
+/* ==================================================
+   DROPDOWN NOTIFIKASI & PROFIL
+================================================== */
+
+.notification-wrapper,
+.profile-wrapper {
+    position: relative;
+}
+
+.notification-menu,
+.profile-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+
+    min-width: 220px;
+
+    background: #ffffff;
+    border-radius: 10px;
+
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+
+    padding: 8px;
+
+    display: none;
+    flex-direction: column;
+
+    z-index: 60;
+}
+
+.notification-menu.open,
+.profile-menu.open {
+    display: flex;
+}
+
+.notification-title {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 10px 4px;
+}
+
+.notification-empty {
+    font-size: 13px;
+    color: #606060;
+    padding: 10px;
+    text-align: center;
+}
+
+.profile-menu-item {
+    text-align: left;
+
+    padding: 10px 12px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: transparent;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+.profile-menu-item:hover {
+    background: #f2f2f2;
+}
+
+
+/* ==================================================
+   HEADER BARU RESPONSIF
+================================================== */
+
+@media (max-width: 800px) {
+
+    .create-button span:last-child {
+        display: none;
+    }
+
+    .create-button {
+        padding: 9px;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        justify-content: center;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .search-wrapper {
+        width: 55%;
+    }
+
+    .voice-search-button {
+        width: 36px;
+        height: 36px;
+        font-size: 15px;
     }
 
 }
