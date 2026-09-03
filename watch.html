@@ -28,11 +28,11 @@
         <div class="header-left">
 
             <button
-                class="icon-button"
-                id="backButton"
-                aria-label="Go back"
+                class="icon-button menu-button"
+                id="menuButton"
+                aria-label="Open menu"
             >
-                ←
+                ☰
             </button>
 
             <a
@@ -52,12 +52,210 @@
 
         </div>
 
+
+        <!-- SEARCH -->
+
+        <div class="search-wrapper">
+
+            <div class="search-container">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search"
+                >
+
+                <button
+                    class="search-button"
+                    id="searchButton"
+                    aria-label="Search"
+                >
+                    🔍
+                </button>
+
+            </div>
+
+            <button
+                class="voice-search-button"
+                id="voiceSearchButton"
+                aria-label="Telusuri dengan suara"
+                title="Telusuri dengan suara"
+                type="button"
+            >
+                🎤
+            </button>
+
+        </div>
+
+
+        <!-- HEADER RIGHT -->
+
+        <div class="header-right">
+
+            <button
+                class="icon-button"
+                id="themeButton"
+                aria-label="Toggle dark mode"
+            >
+                🌙
+            </button>
+
+            <button
+                class="create-button"
+                id="createButton"
+                aria-label="Buat atau unggah video"
+                type="button"
+            >
+                <span class="create-icon">+</span>
+                Buat
+            </button>
+
+            <div class="notification-wrapper">
+
+                <button
+                    class="icon-button"
+                    id="notificationButton"
+                    aria-label="Notifikasi"
+                >
+                    🔔
+                </button>
+
+                <div
+                    class="notification-menu"
+                    id="notificationMenu"
+                >
+
+                    <p class="notification-title">
+                        Notifikasi
+                    </p>
+
+                    <p class="notification-empty">
+                        Tidak ada notifikasi baru.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="profile-wrapper">
+
+                <button
+                    class="profile-button"
+                    id="profileButton"
+                    aria-label="Akun"
+                >
+                    M
+                </button>
+
+                <div
+                    class="profile-menu"
+                    id="profileMenu"
+                >
+
+                    <button class="profile-menu-item" type="button">
+                        👤 Kelola Akun
+                    </button>
+
+                    <button class="profile-menu-item" type="button">
+                        🎨 Tampilan: Ganti tema
+                    </button>
+
+                    <button class="profile-menu-item" type="button">
+                        🚪 Keluar
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </header>
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <nav>
+
+            <a href="index.html" class="sidebar-item">
+                <span>🏠</span>
+                <span>Home</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>🔥</span>
+                <span>Trending</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>📺</span>
+                <span>Subscriptions</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <a href="#" class="sidebar-item">
+                <span>📚</span>
+                <span>Library</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>🕘</span>
+                <span>History</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>▶️</span>
+                <span>Your videos</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>⏰</span>
+                <span>Watch later</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <h3>Explore</h3>
+
+            <a href="#" class="sidebar-item">
+                <span>🎵</span>
+                <span>Music</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>🎮</span>
+                <span>Gaming</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>💻</span>
+                <span>Technology</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <span>📚</span>
+                <span>Education</span>
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MOBILE SIDEBAR OVERLAY -->
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
 
 
     <!-- ================= WATCH PAGE ================= -->
 
-    <main class="watch-main">
+    <main class="watch-main main-content">
 
         
 <!-- VIDEO PLAYER -->
