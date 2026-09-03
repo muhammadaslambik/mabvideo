@@ -1393,6 +1393,11 @@ const watchVideoInfo =
         "videoInfo"
     );
 
+const watchSecondary =
+    document.getElementById(
+        "watchSecondary"
+    );
+
 const backButton =
     document.getElementById(
         "backButton"
@@ -1450,6 +1455,203 @@ const shouldAutoplay =
 
         watchVideoTitle.textContent =
             selectedVideo.title;
+
+
+        /* ==================================================
+           VIDEO TERKAIT (SIDEBAR KANAN ALA YOUTUBE)
+        ================================================== */
+
+        if (watchSecondary) {
+
+            const otherVideos =
+                videos.filter(
+                    video => video.id !== selectedVideo.id
+                );
+
+            let relatedTab =
+                "all";
+
+
+            function getRelatedList() {
+
+                if (relatedTab === "channel") {
+
+                    return otherVideos.filter(
+                        video =>
+                            video.channel === selectedVideo.channel
+                    );
+
+                }
+
+
+                if (relatedTab === "related") {
+
+                    return [...otherVideos].sort(
+                        (a, b) =>
+                            parseViewCount(b.views) -
+                            parseViewCount(a.views)
+                    );
+
+                }
+
+
+                if (relatedTab === "watched") {
+
+                    return [...otherVideos].reverse();
+
+                }
+
+
+                return otherVideos;
+
+            }
+
+
+            function renderRelatedThumb(video) {
+
+                return `
+
+                    <div
+                        class="related-video-card"
+                        data-id="${video.id}"
+                    >
+
+                        <div class="related-thumbnail-wrap">
+
+                            <div class="thumbnail-background">
+                                ${video.icon}
+                            </div>
+
+                            <span class="duration">
+                                ${video.duration}
+                            </span>
+
+                        </div>
+
+                        <div class="related-info">
+
+                            <p class="related-title">
+                                ${video.title}
+                            </p>
+
+                            <p class="related-channel">
+                                ${video.channel}
+                            </p>
+
+                            <p class="related-meta">
+                                ${video.views} • ${video.date}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            function renderRelatedSection() {
+
+                const list =
+                    getRelatedList();
+
+                watchSecondary.innerHTML = `
+
+                    <div
+                        class="related-tabs"
+                        id="relatedTabs"
+                    >
+
+                        <button
+                            class="related-tab${relatedTab === "all" ? " active" : ""}"
+                            data-tab="all"
+                            type="button"
+                        >
+                            Semua
+                        </button>
+
+                        <button
+                            class="related-tab${relatedTab === "channel" ? " active" : ""}"
+                            data-tab="channel"
+                            type="button"
+                        >
+                            Dari ${selectedVideo.channel}
+                        </button>
+
+                        <button
+                            class="related-tab${relatedTab === "related" ? " active" : ""}"
+                            data-tab="related"
+                            type="button"
+                        >
+                            Terkait
+                        </button>
+
+                        <button
+                            class="related-tab${relatedTab === "watched" ? " active" : ""}"
+                            data-tab="watched"
+                            type="button"
+                        >
+                            Ditonton
+                        </button>
+
+                    </div>
+
+                    <div class="related-video-list">
+
+                        ${
+                            list.length > 0
+                                ? list.map(renderRelatedThumb).join("")
+                                : `<p class="related-empty">Belum ada video di kategori ini.</p>`
+                        }
+
+                    </div>
+
+                `;
+
+            }
+
+
+            renderRelatedSection();
+
+
+            watchSecondary.addEventListener(
+                "click",
+                event => {
+
+                    const tabButton =
+                        event.target.closest(
+                            "[data-tab]"
+                        );
+
+                    if (tabButton) {
+
+                        relatedTab =
+                            tabButton.dataset.tab;
+
+                        renderRelatedSection();
+
+                        return;
+
+                    }
+
+
+                    const card =
+                        event.target.closest(
+                            "[data-id]"
+                        );
+
+                    if (card) {
+
+                        window.location.href =
+                            `watch.html?id=${card.dataset.id}&autoplay=1`;
+
+                    }
+
+                }
+            );
+
+        }
 
 
         /* ==================================================
@@ -3436,6 +3638,7 @@ else {
                             type="button"
                         >
                             ⚙
+                            <span class="quality-badge" id="qualityBadge">HD</span>
                         </button>
 
 
@@ -5316,6 +5519,21 @@ function goToSettingsPage(pageName) {
 
                         qualityValueLabel.textContent =
                             option.dataset.quality;
+
+                    }
+
+
+                    const qualityBadge =
+                        document.getElementById("qualityBadge");
+
+                    if (qualityBadge) {
+
+                        const isLowQuality =
+                            option.dataset.quality === "480p" ||
+                            option.dataset.quality === "360p";
+
+                        qualityBadge.textContent =
+                            isLowQuality ? "SD" : "HD";
 
                     }
 
