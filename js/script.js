@@ -1245,17 +1245,6 @@ function applyThemeIcon() {
 
     }
 
-
-    const playerThemeButton =
-        document.getElementById("playerThemeButton");
-
-    if (playerThemeButton) {
-
-        playerThemeButton.textContent =
-            icon;
-
-    }
-
 }
 
 
@@ -1318,12 +1307,6 @@ applyThemeIcon();
    MENU
 ================================================== */
 
-const isWatchPage =
-    document.body.classList.contains(
-        "watch-page"
-    );
-
-
 if (
     menuButton &&
     sidebar
@@ -1333,66 +1316,16 @@ if (
         "click",
         () => {
 
-            if (isWatchPage) {
+            sidebar.classList.toggle(
+                "open"
+            );
 
-                sidebar.classList.toggle(
-                    "open"
+
+            if (sidebarOverlay) {
+
+                sidebarOverlay.classList.toggle(
+                    "active"
                 );
-
-
-                if (sidebarOverlay) {
-
-                    sidebarOverlay.classList.toggle(
-                        "active"
-                    );
-
-                }
-
-
-                return;
-
-            }
-
-
-            if (
-                window.innerWidth > 800
-            ) {
-
-                sidebar.classList.toggle(
-                    "collapsed"
-                );
-
-
-                const mainContent =
-                    document.querySelector(
-                        ".main-content"
-                    );
-
-
-                if (mainContent) {
-
-                    mainContent.classList.toggle(
-                        "sidebar-collapsed"
-                    );
-
-                }
-
-            }
-
-            else {
-
-                sidebar.classList.toggle(
-                    "open"
-                );
-
-
-                if (sidebarOverlay) {
-
-                    sidebarOverlay.classList.toggle(
-                        "active"
-                    );
-
-                }
 
             }
 
@@ -3613,36 +3546,6 @@ else {
             </video>
 
 
-            <!-- TOP OVERLAY (ALA YOUTUBE) -->
-
-            <div
-                class="player-top-overlay"
-                id="playerTopOverlay"
-            >
-
-                <button
-                    class="player-top-button"
-                    id="playerThemeButton"
-                    type="button"
-                    aria-label="Ganti mode gelap/terang"
-                    title="Mode gelap/terang"
-                >
-                    🌙
-                </button>
-
-                <button
-                    class="player-top-button"
-                    id="playerInfoButton"
-                    type="button"
-                    aria-label="Info video"
-                    title="Info lainnya"
-                >
-                    ⓘ
-                </button>
-
-            </div>
-
-
             <!-- CENTER PLAY BUTTON -->
 
             <button
@@ -3777,6 +3680,19 @@ else {
                     <!-- SPACER -->
 
                     <div class="controls-spacer"></div>
+
+
+                    <!-- PUTAR OTOMATIS -->
+
+                    <button
+                        id="autoplayToggleButton"
+                        class="control-button autoplay-toggle-button"
+                        aria-label="Putar otomatis"
+                        title="Putar otomatis"
+                        type="button"
+                    >
+                        <span class="autoplay-switch" id="autoplaySwitch"></span>
+                    </button>
 
 
                     <!-- CAPTIONS -->
@@ -4109,17 +4025,17 @@ else {
     const captionsButton =
         document.getElementById("captionsButton");
 
+    const autoplayToggleButton =
+        document.getElementById("autoplayToggleButton");
+
+    const autoplaySwitch =
+        document.getElementById("autoplaySwitch");
+
     const miniplayerButton =
         document.getElementById("miniplayerButton");
 
     const theaterButton =
         document.getElementById("theaterButton");
-
-    const playerThemeButton =
-        document.getElementById("playerThemeButton");
-
-    const playerInfoButton =
-        document.getElementById("playerInfoButton");
 
     const annotationBubble =
         document.getElementById("annotationBubble");
@@ -6019,6 +5935,101 @@ function goToSettingsPage(pageName) {
 
 
     /* ==================================================
+       PUTAR OTOMATIS (AUTOPLAY VIDEO BERIKUTNYA)
+    ================================================== */
+
+    let autoplayNextEnabled =
+        localStorage.getItem("mab-video-autoplay-next") !== "off";
+
+
+    function applyAutoplaySwitchState() {
+
+        if (autoplaySwitch) {
+
+            autoplaySwitch.classList.toggle(
+                "on",
+                autoplayNextEnabled
+            );
+
+        }
+
+    }
+
+
+    applyAutoplaySwitchState();
+
+
+    if (autoplayToggleButton) {
+
+        autoplayToggleButton.addEventListener(
+            "click",
+            () => {
+
+                autoplayNextEnabled =
+                    !autoplayNextEnabled;
+
+                localStorage.setItem(
+                    "mab-video-autoplay-next",
+                    autoplayNextEnabled ? "on" : "off"
+                );
+
+                applyAutoplaySwitchState();
+
+                showToast(
+                    autoplayNextEnabled
+                        ? "Putar otomatis diaktifkan."
+                        : "Putar otomatis dinonaktifkan."
+                );
+
+            }
+        );
+
+    }
+
+
+    if (mainVideo) {
+
+        mainVideo.addEventListener(
+            "ended",
+            () => {
+
+                if (
+                    !autoplayNextEnabled ||
+                    sleepAtVideoEnd
+                ) {
+
+                    return;
+
+                }
+
+
+                const currentIndex =
+                    videos.findIndex(
+                        video => video.id === selectedVideo.id
+                    );
+
+                if (currentIndex === -1) {
+
+                    return;
+
+                }
+
+
+                const nextVideo =
+                    videos[
+                        (currentIndex + 1) % videos.length
+                    ];
+
+                window.location.href =
+                    `watch.html?id=${nextVideo.id}&autoplay=1`;
+
+            }
+        );
+
+    }
+
+
+    /* ==================================================
        CAPTIONS (CC) — COSMETIC (BELUM ADA FILE SUBTITLE)
     ================================================== */
 
@@ -6049,7 +6060,88 @@ function goToSettingsPage(pageName) {
 
     /* ==================================================
        MINIPLAYER (PICTURE-IN-PICTURE ASLI)
+       - Tombol: tetap aktif sampai ditutup manual/tombol close bawaan
+       - Scroll: otomatis aktif saat video utama tenggelam dari layar,
+         otomatis nonaktif saat video utama terlihat lagi
     ================================================== */
+
+    let pipTriggeredByButton =
+        false;
+
+    let pipTriggeredByScroll =
+        false;
+
+
+    function updateMiniplayerButtonVisual() {
+
+        if (miniplayerButton) {
+
+            miniplayerButton.classList.toggle(
+                "active",
+                Boolean(document.pictureInPictureElement)
+            );
+
+        }
+
+    }
+
+
+    async function exitMiniplayer() {
+
+        try {
+
+            if (document.pictureInPictureElement) {
+
+                await document.exitPictureInPicture();
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.log(
+                "Gagal menutup miniplayer:",
+                error
+            );
+
+        }
+
+    }
+
+
+    async function enterMiniplayer() {
+
+        try {
+
+            if (
+                document.pictureInPictureEnabled &&
+                !document.pictureInPictureElement
+            ) {
+
+                await mainVideo.requestPictureInPicture();
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.log(
+                "Miniplayer tidak bisa dibuka otomatis (butuh interaksi pengguna di browser ini):",
+                error
+            );
+
+            pipTriggeredByScroll =
+                false;
+
+            pipTriggeredByButton =
+                false;
+
+        }
+
+    }
+
 
     if (miniplayerButton && mainVideo) {
 
@@ -6057,42 +6149,149 @@ function goToSettingsPage(pageName) {
             "click",
             async () => {
 
-                try {
+                if (document.pictureInPictureElement) {
 
-                    if (document.pictureInPictureElement) {
+                    /* Sudah aktif (baik dari tombol maupun scroll):
+                       tombol menutupnya secara manual */
 
-                        await document.exitPictureInPicture();
+                    pipTriggeredByButton =
+                        false;
 
-                    }
+                    pipTriggeredByScroll =
+                        false;
 
-                    else if (
-                        document.pictureInPictureEnabled
-                    ) {
+                    await exitMiniplayer();
 
-                        await mainVideo.requestPictureInPicture();
-
-                    }
-
-                    else {
-
-                        showToast(
-                            "Miniplayer tidak didukung browser ini."
-                        );
-
-                    }
+                    return;
 
                 }
 
-                catch (error) {
+
+                if (
+                    !document.pictureInPictureEnabled
+                ) {
 
                     showToast(
-                        "Tidak bisa membuka miniplayer."
+                        "Miniplayer tidak didukung browser ini."
                     );
 
+                    return;
+
                 }
+
+
+                pipTriggeredByButton =
+                    true;
+
+                pipTriggeredByScroll =
+                    false;
+
+                await enterMiniplayer();
+
+                updateMiniplayerButtonVisual();
 
             }
         );
+
+
+        mainVideo.addEventListener(
+            "enterpictureinpicture",
+            updateMiniplayerButtonVisual
+        );
+
+
+        mainVideo.addEventListener(
+            "leavepictureinpicture",
+            () => {
+
+                /* Ditutup lewat tombol close bawaan miniplayer,
+                   atau lewat exitPictureInPicture manapun */
+
+                pipTriggeredByButton =
+                    false;
+
+                pipTriggeredByScroll =
+                    false;
+
+                updateMiniplayerButtonVisual();
+
+            }
+        );
+
+
+        /* ==================================================
+           OBSERVER: PANTAU APAKAH VIDEO UTAMA MASIH TERLIHAT
+        ================================================== */
+
+        if (
+            "IntersectionObserver" in window &&
+            watchVideoPlayer
+        ) {
+
+            const scrollMiniplayerObserver =
+                new IntersectionObserver(
+                    entries => {
+
+                        entries.forEach(entry => {
+
+                            /* Kalau lagi aktif karena tombol,
+                               scroll tidak boleh mengubah apa pun */
+
+                            if (pipTriggeredByButton) {
+
+                                return;
+
+                            }
+
+
+                            const isMainPlayerVisible =
+                                entry.isIntersecting;
+
+
+                            if (
+                                !isMainPlayerVisible &&
+                                !document.pictureInPictureElement &&
+                                mainVideo &&
+                                !mainVideo.paused
+                            ) {
+
+                                pipTriggeredByScroll =
+                                    true;
+
+                                enterMiniplayer().then(
+                                    updateMiniplayerButtonVisual
+                                );
+
+                            }
+
+                            else if (
+                                isMainPlayerVisible &&
+                                pipTriggeredByScroll
+                            ) {
+
+                                pipTriggeredByScroll =
+                                    false;
+
+                                exitMiniplayer().then(
+                                    updateMiniplayerButtonVisual
+                                );
+
+                            }
+
+                        });
+
+                    },
+                    {
+                        threshold: 0
+                    }
+                );
+
+
+            scrollMiniplayerObserver.observe(
+                watchVideoPlayer
+            );
+
+        }
 
     }
 
@@ -6124,49 +6323,6 @@ function goToSettingsPage(pageName) {
 
     }
 
-
-    /* ==================================================
-       TOMBOL ATAS: TEMA & INFO
-    ================================================== */
-
-    if (playerThemeButton) {
-
-        playerThemeButton.textContent =
-            document.body.classList.contains("dark")
-                ? "☀️"
-                : "🌙";
-
-
-        playerThemeButton.addEventListener(
-            "click",
-            event => {
-
-                event.stopPropagation();
-
-                toggleThemeMode();
-
-            }
-        );
-
-    }
-
-
-    if (playerInfoButton) {
-
-        playerInfoButton.addEventListener(
-            "click",
-            event => {
-
-                event.stopPropagation();
-
-                showToast(
-                    `${selectedVideo.title} • ${selectedVideo.channel}`
-                );
-
-            }
-        );
-
-    }
 
     document.addEventListener(
         "click",
