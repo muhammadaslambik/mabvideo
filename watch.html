@@ -319,6 +319,44 @@
     </main>
 
 
+    <!-- FLOATING MINIPLAYER (KUSTOM, BUKAN PIP BROWSER) -->
+
+    <div
+        class="floating-miniplayer"
+        id="floatingMiniplayer"
+    >
+
+        <video
+            id="floatingMiniplayerVideo"
+            muted
+            playsinline
+        ></video>
+
+        <div class="floating-miniplayer-controls">
+
+            <button
+                class="floating-miniplayer-playpause"
+                id="floatingMiniplayerPlayPause"
+                type="button"
+                aria-label="Jeda/putar"
+            >
+                ⏸
+            </button>
+
+            <button
+                class="floating-miniplayer-close"
+                id="floatingMiniplayerClose"
+                type="button"
+                aria-label="Tutup miniplayer"
+            >
+                ✕
+            </button>
+
+        </div>
+
+    </div>
+
+
     <script src="js/script.js"></script>
 
 </body>
