@@ -40,20 +40,34 @@
 
         <!-- SEARCH -->
 
-        <div class="search-container">
+        <div class="search-wrapper">
 
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Search"
-            >
+            <div class="search-container">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search"
+                >
+
+                <button
+                    class="search-button"
+                    id="searchButton"
+                    aria-label="Search"
+                >
+                    🔍
+                </button>
+
+            </div>
 
             <button
-                class="search-button"
-                id="searchButton"
-                aria-label="Search"
+                class="voice-search-button"
+                id="voiceSearchButton"
+                aria-label="Telusuri dengan suara"
+                title="Telusuri dengan suara"
+                type="button"
             >
-                🔍
+                🎤
             </button>
 
         </div>
@@ -71,12 +85,51 @@
                 🌙
             </button>
 
-            <button
-                class="icon-button"
-                aria-label="Notifications"
-            >
-                🔔
-            </button>
+            <div class="create-wrapper">
+
+                <button
+                    class="create-button"
+                    id="createButton"
+                    aria-label="Buat atau unggah video"
+                    type="button"
+                >
+                    <span class="create-icon">+</span>
+                    Buat
+                </button>
+
+                <div
+                    class="create-menu"
+                    id="createMenu"
+                ></div>
+
+            </div>
+
+            <div class="notification-wrapper">
+
+                <button
+                    class="icon-button"
+                    id="notificationButton"
+                    aria-label="Notifikasi"
+                >
+                    🔔
+                </button>
+
+                <div
+                    class="notification-menu"
+                    id="notificationMenu"
+                >
+
+                    <p class="notification-title">
+                        Notifikasi
+                    </p>
+
+                    <p class="notification-empty">
+                        Tidak ada notifikasi baru.
+                    </p>
+
+                </div>
+
+            </div>
 
             <div class="profile-wrapper">
 
