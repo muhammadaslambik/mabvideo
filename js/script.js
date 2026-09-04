@@ -265,6 +265,19 @@ function formatCompactCount(number) {
 }
 
 
+function escapeHtmlBasic(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        text;
+
+    return div.innerHTML;
+
+}
+
+
 function showGlobalToast(message) {
 
     const existingToast =
@@ -357,6 +370,9 @@ const voiceSearchButton =
 
 const createButton =
     document.getElementById("createButton");
+
+const createMenu =
+    document.getElementById("createMenu");
 
 const notificationButton =
     document.getElementById("notificationButton");
@@ -726,17 +742,88 @@ if (voiceSearchButton) {
 
 
 /* ==================================================
-   TOMBOL BUAT / UNGGAH VIDEO
+   TOMBOL BUAT (UPLOAD VIDEO / LIVE STREAMING / POSTINGAN)
 ================================================== */
 
-if (createButton) {
+if (createButton && createMenu) {
+
+    createMenu.innerHTML = `
+
+        <button class="create-menu-item" type="button">
+            <span class="create-menu-icon">🎬</span>
+            <span>Upload video</span>
+        </button>
+
+        <button class="create-menu-item" type="button">
+            <span class="create-menu-icon">📡</span>
+            <span>Live streaming</span>
+        </button>
+
+        <button class="create-menu-item" type="button">
+            <span class="create-menu-icon">✍️</span>
+            <span>Buat postingan</span>
+        </button>
+
+    `;
+
 
     createButton.addEventListener(
         "click",
-        () => {
+        event => {
+
+            event.stopPropagation();
+
+            createMenu.classList.toggle(
+                "open"
+            );
+
+
+            if (notificationMenu) {
+
+                notificationMenu.classList.remove(
+                    "open"
+                );
+
+            }
+
+
+            if (profileMenu) {
+
+                profileMenu.classList.remove(
+                    "open"
+                );
+
+            }
+
+        }
+    );
+
+
+    createMenu.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+
+            const item =
+                event.target.closest(
+                    ".create-menu-item"
+                );
+
+            if (!item) {
+
+                return;
+
+            }
+
+
+            createMenu.classList.remove(
+                "open"
+            );
 
             showGlobalToast(
-                "Fitur unggah video belum tersedia di demo ini."
+                "Fitur ini belum tersedia di demo ini."
             );
 
         }
@@ -765,6 +852,15 @@ if (notificationButton && notificationMenu) {
             if (profileMenu) {
 
                 profileMenu.classList.remove(
+                    "open"
+                );
+
+            }
+
+
+            if (createMenu) {
+
+                createMenu.classList.remove(
                     "open"
                 );
 
@@ -936,6 +1032,15 @@ if (profileButton && profileMenu) {
 
             }
 
+
+            if (createMenu) {
+
+                createMenu.classList.remove(
+                    "open"
+                );
+
+            }
+
         }
     );
 
@@ -1044,6 +1149,15 @@ document.addEventListener(
         if (profileMenu) {
 
             profileMenu.classList.remove(
+                "open"
+            );
+
+        }
+
+
+        if (createMenu) {
+
+            createMenu.classList.remove(
                 "open"
             );
 
@@ -1666,8 +1780,24 @@ const shouldAutoplay =
                 )
             );
 
-        const descriptionHtml =
-            (selectedVideo.description || "Tidak ada deskripsi.")
+        const rawDescription =
+            selectedVideo.description || "Tidak ada deskripsi.";
+
+        const isDescriptionLong =
+            rawDescription.length > 140;
+
+        const shortDescriptionRaw =
+            isDescriptionLong
+                ? rawDescription.slice(0, 140).trim()
+                : rawDescription;
+
+        const shortDescriptionHtml =
+            escapeHtmlBasic(shortDescriptionRaw)
+                .replace(/\n/g, "<br>") +
+            (isDescriptionLong ? "…" : "");
+
+        const fullDescriptionHtml =
+            escapeHtmlBasic(rawDescription)
                 .replace(/\n/g, "<br>");
 
         watchVideoInfo.innerHTML = `
@@ -1815,16 +1945,31 @@ const shouldAutoplay =
                     class="description-text"
                     id="descriptionText"
                 >
-                    ${descriptionHtml}
-                </p>
 
-                <button
-                    class="description-toggle"
-                    id="descriptionToggle"
-                    type="button"
-                >
-                    Tampilkan lebih banyak
-                </button>
+                    <span id="descriptionShort">
+                        ${shortDescriptionHtml}
+                    </span>
+
+                    <span
+                        id="descriptionFull"
+                        class="description-full-hidden"
+                    >
+                        ${fullDescriptionHtml}
+                    </span>
+
+                    ${
+                        isDescriptionLong
+                            ? `<button
+                                    class="description-toggle-inline"
+                                    id="descriptionToggle"
+                                    type="button"
+                                >
+                                    selengkapnya
+                                </button>`
+                            : ""
+                    }
+
+                </p>
 
             </div>
 
@@ -2256,10 +2401,21 @@ const shouldAutoplay =
         const descriptionToggle =
             document.getElementById("descriptionToggle");
 
+        const descriptionShortEl =
+            document.getElementById("descriptionShort");
 
-        if (descriptionBox && descriptionToggle) {
+        const descriptionFullEl =
+            document.getElementById("descriptionFull");
 
-            descriptionToggle.addEventListener(
+
+        if (
+            descriptionBox &&
+            descriptionToggle &&
+            descriptionShortEl &&
+            descriptionFullEl
+        ) {
+
+            descriptionBox.addEventListener(
                 "click",
                 () => {
 
@@ -2268,10 +2424,22 @@ const shouldAutoplay =
                             "expanded"
                         );
 
+
+                    descriptionShortEl.classList.toggle(
+                        "description-full-hidden",
+                        isExpanded
+                    );
+
+                    descriptionFullEl.classList.toggle(
+                        "description-full-hidden",
+                        !isExpanded
+                    );
+
+
                     descriptionToggle.textContent =
                         isExpanded
                             ? "Tampilkan lebih sedikit"
-                            : "Tampilkan lebih banyak";
+                            : "selengkapnya";
 
                 }
             );
