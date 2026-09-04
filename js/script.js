@@ -6059,164 +6059,273 @@ function goToSettingsPage(pageName) {
 
 
     /* ==================================================
-       MINIPLAYER (PICTURE-IN-PICTURE ASLI)
-       - Tombol: tetap aktif sampai ditutup manual/tombol close bawaan
-       - Scroll: otomatis aktif saat video utama tenggelam dari layar,
-         otomatis nonaktif saat video utama terlihat lagi
+       MINIPLAYER KUSTOM (BUKAN PIP BROWSER)
+       - Video utama TETAP menyala normal di tempatnya
+       - Klon video kecil (dibisukan) muncul mengambang di
+         kanan bawah, disinkronkan dengan video utama
+       - Tombol: tetap terbuka sampai ditutup manual/tombol close
+       - Scroll: otomatis terbuka saat video utama tenggelam dari
+         layar, otomatis tertutup saat video utama terlihat lagi
     ================================================== */
 
-    let pipTriggeredByButton =
-        false;
+    const floatingMiniplayer =
+        document.getElementById("floatingMiniplayer");
 
-    let pipTriggeredByScroll =
-        false;
+    const floatingMiniplayerVideo =
+        document.getElementById("floatingMiniplayerVideo");
+
+    const floatingMiniplayerPlayPause =
+        document.getElementById("floatingMiniplayerPlayPause");
+
+    const floatingMiniplayerClose =
+        document.getElementById("floatingMiniplayerClose");
 
 
-    function updateMiniplayerButtonVisual() {
+    if (
+        floatingMiniplayer &&
+        floatingMiniplayerVideo &&
+        mainVideo &&
+        selectedVideo.videoUrl
+    ) {
+
+        let miniplayerTriggeredByButton =
+            false;
+
+        let miniplayerTriggeredByScroll =
+            false;
+
+        let miniplayerSyncInterval =
+            null;
+
+
+        function isMiniplayerOpen() {
+
+            return floatingMiniplayer.classList.contains(
+                "visible"
+            );
+
+        }
+
+
+        function updateMiniplayerButtonVisual() {
+
+            if (miniplayerButton) {
+
+                miniplayerButton.classList.toggle(
+                    "active",
+                    isMiniplayerOpen()
+                );
+
+            }
+
+        }
+
+
+        function openFloatingMiniplayer() {
+
+            if (isMiniplayerOpen()) {
+
+                return;
+
+            }
+
+
+            if (
+                floatingMiniplayerVideo.getAttribute("src") !==
+                selectedVideo.videoUrl
+            ) {
+
+                floatingMiniplayerVideo.src =
+                    selectedVideo.videoUrl;
+
+            }
+
+
+            floatingMiniplayerVideo.currentTime =
+                mainVideo.currentTime;
+
+            floatingMiniplayerVideo.play().catch(
+                () => {}
+            );
+
+
+            floatingMiniplayer.classList.add(
+                "visible"
+            );
+
+
+            floatingMiniplayerPlayPause.textContent =
+                mainVideo.paused ? "▶" : "⏸";
+
+
+            if (!miniplayerSyncInterval) {
+
+                miniplayerSyncInterval =
+                    setInterval(
+                        () => {
+
+                            if (
+                                Math.abs(
+                                    floatingMiniplayerVideo.currentTime -
+                                    mainVideo.currentTime
+                                ) > 0.6
+                            ) {
+
+                                floatingMiniplayerVideo.currentTime =
+                                    mainVideo.currentTime;
+
+                            }
+
+                        },
+                        1500
+                    );
+
+            }
+
+
+            updateMiniplayerButtonVisual();
+
+        }
+
+
+        function closeFloatingMiniplayer() {
+
+            if (!isMiniplayerOpen()) {
+
+                return;
+
+            }
+
+
+            floatingMiniplayer.classList.remove(
+                "visible"
+            );
+
+            floatingMiniplayerVideo.pause();
+
+
+            if (miniplayerSyncInterval) {
+
+                clearInterval(
+                    miniplayerSyncInterval
+                );
+
+                miniplayerSyncInterval =
+                    null;
+
+            }
+
+
+            miniplayerTriggeredByButton =
+                false;
+
+            miniplayerTriggeredByScroll =
+                false;
+
+
+            updateMiniplayerButtonVisual();
+
+        }
+
+
+        /* Video utama tetap sumber kebenaran: play/pause di sana
+           ikut mengendalikan klon mengambang */
+
+        mainVideo.addEventListener(
+            "play",
+            () => {
+
+                if (isMiniplayerOpen()) {
+
+                    floatingMiniplayerVideo.play().catch(
+                        () => {}
+                    );
+
+                    floatingMiniplayerPlayPause.textContent =
+                        "⏸";
+
+                }
+
+            }
+        );
+
+
+        mainVideo.addEventListener(
+            "pause",
+            () => {
+
+                if (isMiniplayerOpen()) {
+
+                    floatingMiniplayerVideo.pause();
+
+                    floatingMiniplayerPlayPause.textContent =
+                        "▶";
+
+                }
+
+            }
+        );
+
+
+        floatingMiniplayerPlayPause.addEventListener(
+            "click",
+            () => {
+
+                if (mainVideo.paused) {
+
+                    mainVideo.play().catch(
+                        () => {}
+                    );
+
+                }
+
+                else {
+
+                    mainVideo.pause();
+
+                }
+
+            }
+        );
+
+
+        floatingMiniplayerClose.addEventListener(
+            "click",
+            () => {
+
+                closeFloatingMiniplayer();
+
+            }
+        );
+
 
         if (miniplayerButton) {
 
-            miniplayerButton.classList.toggle(
-                "active",
-                Boolean(document.pictureInPictureElement)
-            );
+            miniplayerButton.addEventListener(
+                "click",
+                () => {
 
-        }
+                    if (isMiniplayerOpen()) {
 
-    }
+                        closeFloatingMiniplayer();
 
+                        return;
 
-    async function exitMiniplayer() {
-
-        try {
-
-            if (document.pictureInPictureElement) {
-
-                await document.exitPictureInPicture();
-
-            }
-
-        }
-
-        catch (error) {
-
-            console.log(
-                "Gagal menutup miniplayer:",
-                error
-            );
-
-        }
-
-    }
+                    }
 
 
-    async function enterMiniplayer() {
+                    miniplayerTriggeredByButton =
+                        true;
 
-        try {
-
-            if (
-                document.pictureInPictureEnabled &&
-                !document.pictureInPictureElement
-            ) {
-
-                await mainVideo.requestPictureInPicture();
-
-            }
-
-        }
-
-        catch (error) {
-
-            console.log(
-                "Miniplayer tidak bisa dibuka otomatis (butuh interaksi pengguna di browser ini):",
-                error
-            );
-
-            pipTriggeredByScroll =
-                false;
-
-            pipTriggeredByButton =
-                false;
-
-        }
-
-    }
-
-
-    if (miniplayerButton && mainVideo) {
-
-        miniplayerButton.addEventListener(
-            "click",
-            async () => {
-
-                if (document.pictureInPictureElement) {
-
-                    /* Sudah aktif (baik dari tombol maupun scroll):
-                       tombol menutupnya secara manual */
-
-                    pipTriggeredByButton =
+                    miniplayerTriggeredByScroll =
                         false;
 
-                    pipTriggeredByScroll =
-                        false;
-
-                    await exitMiniplayer();
-
-                    return;
+                    openFloatingMiniplayer();
 
                 }
+            );
 
-
-                if (
-                    !document.pictureInPictureEnabled
-                ) {
-
-                    showToast(
-                        "Miniplayer tidak didukung browser ini."
-                    );
-
-                    return;
-
-                }
-
-
-                pipTriggeredByButton =
-                    true;
-
-                pipTriggeredByScroll =
-                    false;
-
-                await enterMiniplayer();
-
-                updateMiniplayerButtonVisual();
-
-            }
-        );
-
-
-        mainVideo.addEventListener(
-            "enterpictureinpicture",
-            updateMiniplayerButtonVisual
-        );
-
-
-        mainVideo.addEventListener(
-            "leavepictureinpicture",
-            () => {
-
-                /* Ditutup lewat tombol close bawaan miniplayer,
-                   atau lewat exitPictureInPicture manapun */
-
-                pipTriggeredByButton =
-                    false;
-
-                pipTriggeredByScroll =
-                    false;
-
-                updateMiniplayerButtonVisual();
-
-            }
-        );
+        }
 
 
         /* ==================================================
@@ -6234,10 +6343,10 @@ function goToSettingsPage(pageName) {
 
                         entries.forEach(entry => {
 
-                            /* Kalau lagi aktif karena tombol,
+                            /* Kalau lagi terbuka karena tombol,
                                scroll tidak boleh mengubah apa pun */
 
-                            if (pipTriggeredByButton) {
+                            if (miniplayerTriggeredByButton) {
 
                                 return;
 
@@ -6250,31 +6359,22 @@ function goToSettingsPage(pageName) {
 
                             if (
                                 !isMainPlayerVisible &&
-                                !document.pictureInPictureElement &&
-                                mainVideo &&
-                                !mainVideo.paused
+                                !isMiniplayerOpen()
                             ) {
 
-                                pipTriggeredByScroll =
+                                miniplayerTriggeredByScroll =
                                     true;
 
-                                enterMiniplayer().then(
-                                    updateMiniplayerButtonVisual
-                                );
+                                openFloatingMiniplayer();
 
                             }
 
                             else if (
                                 isMainPlayerVisible &&
-                                pipTriggeredByScroll
+                                miniplayerTriggeredByScroll
                             ) {
 
-                                pipTriggeredByScroll =
-                                    false;
-
-                                exitMiniplayer().then(
-                                    updateMiniplayerButtonVisual
-                                );
+                                closeFloatingMiniplayer();
 
                             }
 
@@ -6292,6 +6392,21 @@ function goToSettingsPage(pageName) {
             );
 
         }
+
+    }
+
+    else if (miniplayerButton) {
+
+        miniplayerButton.addEventListener(
+            "click",
+            () => {
+
+                showToast(
+                    "Miniplayer belum tersedia untuk video ini."
+                );
+
+            }
+        );
 
     }
 
