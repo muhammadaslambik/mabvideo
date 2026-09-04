@@ -1022,9 +1022,26 @@ body.dark .description-toggle-inline:hover {
     width: 402px;
     flex-shrink: 0;
 
+    position: sticky;
+    top: 80px;
+
+    max-height: calc(100vh - 96px);
+
     display: flex;
     flex-direction: column;
-    gap: 4px;
+
+    overflow: hidden;
+}
+
+.related-tabs {
+    flex-shrink: 0;
+}
+
+.related-video-list {
+    flex: 1;
+    min-height: 0;
+
+    overflow-y: auto;
 }
 
 
@@ -1890,6 +1907,14 @@ body.dark .comment-submit-button:disabled {
 
     .watch-secondary {
         width: 100%;
+
+        position: static;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .related-video-list {
+        overflow-y: visible;
     }
 
 }
@@ -2928,6 +2953,44 @@ body.dark .comment-submit-button:disabled {
 
 
 /* ==================================================
+   TOMBOL PUTAR OTOMATIS
+================================================== */
+
+.autoplay-toggle-button {
+    width: 44px;
+}
+
+.autoplay-switch {
+    position: relative;
+    width: 32px;
+    height: 16px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.35);
+    transition: background 0.15s ease;
+}
+
+.autoplay-switch::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ffffff;
+    transition: transform 0.15s ease;
+}
+
+.autoplay-switch.on {
+    background: #3ea6ff;
+}
+
+.autoplay-switch.on::after {
+    transform: translateX(16px);
+}
+
+
+/* ==================================================
    ANOTASI (COSMETIC BUBBLE)
 ================================================== */
 
@@ -2974,19 +3037,37 @@ body.dark .comment-submit-button:disabled {
 
 
 /* ==================================================
-   MODE TEATER
+   MODE TEATER (TAMPILAN BIOSKOP ALA YOUTUBE)
 ================================================== */
 
 body.theater-mode .watch-container {
     max-width: 100%;
 }
 
-body.theater-mode .youtube-player {
-    max-height: 82vh;
+body.theater-mode .watch-primary {
+    max-width: none;
+}
+
+body.theater-mode .video-player {
+    width: 100%;
+    max-height: calc(100vh - 220px);
+    margin: 0 auto;
+}
+
+body.theater-mode .video-container {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 #theaterButton.active {
     background: rgba(255, 255, 255, 0.2);
+}
+
+#miniplayerButton.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: #3ea6ff;
 }
 
 
@@ -3343,24 +3424,24 @@ body.theater-mode .youtube-player {
 
 
 /* ==================================================
-   SIDEBAR KHUSUS HALAMAN WATCH (BENAR-BENAR TERSEMBUNYI)
+   SIDEBAR TERSEMBUNYI TOTAL (OVERLAY) DI SEMUA HALAMAN
 ================================================== */
 
-body.watch-page .sidebar {
+.sidebar {
     transform: translateX(-100%);
     transition: transform 0.25s ease;
     box-shadow: 2px 0 18px rgba(0, 0, 0, 0.25);
     z-index: 950;
 }
 
-body.watch-page .sidebar.open {
+.sidebar.open {
     transform: translateX(0);
 }
 
-body.watch-page .main-content {
+.main-content {
     margin-left: 0 !important;
 }
 
-body.watch-page .sidebar-overlay.active {
+.sidebar-overlay.active {
     display: block;
 }
