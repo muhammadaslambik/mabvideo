@@ -1042,6 +1042,8 @@ body.dark .description-toggle-inline:hover {
     min-height: 0;
 
     overflow-y: auto;
+
+    overscroll-behavior: contain;
 }
 
 
