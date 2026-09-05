@@ -1003,6 +1003,11 @@ body.dark .description-toggle-inline:hover {
     padding-top: 94px;
 }
 
+.watch-video-wrap {
+    max-width: 910px;
+    margin: 0 0 16px 0;
+}
+
 .watch-container {
     display: flex;
     align-items: flex-start;
@@ -1898,6 +1903,10 @@ body.dark .comment-submit-button:disabled {
 
 
 @media (max-width: 1100px) {
+
+    .watch-video-wrap {
+        max-width: 100%;
+    }
 
     .watch-container {
         flex-direction: column;
@@ -3040,17 +3049,12 @@ body.dark .comment-submit-button:disabled {
 
 /* ==================================================
    MODE TEATER (TAMPILAN BIOSKOP ALA YOUTUBE)
+   Video melebar penuh, tapi video terkait TETAP di
+   samping deskripsi & komentar (bukan pindah ke bawah)
 ================================================== */
 
-body.theater-mode .watch-container {
+body.theater-mode .watch-video-wrap {
     max-width: 100%;
-
-    flex-wrap: wrap;
-}
-
-body.theater-mode .watch-primary {
-    max-width: none;
-    flex: 1 1 100%;
 }
 
 body.theater-mode .video-player {
@@ -3064,21 +3068,6 @@ body.theater-mode .video-container {
     height: 100%;
     max-width: 100%;
     margin: 0 auto;
-}
-
-body.theater-mode .watch-secondary {
-    flex: 1 1 100%;
-    width: 100%;
-
-    position: static;
-    max-height: none;
-    overflow: visible;
-
-    margin-top: 24px;
-}
-
-body.theater-mode .related-video-list {
-    overflow-y: visible;
 }
 
 #theaterButton.active {
