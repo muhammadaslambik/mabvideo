@@ -3121,9 +3121,14 @@ body.theater-mode .video-container {
     position: fixed;
     right: 20px;
     bottom: 20px;
+    left: auto;
+    top: auto;
 
     width: 280px;
     aspect-ratio: 16 / 9;
+
+    min-width: 180px;
+    max-width: 640px;
 
     background: #000;
     border-radius: 10px;
@@ -3146,12 +3151,30 @@ body.theater-mode .video-container {
     pointer-events: auto;
 }
 
+.floating-miniplayer.dragging,
+.floating-miniplayer.resizing {
+    transition: none;
+    user-select: none;
+}
+
 .floating-miniplayer video {
     width: 100%;
     height: 100%;
     object-fit: contain;
     background: #000;
     display: block;
+    pointer-events: none;
+}
+
+.floating-miniplayer-draghandle {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    cursor: grab;
+}
+
+.floating-miniplayer.dragging .floating-miniplayer-draghandle {
+    cursor: grabbing;
 }
 
 .floating-miniplayer-controls {
@@ -3161,13 +3184,20 @@ body.theater-mode .video-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 14px;
 
     background: rgba(0, 0, 0, 0);
 
     opacity: 0;
 
+    z-index: 2;
+    pointer-events: none;
+
     transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.floating-miniplayer-controls button {
+    pointer-events: auto;
 }
 
 .floating-miniplayer:hover .floating-miniplayer-controls {
@@ -3176,9 +3206,10 @@ body.theater-mode .video-container {
 }
 
 .floating-miniplayer-playpause,
+.floating-miniplayer-popout,
 .floating-miniplayer-close {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
 
     display: flex;
     align-items: center;
@@ -3190,7 +3221,7 @@ body.theater-mode .video-container {
     background: rgba(0, 0, 0, 0.6);
     color: #ffffff;
 
-    font-size: 15px;
+    font-size: 14px;
 
     cursor: pointer;
 }
@@ -3200,14 +3231,40 @@ body.theater-mode .video-container {
     top: 8px;
     right: 8px;
 
-    width: 26px;
-    height: 26px;
-    font-size: 12px;
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
 }
 
 .floating-miniplayer-playpause:hover,
+.floating-miniplayer-popout:hover,
 .floating-miniplayer-close:hover {
     background: rgba(0, 0, 0, 0.85);
+}
+
+.floating-miniplayer-resize-handle {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    width: 18px;
+    height: 18px;
+
+    z-index: 2;
+
+    cursor: nesw-resize;
+}
+
+.floating-miniplayer-resize-handle::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    width: 10px;
+    height: 10px;
+    border-left: 2px solid rgba(255, 255, 255, 0.7);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 0 0 0 2px;
 }
 
 @media (max-width: 600px) {
