@@ -1068,8 +1068,6 @@ body.dark .description-toggle-inline:hover {
     min-height: 0;
 
     overflow-y: auto;
-
-    overscroll-behavior: contain;
 }
 
 
@@ -3092,7 +3090,7 @@ body.theater-mode .watch-video-wrap {
 
 body.theater-mode .video-player {
     width: 100%;
-    max-height: calc(100vh - 220px);
+    max-height: 88vh;
     margin: 0 auto;
 }
 
@@ -3101,6 +3099,11 @@ body.theater-mode .video-container {
     height: 100%;
     max-width: 100%;
     margin: 0 auto;
+}
+
+body.theater-mode .watch-secondary {
+    top: 16px;
+    max-height: calc(100vh - 32px);
 }
 
 #theaterButton.active {
