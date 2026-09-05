@@ -252,30 +252,34 @@
 
     <main class="watch-main main-content">
 
+        <div class="watch-video-wrap">
+
+            <!-- VIDEO PLAYER -->
+
+            <div class="video-player" id="videoPlayer">
+
+                <video
+                    id="mainVideo"
+                    preload="metadata"
+                >
+                </video>
+
+                <button
+                    class="play-button"
+                    id="playButton"
+                    aria-label="Play video"
+                >
+                    ▶
+                </button>
+
+            </div>
+
+        </div>
+
+
         <div class="watch-container">
 
         <section class="watch-primary">
-
-        <!-- VIDEO PLAYER -->
-
-    <div class="video-player" id="videoPlayer">
-
-        <video
-            id="mainVideo"
-            preload="metadata"
-        >
-        </video>
-
-        <button
-            class="play-button"
-            id="playButton"
-            aria-label="Play video"
-        >
-            ▶
-        </button>
-
-    </div>
-
 
             <!-- VIDEO TITLE -->
 
@@ -317,6 +321,7 @@
         </div>
 
     </main>
+
 
 
     <!-- FLOATING MINIPLAYER (KUSTOM, BUKAN PIP BROWSER) -->
