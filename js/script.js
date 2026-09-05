@@ -1662,6 +1662,58 @@ const shouldAutoplay =
             renderRelatedSection();
 
 
+            /* ==================================================
+               KONTROL SCROLL TERARAH PADA DAFTAR VIDEO TERKAIT
+               - Scroll turun & sudah mentok bawah: JANGAN ikut
+                 menggeser halaman (video utama tetap diam)
+               - Scroll naik & sudah mentok atas: BOLEH menular
+                 ke scroll halaman (video utama ikut terlihat lagi)
+            ================================================== */
+
+            watchSecondary.addEventListener(
+                "wheel",
+                event => {
+
+                    const list =
+                        event.target.closest(
+                            ".related-video-list"
+                        );
+
+                    if (!list) {
+
+                        return;
+
+                    }
+
+
+                    const isScrollingDown =
+                        event.deltaY > 0;
+
+                    const isAtBottom =
+                        list.scrollTop +
+                            list.clientHeight >=
+                        list.scrollHeight - 1;
+
+
+                    if (isScrollingDown && isAtBottom) {
+
+                        event.preventDefault();
+
+                    }
+
+
+                    /* Kalau scroll ke atas & sudah di posisi
+                       paling atas, biarkan browser meneruskan
+                       scroll ke halaman (tidak di-preventDefault)
+                       supaya video utama otomatis ikut terlihat */
+
+                },
+                {
+                    passive: false
+                }
+            );
+
+
             watchSecondary.addEventListener(
                 "click",
                 event => {
@@ -6846,6 +6898,29 @@ function goToSettingsPage(pageName) {
 
     if (theaterButton) {
 
+        function updateTheaterButtonLabel(isTheater) {
+
+            const label =
+                isTheater ? "Mode default" : "Mode teater";
+
+            theaterButton.setAttribute(
+                "title",
+                label
+            );
+
+            theaterButton.setAttribute(
+                "aria-label",
+                label
+            );
+
+        }
+
+
+        updateTheaterButtonLabel(
+            document.body.classList.contains("theater-mode")
+        );
+
+
         theaterButton.addEventListener(
             "click",
             () => {
@@ -6857,6 +6932,10 @@ function goToSettingsPage(pageName) {
 
                 theaterButton.classList.toggle(
                     "active",
+                    isTheater
+                );
+
+                updateTheaterButtonLabel(
                     isTheater
                 );
 
