@@ -6083,8 +6083,8 @@ function goToSettingsPage(pageName) {
     const floatingMiniplayerDragHandle =
         document.getElementById("floatingMiniplayerDragHandle");
 
-    const floatingMiniplayerResizeHandle =
-        document.getElementById("floatingMiniplayerResizeHandle");
+    const floatingMiniplayerResizeHandles =
+        document.querySelectorAll(".floating-miniplayer-resize-handle");
 
     const floatingMiniplayerPopout =
         document.getElementById("floatingMiniplayerPopout");
@@ -6483,9 +6483,15 @@ function goToSettingsPage(pageName) {
 
         /* ==================================================
            PERBESAR / PERKECIL (RESIZE) MINIPLAYER
+           - 4 pegangan di tiap sudut
+           - sisi yang ditarik menentukan sudut mana yang
+             jadi jangkar (tetap diam) selama resize
         ================================================== */
 
-        if (floatingMiniplayerResizeHandle) {
+        if (
+            floatingMiniplayerResizeHandles &&
+            floatingMiniplayerResizeHandles.length > 0
+        ) {
 
             let isResizing =
                 false;
@@ -6496,68 +6502,20 @@ function goToSettingsPage(pageName) {
             let resizeStartWidth =
                 0;
 
+            let resizeStartHeight =
+                0;
 
-            floatingMiniplayerResizeHandle.addEventListener(
-                "pointerdown",
-                event => {
+            let resizeStartLeft =
+                0;
 
-                    event.stopPropagation();
+            let resizeStartTop =
+                0;
 
-                    isResizing =
-                        true;
+            let activeHoriz =
+                "right";
 
-                    convertToLeftTopPositioning();
-
-
-                    resizeStartX =
-                        event.clientX;
-
-                    resizeStartWidth =
-                        floatingMiniplayer.getBoundingClientRect().width;
-
-
-                    floatingMiniplayer.classList.add(
-                        "resizing"
-                    );
-
-                    floatingMiniplayerResizeHandle.setPointerCapture(
-                        event.pointerId
-                    );
-
-                }
-            );
-
-
-            floatingMiniplayerResizeHandle.addEventListener(
-                "pointermove",
-                event => {
-
-                    if (!isResizing) {
-
-                        return;
-
-                    }
-
-
-                    /* Ditarik ke kiri = lebih besar (pojok kiri-bawah) */
-
-                    const deltaX =
-                        resizeStartX - event.clientX;
-
-                    const newWidth =
-                        Math.min(
-                            640,
-                            Math.max(
-                                180,
-                                resizeStartWidth + deltaX
-                            )
-                        );
-
-                    floatingMiniplayer.style.width =
-                        `${newWidth}px`;
-
-                }
-            );
+            let activeVert =
+                "bottom";
 
 
             function stopResizing() {
@@ -6581,15 +6539,129 @@ function goToSettingsPage(pageName) {
             }
 
 
-            floatingMiniplayerResizeHandle.addEventListener(
-                "pointerup",
-                stopResizing
-            );
+            floatingMiniplayerResizeHandles.forEach(handle => {
 
-            floatingMiniplayerResizeHandle.addEventListener(
-                "pointercancel",
-                stopResizing
-            );
+                handle.addEventListener(
+                    "pointerdown",
+                    event => {
+
+                        event.stopPropagation();
+
+                        isResizing =
+                            true;
+
+                        activeHoriz =
+                            handle.dataset.horiz;
+
+                        activeVert =
+                            handle.dataset.vert;
+
+                        convertToLeftTopPositioning();
+
+
+                        const rect =
+                            floatingMiniplayer.getBoundingClientRect();
+
+                        resizeStartX =
+                            event.clientX;
+
+                        resizeStartWidth =
+                            rect.width;
+
+                        resizeStartHeight =
+                            rect.height;
+
+                        resizeStartLeft =
+                            rect.left;
+
+                        resizeStartTop =
+                            rect.top;
+
+
+                        floatingMiniplayer.classList.add(
+                            "resizing"
+                        );
+
+                        handle.setPointerCapture(
+                            event.pointerId
+                        );
+
+                    }
+                );
+
+
+                handle.addEventListener(
+                    "pointermove",
+                    event => {
+
+                        if (!isResizing) {
+
+                            return;
+
+                        }
+
+
+                        const deltaX =
+                            event.clientX - resizeStartX;
+
+                        const widthDelta =
+                            activeHoriz === "right"
+                                ? deltaX
+                                : -deltaX;
+
+                        const newWidth =
+                            Math.min(
+                                640,
+                                Math.max(
+                                    180,
+                                    resizeStartWidth + widthDelta
+                                )
+                            );
+
+                        const newHeight =
+                            newWidth * (9 / 16);
+
+
+                        floatingMiniplayer.style.width =
+                            `${newWidth}px`;
+
+
+                        /* jangkar di sisi kanan: geser left
+                           supaya tepi kanan tidak ikut pindah */
+
+                        if (activeHoriz === "left") {
+
+                            floatingMiniplayer.style.left =
+                                `${resizeStartLeft + (resizeStartWidth - newWidth)}px`;
+
+                        }
+
+
+                        /* jangkar di sisi bawah: geser top
+                           supaya tepi bawah tidak ikut pindah */
+
+                        if (activeVert === "top") {
+
+                            floatingMiniplayer.style.top =
+                                `${resizeStartTop + (resizeStartHeight - newHeight)}px`;
+
+                        }
+
+                    }
+                );
+
+
+                handle.addEventListener(
+                    "pointerup",
+                    stopResizing
+                );
+
+                handle.addEventListener(
+                    "pointercancel",
+                    stopResizing
+                );
+
+            });
 
         }
 
