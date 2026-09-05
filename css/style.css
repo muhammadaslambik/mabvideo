@@ -1003,29 +1003,50 @@ body.dark .description-toggle-inline:hover {
     padding-top: 94px;
 }
 
-.watch-video-wrap {
-    max-width: 910px;
-    margin: 0 0 16px 0;
-}
-
 .watch-container {
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
+    display: grid;
+
+    grid-template-columns: minmax(0, 1fr) 402px;
+    grid-template-areas:
+        "video    secondary"
+        "title    secondary"
+        "info     secondary"
+        "comments secondary";
+
+    align-items: start;
+    column-gap: 24px;
+    row-gap: 0;
 
     max-width: 1500px;
     margin: 0;
 }
 
-.watch-primary {
-    flex: 1 1 0;
-    min-width: 0;
+.watch-video-wrap {
+    grid-area: video;
     max-width: 910px;
+    margin-bottom: 16px;
+}
+
+.watch-primary {
+    display: contents;
+}
+
+.watch-title {
+    grid-area: title;
+}
+
+.watch-info {
+    grid-area: info;
+}
+
+.comments-section {
+    grid-area: comments;
 }
 
 .watch-secondary {
+    grid-area: secondary;
+
     width: 402px;
-    flex-shrink: 0;
 
     position: sticky;
     top: 80px;
@@ -1909,11 +1930,13 @@ body.dark .comment-submit-button:disabled {
     }
 
     .watch-container {
-        flex-direction: column;
-    }
-
-    .watch-primary {
-        max-width: 100%;
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "video"
+            "title"
+            "info"
+            "comments"
+            "secondary";
     }
 
     .watch-secondary {
@@ -1922,6 +1945,8 @@ body.dark .comment-submit-button:disabled {
         position: static;
         max-height: none;
         overflow: visible;
+
+        margin-top: 24px;
     }
 
     .related-video-list {
@@ -3052,6 +3077,14 @@ body.dark .comment-submit-button:disabled {
    Video melebar penuh, tapi video terkait TETAP di
    samping deskripsi & komentar (bukan pindah ke bawah)
 ================================================== */
+
+body.theater-mode .watch-container {
+    grid-template-areas:
+        "video    video"
+        "title    secondary"
+        "info     secondary"
+        "comments secondary";
+}
 
 body.theater-mode .watch-video-wrap {
     max-width: 100%;
