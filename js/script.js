@@ -6080,6 +6080,15 @@ function goToSettingsPage(pageName) {
     const floatingMiniplayerClose =
         document.getElementById("floatingMiniplayerClose");
 
+    const floatingMiniplayerDragHandle =
+        document.getElementById("floatingMiniplayerDragHandle");
+
+    const floatingMiniplayerResizeHandle =
+        document.getElementById("floatingMiniplayerResizeHandle");
+
+    const floatingMiniplayerPopout =
+        document.getElementById("floatingMiniplayerPopout");
+
 
     if (
         floatingMiniplayer &&
@@ -6297,6 +6306,354 @@ function goToSettingsPage(pageName) {
 
             }
         );
+
+
+        /* ==================================================
+           GESER (DRAG) MINIPLAYER
+        ================================================== */
+
+        function convertToLeftTopPositioning() {
+
+            const rect =
+                floatingMiniplayer.getBoundingClientRect();
+
+            floatingMiniplayer.style.left =
+                `${rect.left}px`;
+
+            floatingMiniplayer.style.top =
+                `${rect.top}px`;
+
+            floatingMiniplayer.style.right =
+                "auto";
+
+            floatingMiniplayer.style.bottom =
+                "auto";
+
+        }
+
+
+        function clampMiniplayerPosition() {
+
+            const rect =
+                floatingMiniplayer.getBoundingClientRect();
+
+            const maxLeft =
+                window.innerWidth - rect.width - 4;
+
+            const maxTop =
+                window.innerHeight - rect.height - 4;
+
+            const clampedLeft =
+                Math.min(
+                    Math.max(4, rect.left),
+                    Math.max(4, maxLeft)
+                );
+
+            const clampedTop =
+                Math.min(
+                    Math.max(4, rect.top),
+                    Math.max(4, maxTop)
+                );
+
+            floatingMiniplayer.style.left =
+                `${clampedLeft}px`;
+
+            floatingMiniplayer.style.top =
+                `${clampedTop}px`;
+
+        }
+
+
+        if (floatingMiniplayerDragHandle) {
+
+            let isDragging =
+                false;
+
+            let dragStartX =
+                0;
+
+            let dragStartY =
+                0;
+
+            let dragOriginLeft =
+                0;
+
+            let dragOriginTop =
+                0;
+
+
+            floatingMiniplayerDragHandle.addEventListener(
+                "pointerdown",
+                event => {
+
+                    isDragging =
+                        true;
+
+                    convertToLeftTopPositioning();
+
+
+                    const rect =
+                        floatingMiniplayer.getBoundingClientRect();
+
+                    dragStartX =
+                        event.clientX;
+
+                    dragStartY =
+                        event.clientY;
+
+                    dragOriginLeft =
+                        rect.left;
+
+                    dragOriginTop =
+                        rect.top;
+
+
+                    floatingMiniplayer.classList.add(
+                        "dragging"
+                    );
+
+                    floatingMiniplayerDragHandle.setPointerCapture(
+                        event.pointerId
+                    );
+
+                }
+            );
+
+
+            floatingMiniplayerDragHandle.addEventListener(
+                "pointermove",
+                event => {
+
+                    if (!isDragging) {
+
+                        return;
+
+                    }
+
+
+                    const deltaX =
+                        event.clientX - dragStartX;
+
+                    const deltaY =
+                        event.clientY - dragStartY;
+
+                    floatingMiniplayer.style.left =
+                        `${dragOriginLeft + deltaX}px`;
+
+                    floatingMiniplayer.style.top =
+                        `${dragOriginTop + deltaY}px`;
+
+                }
+            );
+
+
+            function stopDragging() {
+
+                if (!isDragging) {
+
+                    return;
+
+                }
+
+
+                isDragging =
+                    false;
+
+                floatingMiniplayer.classList.remove(
+                    "dragging"
+                );
+
+                clampMiniplayerPosition();
+
+            }
+
+
+            floatingMiniplayerDragHandle.addEventListener(
+                "pointerup",
+                stopDragging
+            );
+
+            floatingMiniplayerDragHandle.addEventListener(
+                "pointercancel",
+                stopDragging
+            );
+
+        }
+
+
+        /* ==================================================
+           PERBESAR / PERKECIL (RESIZE) MINIPLAYER
+        ================================================== */
+
+        if (floatingMiniplayerResizeHandle) {
+
+            let isResizing =
+                false;
+
+            let resizeStartX =
+                0;
+
+            let resizeStartWidth =
+                0;
+
+
+            floatingMiniplayerResizeHandle.addEventListener(
+                "pointerdown",
+                event => {
+
+                    event.stopPropagation();
+
+                    isResizing =
+                        true;
+
+                    convertToLeftTopPositioning();
+
+
+                    resizeStartX =
+                        event.clientX;
+
+                    resizeStartWidth =
+                        floatingMiniplayer.getBoundingClientRect().width;
+
+
+                    floatingMiniplayer.classList.add(
+                        "resizing"
+                    );
+
+                    floatingMiniplayerResizeHandle.setPointerCapture(
+                        event.pointerId
+                    );
+
+                }
+            );
+
+
+            floatingMiniplayerResizeHandle.addEventListener(
+                "pointermove",
+                event => {
+
+                    if (!isResizing) {
+
+                        return;
+
+                    }
+
+
+                    /* Ditarik ke kiri = lebih besar (pojok kiri-bawah) */
+
+                    const deltaX =
+                        resizeStartX - event.clientX;
+
+                    const newWidth =
+                        Math.min(
+                            640,
+                            Math.max(
+                                180,
+                                resizeStartWidth + deltaX
+                            )
+                        );
+
+                    floatingMiniplayer.style.width =
+                        `${newWidth}px`;
+
+                }
+            );
+
+
+            function stopResizing() {
+
+                if (!isResizing) {
+
+                    return;
+
+                }
+
+
+                isResizing =
+                    false;
+
+                floatingMiniplayer.classList.remove(
+                    "resizing"
+                );
+
+                clampMiniplayerPosition();
+
+            }
+
+
+            floatingMiniplayerResizeHandle.addEventListener(
+                "pointerup",
+                stopResizing
+            );
+
+            floatingMiniplayerResizeHandle.addEventListener(
+                "pointercancel",
+                stopResizing
+            );
+
+        }
+
+
+        /* ==================================================
+           POP-OUT: TAMPIL DI LUAR BROWSER (PIP SISTEM ASLI)
+        ================================================== */
+
+        if (floatingMiniplayerPopout) {
+
+            floatingMiniplayerPopout.addEventListener(
+                "click",
+                async () => {
+
+                    if (!document.pictureInPictureEnabled) {
+
+                        showToast(
+                            "Tampil di luar browser tidak didukung browser ini."
+                        );
+
+                        return;
+
+                    }
+
+
+                    try {
+
+                        /* klik tombol ini = user gesture asli,
+                           jadi PiP sistem pasti diizinkan browser */
+
+                        await mainVideo.requestPictureInPicture();
+
+
+                        /* klon mengambang di dalam halaman tidak
+                           perlu tampil dobel selama PiP sistem aktif */
+
+                        closeFloatingMiniplayer();
+
+                    }
+
+                    catch (error) {
+
+                        showToast(
+                            "Tidak bisa menampilkan di luar browser."
+                        );
+
+                    }
+
+                }
+            );
+
+
+            mainVideo.addEventListener(
+                "leavepictureinpicture",
+                () => {
+
+                    showToast(
+                        "Kembali dari tampilan luar browser."
+                    );
+
+                }
+            );
+
+        }
 
 
         if (miniplayerButton) {
