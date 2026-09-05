@@ -331,6 +331,11 @@
         id="floatingMiniplayer"
     >
 
+        <div
+            class="floating-miniplayer-draghandle"
+            id="floatingMiniplayerDragHandle"
+        ></div>
+
         <video
             id="floatingMiniplayerVideo"
             muted
@@ -349,6 +354,16 @@
             </button>
 
             <button
+                class="floating-miniplayer-popout"
+                id="floatingMiniplayerPopout"
+                type="button"
+                aria-label="Tampilkan di luar browser"
+                title="Tampilkan di luar browser (Picture-in-Picture sistem)"
+            >
+                ⧉
+            </button>
+
+            <button
                 class="floating-miniplayer-close"
                 id="floatingMiniplayerClose"
                 type="button"
@@ -358,6 +373,11 @@
             </button>
 
         </div>
+
+        <div
+            class="floating-miniplayer-resize-handle"
+            id="floatingMiniplayerResizeHandle"
+        ></div>
 
     </div>
 
