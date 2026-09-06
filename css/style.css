@@ -3092,10 +3092,10 @@ body.dark .comment-submit-button:disabled {
 
 body.theater-mode .watch-container {
     grid-template-areas:
-        "video   video"
-        "content secondary";
-
-    grid-template-rows: auto 1fr;
+        "video    video"
+        "title    secondary"
+        "info     secondary"
+        "comments secondary";
 }
 
 body.theater-mode .video-player {
@@ -3114,23 +3114,6 @@ body.theater-mode .video-container {
 body.theater-mode .watch-secondary {
     top: 16px;
     max-height: calc(100vh - 32px);
-}
-
-/* Deskripsi + komentar jadi satu panel yang nempel & scroll
-   sendiri, sinkron dengan panel video terkait di sampingnya,
-   supaya scroll salah satu tidak ikut menggeser yang lain */
-
-body.theater-mode .watch-primary {
-    display: block;
-    grid-area: content;
-
-    position: sticky;
-    top: 16px;
-
-    max-height: calc(100vh - 32px);
-    overflow-y: auto;
-
-    min-width: 0;
 }
 
 #theaterButton.active {
