@@ -3603,7 +3603,8 @@ else {
             <button
                 id="playButton"
                 class="play-button"
-                aria-label="Play video"
+                aria-label="Putar (k)"
+                title="Putar (k)"
                 type="button"
             >
                 ▶
@@ -3681,7 +3682,8 @@ else {
                     <button
                         id="controlPlayButton"
                         class="control-button"
-                        aria-label="Play video"
+                        aria-label="Putar (k)"
+                        title="Putar (k)"
                         type="button"
                     >
                         ▶
@@ -3698,7 +3700,8 @@ else {
                         <button
                             id="muteButton"
                             class="mute-button control-button"
-                            aria-label="Mute video"
+                            aria-label="Mute (m)"
+                            title="Mute (m)"
                             type="button"
                         >
                             🔊
@@ -3739,8 +3742,8 @@ else {
                     <button
                         id="autoplayToggleButton"
                         class="control-button autoplay-toggle-button"
-                        aria-label="Putar otomatis"
-                        title="Putar otomatis"
+                        aria-label="Putar Otomatis Aktif (a)"
+                        title="Putar Otomatis Aktif (a)"
                         type="button"
                     >
                         <span class="autoplay-switch" id="autoplaySwitch"></span>
@@ -3752,8 +3755,8 @@ else {
                     <button
                         id="captionsButton"
                         class="control-button"
-                        aria-label="Teks (CC)"
-                        title="Teks"
+                        aria-label="Subtitel/Teks Aktif (c)"
+                        title="Subtitel/Teks Aktif (c)"
                         type="button"
                     >
                         <span class="cc-icon">CC</span>
@@ -3770,7 +3773,8 @@ else {
                         <button
                             id="settingsButton"
                             class="control-button"
-                            aria-label="Settings"
+                            aria-label="Pengaturan (s)"
+                            title="Pengaturan (s)"
                             type="button"
                         >
                             ⚙
@@ -3952,8 +3956,8 @@ else {
                     <button
                         id="miniplayerButton"
                         class="control-button"
-                        aria-label="Miniplayer"
-                        title="Miniplayer"
+                        aria-label="Miniplayer Aktif (x)"
+                        title="Miniplayer Aktif (x)"
                         type="button"
                     >
                         ⧉
@@ -3965,8 +3969,8 @@ else {
                     <button
                         id="theaterButton"
                         class="control-button"
-                        aria-label="Mode teater"
-                        title="Mode teater"
+                        aria-label="Mode teater (t)"
+                        title="Mode teater (t)"
                         type="button"
                     >
                         ▭
@@ -3978,7 +3982,8 @@ else {
                     <button
                         id="fullscreenButton"
                         class="control-button fullscreen-button"
-                        aria-label="Fullscreen"
+                        aria-label="Layar Penuh (f)"
+                        title="Layar Penuh (f)"
                         type="button"
                     >
                         ⛶
@@ -4308,8 +4313,8 @@ if (videoProgressThumb) {
 
         const buttonLabel =
             isPlaying
-                ? "Pause video"
-                : "Play video";
+                ? "Jeda (k)"
+                : "Putar (k)";
 
 
         if (playButton) {
@@ -4320,6 +4325,11 @@ if (videoProgressThumb) {
 
             playButton.setAttribute(
                 "aria-label",
+                buttonLabel
+            );
+
+            playButton.setAttribute(
+                "title",
                 buttonLabel
             );
 
@@ -4334,6 +4344,11 @@ if (videoProgressThumb) {
 
             controlPlayButton.setAttribute(
                 "aria-label",
+                buttonLabel
+            );
+
+            controlPlayButton.setAttribute(
+                "title",
                 buttonLabel
             );
 
@@ -4401,6 +4416,21 @@ function showControls() {
 function hideControls() {
 
     if (!youtubePlayer) {
+
+        return;
+
+    }
+
+
+    /* Jangan sembunyikan kontrol selama menu pengaturan
+       masih terbuka — coba cek lagi beberapa saat kemudian */
+
+    if (
+        settingsMenu &&
+        !settingsMenu.classList.contains("hidden")
+    ) {
+
+        scheduleHideControls();
 
         return;
 
@@ -4689,7 +4719,12 @@ mainVideo.addEventListener(
 
             muteButton.setAttribute(
                 "aria-label",
-                "Unmute video"
+                "Unmute (m)"
+            );
+
+            muteButton.setAttribute(
+                "title",
+                "Unmute (m)"
             );
 
         }
@@ -4702,7 +4737,12 @@ mainVideo.addEventListener(
 
             muteButton.setAttribute(
                 "aria-label",
-                "Mute video"
+                "Mute (m)"
+            );
+
+            muteButton.setAttribute(
+                "title",
+                "Mute (m)"
             );
 
         }
@@ -5403,6 +5443,10 @@ function closeSettings() {
         "main"
     );
 
+
+    qualityKeyboardActive =
+        false;
+
 }
 
 
@@ -5504,6 +5548,94 @@ function goToSettingsPage(pageName) {
        PLAYBACK SPEED
     ================================================== */
 
+    const speedSteps =
+        [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+
+
+    function applyPlaybackSpeed(speed) {
+
+        if (!mainVideo) {
+
+            return;
+
+        }
+
+
+        mainVideo.playbackRate =
+            speed;
+
+
+        speedOptions.forEach(
+            item => {
+
+                item.classList.toggle(
+                    "active",
+                    Number(item.dataset.speed) === speed
+                );
+
+            }
+        );
+
+
+        const speedValueLabel =
+            document.getElementById("speedValue");
+
+        if (speedValueLabel) {
+
+            speedValueLabel.textContent =
+                speed === 1 ? "Normal" : `${speed}x`;
+
+        }
+
+    }
+
+
+    function stepPlaybackSpeed(direction) {
+
+        if (!mainVideo) {
+
+            return;
+
+        }
+
+
+        const current =
+            mainVideo.playbackRate;
+
+        let index =
+            speedSteps.findIndex(
+                step => Math.abs(step - current) < 0.001
+            );
+
+        if (index === -1) {
+
+            index =
+                speedSteps.indexOf(1);
+
+        }
+
+
+        const newIndex =
+            Math.min(
+                speedSteps.length - 1,
+                Math.max(0, index + direction)
+            );
+
+        const newSpeed =
+            speedSteps[newIndex];
+
+
+        applyPlaybackSpeed(
+            newSpeed
+        );
+
+        showToast(
+            `Kecepatan pemutaran: ${newSpeed === 1 ? "Normal" : newSpeed + "x"}`
+        );
+
+    }
+
+
     speedOptions.forEach(
         option => {
 
@@ -5512,13 +5644,6 @@ function goToSettingsPage(pageName) {
                 event => {
 
                     event.stopPropagation();
-
-
-                    if (!mainVideo) {
-
-                        return;
-
-                    }
 
 
                     const speed =
@@ -5536,23 +5661,8 @@ function goToSettingsPage(pageName) {
                     }
 
 
-                    mainVideo.playbackRate =
-                        speed;
-
-
-                    speedOptions.forEach(
-                        item => {
-
-                            item.classList.remove(
-                                "active"
-                            );
-
-                        }
-                    );
-
-
-                    option.classList.add(
-                        "active"
+                    applyPlaybackSpeed(
+                        speed
                     );
 
 
@@ -6005,6 +6115,27 @@ function goToSettingsPage(pageName) {
 
         }
 
+
+        if (autoplayToggleButton) {
+
+            const label =
+                (autoplayNextEnabled
+                    ? "Putar Otomatis Aktif"
+                    : "Putar Otomatis Non-Aktif") +
+                " (a)";
+
+            autoplayToggleButton.setAttribute(
+                "title",
+                label
+            );
+
+            autoplayToggleButton.setAttribute(
+                "aria-label",
+                label
+            );
+
+        }
+
     }
 
 
@@ -6087,6 +6218,32 @@ function goToSettingsPage(pageName) {
 
     if (captionsButton) {
 
+        function updateCaptionsLabel(isActive) {
+
+            const label =
+                (isActive
+                    ? "Subtitel/Teks Aktif"
+                    : "Subtitel/Teks Non-Aktif") +
+                " (c)";
+
+            captionsButton.setAttribute(
+                "title",
+                label
+            );
+
+            captionsButton.setAttribute(
+                "aria-label",
+                label
+            );
+
+        }
+
+
+        updateCaptionsLabel(
+            captionsButton.classList.contains("active")
+        );
+
+
         captionsButton.addEventListener(
             "click",
             () => {
@@ -6095,6 +6252,10 @@ function goToSettingsPage(pageName) {
                     captionsButton.classList.toggle(
                         "active"
                     );
+
+                updateCaptionsLabel(
+                    isActive
+                );
 
                 showToast(
                     isActive
@@ -6172,9 +6333,29 @@ function goToSettingsPage(pageName) {
 
             if (miniplayerButton) {
 
+                const isOpen =
+                    isMiniplayerOpen();
+
                 miniplayerButton.classList.toggle(
                     "active",
-                    isMiniplayerOpen()
+                    isOpen
+                );
+
+
+                const label =
+                    (isOpen
+                        ? "Miniplayer Aktif"
+                        : "Miniplayer Non-Aktif") +
+                    " (x)";
+
+                miniplayerButton.setAttribute(
+                    "title",
+                    label
+                );
+
+                miniplayerButton.setAttribute(
+                    "aria-label",
+                    label
                 );
 
             }
@@ -6901,7 +7082,8 @@ function goToSettingsPage(pageName) {
         function updateTheaterButtonLabel(isTheater) {
 
             const label =
-                isTheater ? "Mode default" : "Mode teater";
+                (isTheater ? "Mode default" : "Mode teater") +
+                " (t)";
 
             theaterButton.setAttribute(
                 "title",
@@ -7552,6 +7734,450 @@ if (mainVideo) {
 
     showControls();
 }
+
+
+/* ==================================================
+   NAVIGASI KEYBOARD DI MENU KUALITAS (SETELAH TEKAN Q)
+================================================== */
+
+let qualityKeyboardActive =
+    false;
+
+let qualityFocusIndex =
+    0;
+
+
+function getQualityOptionsList() {
+
+    if (!settingsMenu) {
+
+        return [];
+
+    }
+
+    return Array.from(
+        settingsMenu.querySelectorAll(
+            ".quality-option"
+        )
+    );
+
+}
+
+
+function updateQualityFocusHighlight() {
+
+    const options =
+        getQualityOptionsList();
+
+    options.forEach(
+        (option, index) => {
+
+            option.classList.toggle(
+                "keyboard-focus",
+                index === qualityFocusIndex
+            );
+
+        }
+    );
+
+
+    if (
+        options[qualityFocusIndex] &&
+        options[qualityFocusIndex].scrollIntoView
+    ) {
+
+        options[qualityFocusIndex].scrollIntoView(
+            {
+                block: "nearest"
+            }
+        );
+
+    }
+
+}
+
+
+function openQualityMenuViaKeyboard() {
+
+    if (
+        !settingsMenu ||
+        !settingsButton
+    ) {
+
+        return;
+
+    }
+
+
+    settingsMenu.classList.remove(
+        "hidden"
+    );
+
+    settingsMenu.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+    goToSettingsPage(
+        "quality"
+    );
+
+
+    const options =
+        getQualityOptionsList();
+
+    const activeIndex =
+        options.findIndex(
+            option => option.classList.contains("active")
+        );
+
+    qualityFocusIndex =
+        activeIndex === -1 ? 0 : activeIndex;
+
+    qualityKeyboardActive =
+        true;
+
+
+    updateQualityFocusHighlight();
+
+    showControls();
+
+}
+
+
+/* ==================================================
+   PINTASAN KEYBOARD ALA YOUTUBE
+================================================== */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        const activeElement =
+            document.activeElement;
+
+        const activeTag =
+            activeElement
+                ? activeElement.tagName
+                : "";
+
+        const isTyping =
+            activeTag === "INPUT" ||
+            activeTag === "TEXTAREA" ||
+            (activeElement && activeElement.isContentEditable);
+
+
+        if (isTyping || !mainVideo) {
+
+            return;
+
+        }
+
+
+        const isSettingsOpen =
+            settingsMenu &&
+            !settingsMenu.classList.contains("hidden");
+
+
+        /* ---- Mode navigasi khusus menu kualitas ---- */
+
+        if (qualityKeyboardActive && isSettingsOpen) {
+
+            const options =
+                getQualityOptionsList();
+
+
+            if (event.key === "ArrowDown") {
+
+                event.preventDefault();
+
+                qualityFocusIndex =
+                    Math.min(
+                        options.length - 1,
+                        qualityFocusIndex + 1
+                    );
+
+                updateQualityFocusHighlight();
+
+                return;
+
+            }
+
+
+            if (event.key === "ArrowUp") {
+
+                event.preventDefault();
+
+                qualityFocusIndex =
+                    Math.max(
+                        0,
+                        qualityFocusIndex - 1
+                    );
+
+                updateQualityFocusHighlight();
+
+                return;
+
+            }
+
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                if (options[qualityFocusIndex]) {
+
+                    options[qualityFocusIndex].click();
+
+                }
+
+                qualityKeyboardActive =
+                    false;
+
+                return;
+
+            }
+
+
+            if (event.key === "Escape") {
+
+                event.preventDefault();
+
+                closeSettings();
+
+                qualityKeyboardActive =
+                    false;
+
+                return;
+
+            }
+
+        }
+
+        else {
+
+            qualityKeyboardActive =
+                false;
+
+        }
+
+
+        const key =
+            event.key.toLowerCase();
+
+
+        switch (key) {
+
+            case "f": {
+
+                event.preventDefault();
+
+                if (typeof toggleFullscreen === "function") {
+
+                    toggleFullscreen();
+
+                }
+
+                showControls();
+
+                break;
+
+            }
+
+
+            case "t": {
+
+                event.preventDefault();
+
+                if (theaterButton) {
+
+                    theaterButton.click();
+
+                }
+
+                break;
+
+            }
+
+
+            case "k":
+            case " ": {
+
+                event.preventDefault();
+
+                if (mainVideo.paused) {
+
+                    mainVideo.play().catch(
+                        () => {}
+                    );
+
+                }
+
+                else {
+
+                    mainVideo.pause();
+
+                }
+
+                showControls();
+
+                break;
+
+            }
+
+
+            case "m": {
+
+                event.preventDefault();
+
+                if (muteButton) {
+
+                    muteButton.click();
+
+                }
+
+                break;
+
+            }
+
+
+            case "c": {
+
+                event.preventDefault();
+
+                if (captionsButton) {
+
+                    captionsButton.click();
+
+                }
+
+                break;
+
+            }
+
+
+            case "a": {
+
+                event.preventDefault();
+
+                if (autoplayToggleButton) {
+
+                    autoplayToggleButton.click();
+
+                }
+
+                break;
+
+            }
+
+
+            case "x": {
+
+                event.preventDefault();
+
+                if (miniplayerButton) {
+
+                    miniplayerButton.click();
+
+                }
+
+                break;
+
+            }
+
+
+            case "s": {
+
+                event.preventDefault();
+
+                if (typeof toggleSettings === "function") {
+
+                    toggleSettings();
+
+                }
+
+                break;
+
+            }
+
+
+            case "j": {
+
+                event.preventDefault();
+
+                stepPlaybackSpeed(-1);
+
+                break;
+
+            }
+
+
+            case "l": {
+
+                event.preventDefault();
+
+                stepPlaybackSpeed(1);
+
+                break;
+
+            }
+
+
+            case "q": {
+
+                event.preventDefault();
+
+                openQualityMenuViaKeyboard();
+
+                break;
+
+            }
+
+
+            case "arrowleft":
+            case "home": {
+
+                event.preventDefault();
+
+                mainVideo.currentTime =
+                    Math.max(
+                        0,
+                        mainVideo.currentTime - 5
+                    );
+
+                showControls();
+
+                break;
+
+            }
+
+
+            case "arrowright":
+            case "end": {
+
+                event.preventDefault();
+
+                mainVideo.currentTime =
+                    Math.min(
+                        mainVideo.duration || Infinity,
+                        mainVideo.currentTime + 5
+                    );
+
+                showControls();
+
+                break;
+
+            }
+
+
+            default:
+
+                break;
+
+        }
+
+    }
+);
 
 
 
