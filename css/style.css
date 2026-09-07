@@ -123,6 +123,8 @@ a {
 
     font-size: 18px;
 
+    filter: grayscale(100%) contrast(1.1);
+
     transition: background 0.2s ease;
 }
 
@@ -212,6 +214,8 @@ a {
 
     font-size: 17px;
 
+    filter: grayscale(100%) contrast(1.1);
+
     cursor: pointer;
 
     transition: background 0.15s ease;
@@ -291,6 +295,8 @@ a {
     text-align: center;
 
     font-size: 18px;
+
+    filter: grayscale(100%) contrast(1.1);
 }
 
 .sidebar-divider {
