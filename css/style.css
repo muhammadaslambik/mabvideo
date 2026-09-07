@@ -1380,12 +1380,12 @@ body.dark .description-toggle-inline:hover {
 .description-meta {
     font-size: 14px;
     font-weight: 500;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .description-text {
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.4;
     color: #0f0f0f;
     white-space: pre-line;
 }
@@ -1692,7 +1692,7 @@ body.dark .description-toggle-inline:hover {
     align-items: baseline;
     gap: 8px;
 
-    margin-bottom: 2px;
+    margin-bottom: 0;
 }
 
 .comment-author {
@@ -1708,11 +1708,11 @@ body.dark .description-toggle-inline:hover {
 
 .comment-text {
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.35;
     color: #0f0f0f;
     white-space: pre-line;
 
-    margin-bottom: 6px;
+    margin-bottom: 2px;
 
     word-break: break-word;
 }
