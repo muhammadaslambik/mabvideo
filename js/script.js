@@ -1234,13 +1234,19 @@ function applyThemeIcon() {
     const darkMode =
         document.body.classList.contains("dark");
 
+    const moonIcon =
+        `<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20 14.5A8.5 8.5 0 019.5 4 8.5 8.5 0 1020 14.5z"/></svg>`;
+
+    const sunIcon =
+        `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M17.9 17.9l1.9 1.9M2 12h2.5M19.5 12H22M4.2 19.8l1.8-1.8M17.9 6.1l1.9-1.9"/></svg>`;
+
     const icon =
-        darkMode ? "☀️" : "🌙";
+        darkMode ? sunIcon : moonIcon;
 
 
     if (themeButton) {
 
-        themeButton.textContent =
+        themeButton.innerHTML =
             icon;
 
     }
