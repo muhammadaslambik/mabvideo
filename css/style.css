@@ -125,13 +125,21 @@ a {
 
     font-size: 18px;
 
-    filter: grayscale(100%) contrast(1.1);
+    color: #0f0f0f;
 
     transition: background 0.2s ease;
 }
 
+.icon-button svg {
+    fill: currentColor;
+}
+
 .icon-button:hover {
     background: #f2f2f2;
+}
+
+body.dark .icon-button {
+    color: #ffffff;
 }
 
 .profile-button {
@@ -216,7 +224,7 @@ a {
 
     font-size: 17px;
 
-    filter: grayscale(100%) contrast(1.1);
+    color: #0f0f0f;
 
     cursor: pointer;
 
