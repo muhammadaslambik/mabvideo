@@ -184,6 +184,149 @@ const videos = [
 
 
 /* ==================================================
+   VIDEO HASIL UPLOAD PENGGUNA
+   - Metadata (judul, channel, dll) disimpan di localStorage
+   - File videonya sendiri disimpan di IndexedDB (bisa
+     menampung file besar, tidak seperti localStorage)
+================================================== */
+
+const UPLOADED_META_KEY =
+    "mabvideo-uploaded-videos";
+
+const UPLOAD_DB_NAME =
+    "mabvideo-uploads-db";
+
+const UPLOAD_STORE_NAME =
+    "videoFiles";
+
+
+function loadUploadedVideosMeta() {
+
+    try {
+
+        const raw =
+            localStorage.getItem(UPLOADED_META_KEY);
+
+        const parsed =
+            raw ? JSON.parse(raw) : [];
+
+        return Array.isArray(parsed) ? parsed : [];
+
+    }
+
+    catch (error) {
+
+        return [];
+
+    }
+
+}
+
+
+function saveUploadedVideosMeta(list) {
+
+    try {
+
+        localStorage.setItem(
+            UPLOADED_META_KEY,
+            JSON.stringify(list)
+        );
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Gagal menyimpan metadata video upload:",
+            error
+        );
+
+    }
+
+}
+
+
+function openUploadDB() {
+
+    return new Promise((resolve, reject) => {
+
+        const request =
+            indexedDB.open(UPLOAD_DB_NAME, 1);
+
+
+        request.onupgradeneeded = () => {
+
+            request.result.createObjectStore(
+                UPLOAD_STORE_NAME
+            );
+
+        };
+
+
+        request.onsuccess = () => resolve(request.result);
+
+        request.onerror = () => reject(request.error);
+
+    });
+
+}
+
+
+async function saveUploadedVideoFile(id, file) {
+
+    const db =
+        await openUploadDB();
+
+    return new Promise((resolve, reject) => {
+
+        const tx =
+            db.transaction(UPLOAD_STORE_NAME, "readwrite");
+
+        tx.objectStore(UPLOAD_STORE_NAME).put(file, id);
+
+        tx.oncomplete = () => resolve();
+
+        tx.onerror = () => reject(tx.error);
+
+    });
+
+}
+
+
+async function getUploadedVideoFile(id) {
+
+    const db =
+        await openUploadDB();
+
+    return new Promise((resolve, reject) => {
+
+        const tx =
+            db.transaction(UPLOAD_STORE_NAME, "readonly");
+
+        const request =
+            tx.objectStore(UPLOAD_STORE_NAME).get(id);
+
+        request.onsuccess = () => resolve(request.result);
+
+        request.onerror = () => reject(request.error);
+
+    });
+
+}
+
+
+/* Gabungkan video hasil upload (terbaru duluan) ke daftar utama,
+   supaya muncul juga di beranda dan bisa dicari/direkomendasikan */
+
+const uploadedVideosMeta =
+    loadUploadedVideosMeta();
+
+videos.unshift(
+    ...uploadedVideosMeta
+);
+
+
+/* ==================================================
    HELPER: PARSE & FORMAT ANGKA (VIEWS, LIKES, SUBSCRIBER)
 ================================================== */
 
@@ -332,6 +475,565 @@ function showGlobalToast(message) {
 
         },
         2200
+    );
+
+}
+
+
+/* ==================================================
+   MODAL UPLOAD VIDEO SUNGGUHAN
+================================================== */
+
+let uploadModalElements =
+    null;
+
+
+function buildUploadModal() {
+
+    if (uploadModalElements) {
+
+        return uploadModalElements;
+
+    }
+
+
+    const overlay =
+        document.createElement("div");
+
+    overlay.className =
+        "upload-modal-overlay";
+
+    overlay.id =
+        "uploadModalOverlay";
+
+    overlay.innerHTML = `
+
+        <div class="upload-modal">
+
+            <div class="upload-modal-header">
+
+                <h2>Upload video</h2>
+
+                <button
+                    class="upload-modal-close"
+                    id="uploadModalClose"
+                    type="button"
+                    aria-label="Tutup"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+            <div
+                class="upload-drop-zone"
+                id="uploadDropZone"
+            >
+
+                <div class="upload-icon-circle">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 16V4M12 4l-5 5M12 4l5 5"/>
+                        <path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3"/>
+                    </svg>
+                </div>
+
+                <p class="upload-drop-text">
+                    Tarik lalu lepas file video yang ingin diupload
+                </p>
+
+                <button
+                    class="upload-pick-button"
+                    id="uploadPickButton"
+                    type="button"
+                >
+                    Pilih file
+                </button>
+
+                <input
+                    type="file"
+                    accept="video/*"
+                    id="uploadFileInput"
+                    hidden
+                >
+
+            </div>
+
+            <div
+                class="upload-progress-area"
+                id="uploadProgressArea"
+            >
+
+                <p id="uploadProgressText">Mengunggah video...</p>
+
+                <div class="upload-progress-bar">
+                    <div
+                        class="upload-progress-fill"
+                        id="uploadProgressFill"
+                    ></div>
+                </div>
+
+            </div>
+
+            <div class="upload-modal-footer">
+
+                <p>
+                    Dengan mengirimkan video ke MAB-Video, Anda menyatakan
+                    bahwa Anda setuju dengan
+                    <a href="#" data-action="toast">Persyaratan Layanan</a>
+                    dan
+                    <a href="#" data-action="toast">Pedoman Komunitas</a>
+                    MAB-Video. Pastikan video Anda tidak melanggar privasi
+                    atau hak cipta orang lain.
+                    <a href="#" data-action="toast">Pelajari lebih lanjut</a>
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(
+        overlay
+    );
+
+
+    const elements = {
+
+        overlay: overlay,
+
+        closeButton:
+            overlay.querySelector("#uploadModalClose"),
+
+        dropZone:
+            overlay.querySelector("#uploadDropZone"),
+
+        pickButton:
+            overlay.querySelector("#uploadPickButton"),
+
+        fileInput:
+            overlay.querySelector("#uploadFileInput"),
+
+        progressArea:
+            overlay.querySelector("#uploadProgressArea"),
+
+        progressText:
+            overlay.querySelector("#uploadProgressText"),
+
+        progressFill:
+            overlay.querySelector("#uploadProgressFill")
+
+    };
+
+
+    overlay.addEventListener(
+        "click",
+        event => {
+
+            if (event.target === overlay) {
+
+                closeUploadModal();
+
+            }
+
+
+            const link =
+                event.target.closest(
+                    "[data-action='toast']"
+                );
+
+            if (link) {
+
+                event.preventDefault();
+
+                showGlobalToast(
+                    "Fitur ini belum tersedia di demo ini."
+                );
+
+            }
+
+        }
+    );
+
+
+    elements.closeButton.addEventListener(
+        "click",
+        closeUploadModal
+    );
+
+
+    elements.pickButton.addEventListener(
+        "click",
+        () => {
+
+            elements.fileInput.click();
+
+        }
+    );
+
+
+    elements.fileInput.addEventListener(
+        "change",
+        () => {
+
+            const file =
+                elements.fileInput.files[0];
+
+            if (file) {
+
+                handleVideoFileSelected(
+                    file
+                );
+
+            }
+
+        }
+    );
+
+
+    /* ---- DRAG & DROP ---- */
+
+    [
+        "dragenter",
+        "dragover"
+    ].forEach(eventName => {
+
+        elements.dropZone.addEventListener(
+            eventName,
+            event => {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                elements.dropZone.classList.add(
+                    "drag-active"
+                );
+
+            }
+        );
+
+    });
+
+
+    [
+        "dragleave",
+        "drop"
+    ].forEach(eventName => {
+
+        elements.dropZone.addEventListener(
+            eventName,
+            event => {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                elements.dropZone.classList.remove(
+                    "drag-active"
+                );
+
+            }
+        );
+
+    });
+
+
+    elements.dropZone.addEventListener(
+        "drop",
+        event => {
+
+            const file =
+                event.dataTransfer.files[0];
+
+            if (
+                file &&
+                file.type.startsWith("video/")
+            ) {
+
+                handleVideoFileSelected(
+                    file
+                );
+
+            }
+
+            else if (file) {
+
+                showGlobalToast(
+                    "File yang dipilih bukan video."
+                );
+
+            }
+
+        }
+    );
+
+
+    uploadModalElements =
+        elements;
+
+    return elements;
+
+}
+
+
+function openUploadModal() {
+
+    const elements =
+        buildUploadModal();
+
+    elements.overlay.classList.add(
+        "visible"
+    );
+
+    elements.dropZone.style.display =
+        "flex";
+
+    elements.progressArea.classList.remove(
+        "visible"
+    );
+
+}
+
+
+function closeUploadModal() {
+
+    if (!uploadModalElements) {
+
+        return;
+
+    }
+
+
+    uploadModalElements.overlay.classList.remove(
+        "visible"
+    );
+
+}
+
+
+function formatDurationSeconds(totalSeconds) {
+
+    if (
+        !Number.isFinite(totalSeconds) ||
+        totalSeconds < 0
+    ) {
+
+        return "0:00";
+
+    }
+
+
+    const minutes =
+        Math.floor(totalSeconds / 60);
+
+    const seconds =
+        Math.floor(totalSeconds % 60);
+
+    return `${minutes}:${String(seconds).padStart(2, "0")}`;
+
+}
+
+
+function handleVideoFileSelected(file) {
+
+    const elements =
+        uploadModalElements;
+
+    if (!elements) {
+
+        return;
+
+    }
+
+
+    elements.dropZone.style.display =
+        "none";
+
+    elements.progressArea.classList.add(
+        "visible"
+    );
+
+    elements.progressText.textContent =
+        `Mengunggah "${file.name}"...`;
+
+    elements.progressFill.style.width =
+        "0%";
+
+
+    /* Simulasi progres upload supaya terasa seperti
+       benar-benar mengunggah, sebelum diproses lokal */
+
+    let simulatedProgress =
+        0;
+
+    const progressInterval =
+        setInterval(
+            () => {
+
+                simulatedProgress =
+                    Math.min(
+                        90,
+                        simulatedProgress + Math.random() * 20
+                    );
+
+                elements.progressFill.style.width =
+                    `${simulatedProgress}%`;
+
+            },
+            200
+        );
+
+
+    const tempVideo =
+        document.createElement("video");
+
+    tempVideo.preload =
+        "metadata";
+
+    tempVideo.src =
+        URL.createObjectURL(file);
+
+
+    tempVideo.addEventListener(
+        "loadedmetadata",
+        async () => {
+
+            const duration =
+                formatDurationSeconds(
+                    tempVideo.duration
+                );
+
+            URL.revokeObjectURL(
+                tempVideo.src
+            );
+
+
+            const newId =
+                "upload-" + Date.now();
+
+
+            try {
+
+                await saveUploadedVideoFile(
+                    newId,
+                    file
+                );
+
+
+                const titleFromFile =
+                    file.name.replace(
+                        /\.[^/.]+$/,
+                        ""
+                    );
+
+
+                const newVideoMeta = {
+                    id: newId,
+                    title: titleFromFile || "Video tanpa judul",
+                    channel: "Muhammad Aslambik",
+                    views: "0 views",
+                    date: "Baru saja",
+                    duration: duration,
+                    category: "all",
+                    icon: "🎬",
+                    avatar: "M",
+                    subscribers: "0 subscriber",
+                    description: "Video ini baru saja diupload.",
+                    videoUrl: "indexeddb:" + newId
+                };
+
+
+                const currentMeta =
+                    loadUploadedVideosMeta();
+
+                currentMeta.unshift(
+                    newVideoMeta
+                );
+
+                saveUploadedVideosMeta(
+                    currentMeta
+                );
+
+
+                videos.unshift(
+                    newVideoMeta
+                );
+
+
+                clearInterval(
+                    progressInterval
+                );
+
+                elements.progressFill.style.width =
+                    "100%";
+
+                elements.progressText.textContent =
+                    "Selesai! Membuka video...";
+
+
+                if (videoGrid) {
+
+                    renderVideos(
+                        videos
+                    );
+
+                }
+
+
+                setTimeout(
+                    () => {
+
+                        closeUploadModal();
+
+                        window.location.href =
+                            `watch.html?id=${newId}&autoplay=1`;
+
+                    },
+                    700
+                );
+
+            }
+
+            catch (error) {
+
+                clearInterval(
+                    progressInterval
+                );
+
+                console.log(
+                    "Gagal menyimpan video upload:",
+                    error
+                );
+
+                showGlobalToast(
+                    "Gagal menyimpan video. Coba file lain atau browser lain."
+                );
+
+                closeUploadModal();
+
+            }
+
+        }
+    );
+
+
+    tempVideo.addEventListener(
+        "error",
+        () => {
+
+            clearInterval(
+                progressInterval
+            );
+
+            showGlobalToast(
+                "File video tidak bisa dibaca."
+            );
+
+            closeUploadModal();
+
+        }
     );
 
 }
@@ -749,17 +1451,17 @@ if (createButton && createMenu) {
 
     createMenu.innerHTML = `
 
-        <button class="create-menu-item" type="button">
+        <button class="create-menu-item" data-action="upload" type="button">
             <span class="create-menu-icon">🎬</span>
             <span>Upload video</span>
         </button>
 
-        <button class="create-menu-item" type="button">
+        <button class="create-menu-item" data-action="live" type="button">
             <span class="create-menu-icon">📡</span>
             <span>Live streaming</span>
         </button>
 
-        <button class="create-menu-item" type="button">
+        <button class="create-menu-item" data-action="post" type="button">
             <span class="create-menu-icon">✍️</span>
             <span>Buat postingan</span>
         </button>
@@ -821,6 +1523,20 @@ if (createButton && createMenu) {
             createMenu.classList.remove(
                 "open"
             );
+
+
+            if (item.dataset.action === "upload") {
+
+                if (typeof openUploadModal === "function") {
+
+                    openUploadModal();
+
+                }
+
+                return;
+
+            }
+
 
             showGlobalToast(
                 "Fitur ini belum tersedia di demo ini."
@@ -4023,6 +4739,72 @@ else {
 
     const youtubePlayer =
         document.getElementById("youtubePlayer");
+
+
+    /* ==================================================
+       RESOLUSI FILE VIDEO HASIL UPLOAD (INDEXEDDB)
+       Video biasa langsung punya src dari file mp4 di
+       server, tapi video hasil upload disimpan sebagai
+       Blob di IndexedDB browser, jadi perlu diambil dulu
+       secara async lalu dipasang sebagai object URL.
+    ================================================== */
+
+    if (
+        mainVideo &&
+        selectedVideo.videoUrl &&
+        selectedVideo.videoUrl.startsWith("indexeddb:")
+    ) {
+
+        const uploadedFileId =
+            selectedVideo.videoUrl.replace(
+                "indexeddb:",
+                ""
+            );
+
+        getUploadedVideoFile(uploadedFileId)
+            .then(file => {
+
+                if (!file) {
+
+                    showGlobalToast(
+                        "Video upload ini tidak ditemukan lagi di penyimpanan browser (kemungkinan sudah dihapus, atau kamu membuka dari browser/perangkat lain)."
+                    );
+
+                    return;
+
+                }
+
+
+                const objectUrl =
+                    URL.createObjectURL(file);
+
+                mainVideo.src =
+                    objectUrl;
+
+                mainVideo.load();
+
+
+                if (shouldAutoplay) {
+
+                    mainVideo.play().catch(
+                        () => {}
+                    );
+
+                }
+
+            })
+            .catch(
+                () => {
+
+                    showGlobalToast(
+                        "Gagal memuat video upload dari penyimpanan browser."
+                    );
+
+                }
+            );
+
+    }
+
 
     const videoControls =
         document.getElementById("videoControls");
