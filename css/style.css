@@ -26,11 +26,13 @@ body {
 button,
 input {
     font-family: inherit;
+    color: inherit;
 }
 
 button {
     cursor: pointer;
     border: none;
+    background: none;
 }
 
 a {
