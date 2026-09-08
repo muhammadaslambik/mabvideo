@@ -3744,3 +3744,288 @@ body.theater-mode .watch-secondary {
 .sidebar-overlay.active {
     display: block;
 }
+
+
+/* ==================================================
+   MODAL UPLOAD VIDEO (SEPERTI YOUTUBE STUDIO)
+================================================== */
+
+.upload-modal-overlay {
+    position: fixed;
+    inset: 0;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.6);
+
+    z-index: 4000;
+
+    padding: 20px;
+}
+
+.upload-modal-overlay.visible {
+    display: flex;
+}
+
+.upload-modal {
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+
+    background: #ffffff;
+    border-radius: 12px;
+
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.upload-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 24px;
+
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.upload-modal-header h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #0f0f0f;
+}
+
+.upload-modal-close {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: transparent;
+    color: #0f0f0f;
+
+    font-size: 15px;
+    cursor: pointer;
+
+    transition: background 0.15s ease;
+}
+
+.upload-modal-close:hover {
+    background: #f2f2f2;
+}
+
+.upload-drop-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 16px;
+
+    margin: 24px;
+    padding: 48px 24px;
+
+    min-height: 260px;
+
+    border: 2px dashed #d3d3d3;
+    border-radius: 12px;
+
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.upload-drop-zone.drag-active {
+    border-color: #3ea6ff;
+    background: rgba(62, 166, 255, 0.06);
+}
+
+.upload-icon-circle {
+    width: 90px;
+    height: 90px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f2f2f2;
+    color: #606060;
+}
+
+.upload-drop-text {
+    font-size: 14px;
+    color: #606060;
+    text-align: center;
+}
+
+.upload-pick-button {
+    padding: 10px 22px;
+
+    border: none;
+    border-radius: 20px;
+
+    background: #0f0f0f;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background 0.15s ease;
+}
+
+.upload-pick-button:hover {
+    background: #272727;
+}
+
+.upload-progress-area {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+
+    margin: 24px;
+    padding: 48px 24px;
+
+    min-height: 260px;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-progress-area.visible {
+    display: flex;
+}
+
+.upload-progress-area p {
+    font-size: 14px;
+    color: #0f0f0f;
+    text-align: center;
+}
+
+.upload-progress-bar {
+    width: 100%;
+    max-width: 360px;
+    height: 6px;
+
+    border-radius: 4px;
+
+    background: #e5e5e5;
+
+    overflow: hidden;
+}
+
+.upload-progress-fill {
+    height: 100%;
+
+    width: 0%;
+
+    background: #ff0000;
+
+    transition: width 0.2s ease;
+}
+
+.upload-modal-footer {
+    padding: 0 24px 24px;
+}
+
+.upload-modal-footer p {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #606060;
+}
+
+.upload-modal-footer a {
+    color: #3ea6ff;
+    text-decoration: none;
+}
+
+.upload-modal-footer a:hover {
+    text-decoration: underline;
+}
+
+
+/* ================= DARK MODE: MODAL UPLOAD ================= */
+
+body.dark .upload-modal {
+    background: #212121;
+}
+
+body.dark .upload-modal-header {
+    border-color: #3a3a3a;
+}
+
+body.dark .upload-modal-header h2 {
+    color: #ffffff;
+}
+
+body.dark .upload-modal-close {
+    color: #ffffff;
+}
+
+body.dark .upload-modal-close:hover {
+    background: #333333;
+}
+
+body.dark .upload-drop-zone {
+    border-color: #3a3a3a;
+}
+
+body.dark .upload-drop-zone.drag-active {
+    background: rgba(62, 166, 255, 0.1);
+}
+
+body.dark .upload-icon-circle {
+    background: #333333;
+    color: #ffffff;
+}
+
+body.dark .upload-drop-text,
+body.dark .upload-progress-area p {
+    color: #aaaaaa;
+}
+
+body.dark .upload-pick-button {
+    background: #ffffff;
+    color: #0f0f0f;
+}
+
+body.dark .upload-pick-button:hover {
+    background: #d9d9d9;
+}
+
+body.dark .upload-progress-bar {
+    background: #3a3a3a;
+}
+
+body.dark .upload-modal-footer p {
+    color: #aaaaaa;
+}
+
+
+@media (max-width: 600px) {
+
+    .upload-modal {
+        max-width: 100%;
+    }
+
+    .upload-drop-zone,
+    .upload-progress-area {
+        margin: 16px;
+        padding: 32px 16px;
+        min-height: 200px;
+    }
+
+    .upload-icon-circle {
+        width: 70px;
+        height: 70px;
+    }
+
+}
