@@ -1652,7 +1652,7 @@ if (profileButton && profileMenu) {
 
         <div class="profile-menu-divider"></div>
 
-        <button class="profile-menu-item" data-action="toast" type="button">
+        <button class="profile-menu-item" data-action="studio" type="button">
             <span class="profile-menu-icon">▶</span>
             <span>MAB-Video Studio</span>
         </button>
@@ -1803,6 +1803,16 @@ if (profileButton && profileMenu) {
 
                 }
 
+
+                return;
+
+            }
+
+
+            if (action === "studio") {
+
+                window.location.href =
+                    "studio.html";
 
                 return;
 
