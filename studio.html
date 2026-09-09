@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dasbor Channel - MAB-Video Studio</title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+<body class="studio-body">
+
+    <!-- ================= STUDIO HEADER ================= -->
+
+    <header class="studio-header">
+
+        <div class="studio-header-left">
+
+            <button
+                class="icon-button menu-button"
+                id="menuButton"
+                aria-label="Buka menu"
+            >
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z"/></svg>
+            </button>
+
+            <a href="index.html" class="studio-logo">
+                <span class="logo-icon">▶</span>
+                <span class="studio-logo-text">Studio</span>
+            </a>
+
+        </div>
+
+        <div class="studio-header-search">
+
+            <div class="search-container">
+
+                <input
+                    type="text"
+                    id="studioSearchInput"
+                    placeholder="Telusuri konten di channel Anda"
+                >
+
+                <button
+                    class="search-button"
+                    id="studioSearchButton"
+                    aria-label="Telusuri"
+                >
+                    🔍
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="studio-header-right">
+
+            <button
+                class="icon-button"
+                id="studioHelpButton"
+                aria-label="Bantuan"
+            >
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 .5c0 1.5-2 1.7-2.3 3M12 17h.01"/></svg>
+            </button>
+
+            <div class="notification-wrapper">
+
+                <button
+                    class="icon-button"
+                    id="notificationButton"
+                    aria-label="Notifikasi"
+                >
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 22a2.2 2.2 0 002.2-2.2h-4.4A2.2 2.2 0 0012 22zm7-6v-5a7 7 0 00-5.5-6.84V3a1.5 1.5 0 00-3 0v1.16A7 7 0 005 11v5l-2 2v1h18v-1z"/></svg>
+                </button>
+
+                <div class="notification-menu" id="notificationMenu">
+                    <p class="notification-title">Notifikasi</p>
+                    <p class="notification-empty">Tidak ada notifikasi baru.</p>
+                </div>
+
+            </div>
+
+            <button
+                class="studio-request-button"
+                id="studioRequestButton"
+                type="button"
+            >
+                Minta Studio
+            </button>
+
+            <div class="create-wrapper">
+
+                <button
+                    class="studio-create-button"
+                    id="createButton"
+                    type="button"
+                >
+                    <span class="create-icon">+</span>
+                    Buat
+                </button>
+
+                <div class="create-menu" id="createMenu"></div>
+
+            </div>
+
+            <button
+                class="profile-button"
+                id="profileButton"
+                aria-label="Akun"
+            >
+                M
+            </button>
+
+            <div class="profile-menu" id="profileMenu"></div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= STUDIO SIDEBAR ================= -->
+
+    <aside class="studio-sidebar" id="studioSidebar">
+
+        <div class="studio-channel-block">
+
+            <div class="studio-channel-avatar">M</div>
+
+            <p class="studio-channel-label">Channel Anda</p>
+            <p class="studio-channel-name">Muhammad Aslambik</p>
+
+        </div>
+
+        <nav>
+
+            <a href="studio.html" class="studio-sidebar-item active">
+                <span class="studio-sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg></span>
+                <span>Dasbor</span>
+            </a>
+
+            <a href="#" class="studio-sidebar-item" data-toast="1">
+                <span class="studio-sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm6 3v8l6-4z"/></svg></span>
+                <span>Konten</span>
+            </a>
+
+            <a href="#" class="studio-sidebar-item" data-toast="1">
+                <span class="studio-sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9M11 19V4M18 19v-6"/></svg></span>
+                <span>Analytics</span>
+            </a>
+
+            <a href="#" class="studio-sidebar-item" data-toast="1">
+                <span class="studio-sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M4 4h16v11H8l-4 4z"/></svg></span>
+                <span>Komunitas</span>
+            </a>
+
+            <a href="#" class="studio-sidebar-item" data-toast="1">
+                <span class="studio-sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h11M9 3v2c0 4-3 8-7 9M6 9c1 2 4 4 7 4M13 21l5-11 5 11M15 17h6"/></svg></span>
+                <span>Bahasa dan teks</span>
+            </a>
+
+            <a href="#" class="studio-sidebar-item" data-toast="1">
+                <span class="studio-sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></span>
+                <span>Deteksi konten</span>
+            </a>
+
+            <a href="#" class="studio-sidebar-item" data-toast="1">
+                <span class="studio-sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2M8 3.5l1.5 2M16 3.5L14.5 5.5"/></svg></span>
+                <span>Penghasilan</span>
+            </a>
+
+            <a href="#" class="studio-sidebar-item" data-toast="1">
+                <span class="studio-sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l4-11 4 11M6 15h4M13 4l3 8 3-8M14.5 9h3"/></svg></span>
+                <span>Penyesuaian</span>
+            </a>
+
+            <a href="#" class="studio-sidebar-item" data-toast="1">
+                <span class="studio-sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M9 18V5l11-2v13M9 18a3 3 0 11-6 0 3 3 0 016 0zm11-2a3 3 0 11-6 0 3 3 0 016 0z"/></svg></span>
+                <span>Koleksi audio</span>
+            </a>
+
+            <div class="studio-sidebar-divider"></div>
+
+            <a href="#" class="studio-sidebar-item" data-toast="1">
+                <span class="studio-sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.9 2.9l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.6V21a2 2 0 11-4 0v-.2a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.9-2.9l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.6-1H3a2 2 0 110-4h.2a1.7 1.7 0 001.6-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.9-2.9l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.6V3a2 2 0 114 0v.2a1.7 1.7 0 001 1.6 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.9 2.9l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.6 1H21a2 2 0 110 4h-.2a1.7 1.7 0 00-1.6 1z"/></svg></span>
+                <span>Setelan</span>
+            </a>
+
+            <a href="#" class="studio-sidebar-item" data-toast="1">
+                <span class="studio-sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg></span>
+                <span>Kirim masukan</span>
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MOBILE SIDEBAR OVERLAY -->
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+    <!-- ================= STUDIO MAIN ================= -->
+
+    <main class="studio-main">
+
+        <h1 class="studio-page-title">Dasbor channel</h1>
+
+        <div class="studio-dashboard-grid">
+
+            <!-- KOLOM KIRI -->
+
+            <div class="studio-col-left">
+
+                <div class="studio-card studio-prompt-card">
+
+                    <svg viewBox="0 0 120 90" width="120" height="90" class="studio-prompt-illustration">
+                        <rect x="10" y="10" width="60" height="70" rx="4" fill="#3ea6ff" opacity="0.15"/>
+                        <path d="M40 70V20M40 20l-14 14M40 20l14 14" stroke="#3ea6ff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="90" cy="60" r="18" fill="#0f0f0f"/>
+                        <path d="M83 60l5 5 10-10" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+
+                    <p class="studio-prompt-text">
+                        Ingin melihat metrik di video terbaru Anda?
+                        <br>
+                        Upload dan publikasikan video untuk memulai.
+                    </p>
+
+                    <button
+                        class="studio-primary-button"
+                        id="studioUploadButton"
+                        type="button"
+                    >
+                        Upload video
+                    </button>
+
+                </div>
+
+                <div class="studio-card studio-prompt-card studio-post-card">
+
+                    <svg viewBox="0 0 120 90" width="120" height="90" class="studio-prompt-illustration">
+                        <circle cx="60" cy="42" r="30" fill="#ff4d4d" opacity="0.15"/>
+                        <rect x="42" y="24" width="36" height="46" rx="6" fill="#ff4d4d"/>
+                        <rect x="50" y="34" width="20" height="4" rx="2" fill="#fff"/>
+                        <rect x="50" y="42" width="20" height="4" rx="2" fill="#fff"/>
+                        <rect x="50" y="50" width="12" height="4" rx="2" fill="#fff"/>
+                    </svg>
+
+                    <p class="studio-prompt-text">
+                        Buat postingan pertama Anda untuk memulai
+                        percakapan dan mendapatkan masukan dari
+                        komunitas Anda.
+                    </p>
+
+                    <button
+                        class="studio-primary-button"
+                        id="studioPostButton"
+                        type="button"
+                    >
+                        Buat postingan
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- KOLOM KANAN -->
+
+            <div class="studio-col-right">
+
+                <div class="studio-card">
+
+                    <h2 class="studio-card-title">Analisis channel</h2>
+
+                    <p class="studio-card-subtitle">
+                        Subscriber saat ini
+                    </p>
+
+                    <p class="studio-big-number" id="studioSubscriberCount">
+                        13
+                    </p>
+
+                    <div class="studio-divider"></div>
+
+                    <p class="studio-card-subtitle">
+                        Ringkasan
+                        <span class="studio-muted">28 hari terakhir</span>
+                    </p>
+
+                    <div class="studio-stat-row">
+                        <span>Penayangan</span>
+                        <span class="studio-stat-value" id="studioViewsCount">4</span>
+                    </div>
+
+                    <div class="studio-stat-row">
+                        <span>Waktu tonton (jam)</span>
+                        <span class="studio-stat-value">0,0</span>
+                    </div>
+
+                    <div class="studio-divider"></div>
+
+                    <p class="studio-card-subtitle">
+                        Konten populer
+                        <span class="studio-muted">48 jam terakhir &middot; Penayangan</span>
+                    </p>
+
+                    <button class="studio-secondary-button" data-toast="1" type="button">
+                        Buka analisis channel
+                    </button>
+
+                </div>
+
+                <div class="studio-card">
+
+                    <h2 class="studio-card-title">Komentar</h2>
+
+                    <div class="studio-comment-row">
+                        <div class="studio-comment-avatar">B</div>
+                        <div class="studio-comment-body">
+                            <p class="studio-comment-meta">
+                                <strong>@bagas_setiawan</strong> &middot; 1 minggu yang lalu
+                            </p>
+                            <p class="studio-comment-text">
+                                Kualitas videonya makin ke sini makin bagus...
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="studio-comment-row">
+                        <div class="studio-comment-avatar">R</div>
+                        <div class="studio-comment-body">
+                            <p class="studio-comment-meta">
+                                <strong>@rizky_pratama</strong> &middot; 2 hari yang lalu
+                            </p>
+                            <p class="studio-comment-text">
+                                Videonya keren banget, penjelasannya gampang...
+                            </p>
+                        </div>
+                    </div>
+
+                    <button class="studio-secondary-button" data-toast="1" type="button">
+                        Lihat lainnya
+                    </button>
+
+                </div>
+
+                <div class="studio-card">
+
+                    <h2 class="studio-card-title">Subscriber baru</h2>
+
+                    <div class="studio-subscriber-row">
+                        <div class="studio-comment-avatar">R</div>
+                        <div class="studio-comment-body">
+                            <p class="studio-comment-meta"><strong>Rizky Pratama</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="studio-subscriber-row">
+                        <div class="studio-comment-avatar">D</div>
+                        <div class="studio-comment-body">
+                            <p class="studio-comment-meta"><strong>Dewi Anjani</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="studio-subscriber-row">
+                        <div class="studio-comment-avatar">B</div>
+                        <div class="studio-comment-body">
+                            <p class="studio-comment-meta"><strong>Bagas Setiawan</strong></p>
+                        </div>
+                    </div>
+
+                    <button class="studio-secondary-button" data-toast="1" type="button">
+                        Lihat semua
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script src="js/script.js"></script>
+    <script src="js/studio.js"></script>
+
+</body>
+
+</html>
