@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Dasbor Channel - MAB-Video Studio</title>
+    <title>Konten - MAB-Video Studio</title>
 
     <link
         rel="preconnect"
@@ -160,12 +160,12 @@
 
         <nav>
 
-            <a href="studio.html" class="studio-sidebar-item active">
+            <a href="studio.html" class="studio-sidebar-item">
                 <span class="studio-sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg></span>
                 <span>Dasbor</span>
             </a>
 
-            <a href="studio-content.html" class="studio-sidebar-item">
+            <a href="studio-content.html" class="studio-sidebar-item active">
                 <span class="studio-sidebar-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm6 3v8l6-4z"/></svg></span>
                 <span>Konten</span>
             </a>
@@ -231,188 +231,64 @@
 
     <main class="studio-main">
 
-        <h1 class="studio-page-title">Dasbor channel</h1>
+        <div class="studio-content-header">
 
-        <div class="studio-dashboard-grid">
+            <h1 class="studio-page-title">Konten</h1>
 
-            <!-- KOLOM KIRI -->
-
-            <div class="studio-col-left">
-
-                <div class="studio-card studio-prompt-card">
-
-                    <svg viewBox="0 0 120 90" width="120" height="90" class="studio-prompt-illustration">
-                        <rect x="10" y="10" width="60" height="70" rx="4" fill="#3ea6ff" opacity="0.15"/>
-                        <path d="M40 70V20M40 20l-14 14M40 20l14 14" stroke="#3ea6ff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="90" cy="60" r="18" fill="#0f0f0f"/>
-                        <path d="M83 60l5 5 10-10" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-
-                    <p class="studio-prompt-text">
-                        Ingin melihat metrik di video terbaru Anda?
-                        <br>
-                        Upload dan publikasikan video untuk memulai.
-                    </p>
-
-                    <button
-                        class="studio-primary-button"
-                        id="studioUploadButton"
-                        type="button"
-                    >
-                        Upload video
-                    </button>
-
-                </div>
-
-                <div class="studio-card studio-prompt-card studio-post-card">
-
-                    <svg viewBox="0 0 120 90" width="120" height="90" class="studio-prompt-illustration">
-                        <circle cx="60" cy="42" r="30" fill="#ff4d4d" opacity="0.15"/>
-                        <rect x="42" y="24" width="36" height="46" rx="6" fill="#ff4d4d"/>
-                        <rect x="50" y="34" width="20" height="4" rx="2" fill="#fff"/>
-                        <rect x="50" y="42" width="20" height="4" rx="2" fill="#fff"/>
-                        <rect x="50" y="50" width="12" height="4" rx="2" fill="#fff"/>
-                    </svg>
-
-                    <p class="studio-prompt-text">
-                        Buat postingan pertama Anda untuk memulai
-                        percakapan dan mendapatkan masukan dari
-                        komunitas Anda.
-                    </p>
-
-                    <button
-                        class="studio-primary-button"
-                        id="studioPostButton"
-                        type="button"
-                    >
-                        Buat postingan
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- KOLOM KANAN -->
-
-            <div class="studio-col-right">
-
-                <div class="studio-card">
-
-                    <h2 class="studio-card-title">Analisis channel</h2>
-
-                    <p class="studio-card-subtitle">
-                        Subscriber saat ini
-                    </p>
-
-                    <p class="studio-big-number" id="studioSubscriberCount">
-                        13
-                    </p>
-
-                    <div class="studio-divider"></div>
-
-                    <p class="studio-card-subtitle">
-                        Ringkasan
-                        <span class="studio-muted">28 hari terakhir</span>
-                    </p>
-
-                    <div class="studio-stat-row">
-                        <span>Penayangan</span>
-                        <span class="studio-stat-value" id="studioViewsCount">4</span>
-                    </div>
-
-                    <div class="studio-stat-row">
-                        <span>Waktu tonton (jam)</span>
-                        <span class="studio-stat-value">0,0</span>
-                    </div>
-
-                    <div class="studio-divider"></div>
-
-                    <p class="studio-card-subtitle">
-                        Konten populer
-                        <span class="studio-muted">48 jam terakhir &middot; Penayangan</span>
-                    </p>
-
-                    <button class="studio-secondary-button" data-toast="1" type="button">
-                        Buka analisis channel
-                    </button>
-
-                </div>
-
-                <div class="studio-card">
-
-                    <h2 class="studio-card-title">Komentar</h2>
-
-                    <div class="studio-comment-row">
-                        <div class="studio-comment-avatar">B</div>
-                        <div class="studio-comment-body">
-                            <p class="studio-comment-meta">
-                                <strong>@bagas_setiawan</strong> &middot; 1 minggu yang lalu
-                            </p>
-                            <p class="studio-comment-text">
-                                Kualitas videonya makin ke sini makin bagus...
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="studio-comment-row">
-                        <div class="studio-comment-avatar">R</div>
-                        <div class="studio-comment-body">
-                            <p class="studio-comment-meta">
-                                <strong>@rizky_pratama</strong> &middot; 2 hari yang lalu
-                            </p>
-                            <p class="studio-comment-text">
-                                Videonya keren banget, penjelasannya gampang...
-                            </p>
-                        </div>
-                    </div>
-
-                    <button class="studio-secondary-button" data-toast="1" type="button">
-                        Lihat lainnya
-                    </button>
-
-                </div>
-
-                <div class="studio-card">
-
-                    <h2 class="studio-card-title">Subscriber baru</h2>
-
-                    <div class="studio-subscriber-row">
-                        <div class="studio-comment-avatar">R</div>
-                        <div class="studio-comment-body">
-                            <p class="studio-comment-meta"><strong>Rizky Pratama</strong></p>
-                        </div>
-                    </div>
-
-                    <div class="studio-subscriber-row">
-                        <div class="studio-comment-avatar">D</div>
-                        <div class="studio-comment-body">
-                            <p class="studio-comment-meta"><strong>Dewi Anjani</strong></p>
-                        </div>
-                    </div>
-
-                    <div class="studio-subscriber-row">
-                        <div class="studio-comment-avatar">B</div>
-                        <div class="studio-comment-body">
-                            <p class="studio-comment-meta"><strong>Bagas Setiawan</strong></p>
-                        </div>
-                    </div>
-
-                    <button class="studio-secondary-button" data-toast="1" type="button">
-                        Lihat semua
-                    </button>
-
-                </div>
-
-            </div>
+            <button class="studio-secondary-button studio-customize-button" data-toast="1" type="button">
+                ✎ Sesuaikan
+            </button>
 
         </div>
+
+        <div class="studio-content-tabs">
+
+            <button class="studio-content-tab active" data-tab="video" type="button">
+                Video
+            </button>
+
+            <button class="studio-content-tab" data-tab="playlist" type="button">
+                Playlist ▾
+            </button>
+
+        </div>
+
+
+        <!-- ================= VIDEO ================= -->
+
+        <section class="studio-content-section" id="studioVideoSection">
+
+            <div class="studio-section-header">
+                <h2>Video</h2>
+                <button class="studio-link-button" data-toast="1" type="button">Lihat semua</button>
+            </div>
+
+            <div class="studio-content-row" id="studioVideoRow"></div>
+
+        </section>
+
+
+        <!-- ================= PLAYLIST ================= -->
+
+        <section class="studio-content-section" id="studioPlaylistSection">
+
+            <div class="studio-section-header">
+                <h2>Playlist</h2>
+                <button class="studio-link-button" data-toast="1" type="button">Lihat semua</button>
+            </div>
+
+            <p class="studio-empty-text">
+                Anda belum memiliki daftar putar.
+            </p>
+
+        </section>
 
     </main>
 
 
     <script src="js/script.js"></script>
     <script src="js/studio.js"></script>
+    <script src="js/studio-content.js"></script>
 
 </body>
 

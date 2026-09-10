@@ -836,6 +836,123 @@ function formatDurationSeconds(totalSeconds) {
 }
 
 
+async function finishVideoUpload(
+    file,
+    duration,
+    thumbnailDataUrl,
+    elements,
+    progressInterval
+) {
+
+    const newId =
+        "upload-" + Date.now();
+
+
+    try {
+
+        await saveUploadedVideoFile(
+            newId,
+            file
+        );
+
+
+        const titleFromFile =
+            file.name.replace(
+                /\.[^/.]+$/,
+                ""
+            );
+
+
+        const newVideoMeta = {
+            id: newId,
+            title: titleFromFile || "Video tanpa judul",
+            channel: "Muhammad Aslambik",
+            views: "0 views",
+            date: "Baru saja",
+            duration: duration,
+            category: "all",
+            icon: "🎬",
+            avatar: "M",
+            subscribers: "0 subscriber",
+            description: "Video ini baru saja diupload.",
+            videoUrl: "indexeddb:" + newId,
+            thumbnailDataUrl: thumbnailDataUrl || null
+        };
+
+
+        const currentMeta =
+            loadUploadedVideosMeta();
+
+        currentMeta.unshift(
+            newVideoMeta
+        );
+
+        saveUploadedVideosMeta(
+            currentMeta
+        );
+
+
+        videos.unshift(
+            newVideoMeta
+        );
+
+
+        clearInterval(
+            progressInterval
+        );
+
+        elements.progressFill.style.width =
+            "100%";
+
+        elements.progressText.textContent =
+            "Selesai! Membuka video...";
+
+
+        if (videoGrid) {
+
+            renderVideos(
+                videos
+            );
+
+        }
+
+
+        setTimeout(
+            () => {
+
+                closeUploadModal();
+
+                window.location.href =
+                    `watch.html?id=${newId}&autoplay=1`;
+
+            },
+            700
+        );
+
+    }
+
+    catch (error) {
+
+        clearInterval(
+            progressInterval
+        );
+
+        console.log(
+            "Gagal menyimpan video upload:",
+            error
+        );
+
+        showGlobalToast(
+            "Gagal menyimpan video. Coba file lain atau browser lain."
+        );
+
+        closeUploadModal();
+
+    }
+
+}
+
+
 function handleVideoFileSelected(file) {
 
     const elements =
@@ -898,120 +1015,114 @@ function handleVideoFileSelected(file) {
 
     tempVideo.addEventListener(
         "loadedmetadata",
-        async () => {
+        () => {
 
             const duration =
                 formatDurationSeconds(
                     tempVideo.duration
                 );
 
-            URL.revokeObjectURL(
-                tempVideo.src
-            );
+
+            function finalizeUpload(thumbnailDataUrl) {
+
+                URL.revokeObjectURL(
+                    tempVideo.src
+                );
 
 
-            const newId =
-                "upload-" + Date.now();
+                finishVideoUpload(
+                    file,
+                    duration,
+                    thumbnailDataUrl,
+                    elements,
+                    progressInterval
+                );
+
+            }
 
 
             try {
 
-                await saveUploadedVideoFile(
-                    newId,
-                    file
-                );
+                const captureTime =
+                    Number.isFinite(tempVideo.duration) && tempVideo.duration > 0
+                        ? Math.min(1, tempVideo.duration / 4)
+                        : 0;
 
 
-                const titleFromFile =
-                    file.name.replace(
-                        /\.[^/.]+$/,
-                        ""
-                    );
+                tempVideo.addEventListener(
+                    "seeked",
+                    function onSeeked() {
+
+                        tempVideo.removeEventListener(
+                            "seeked",
+                            onSeeked
+                        );
 
 
-                const newVideoMeta = {
-                    id: newId,
-                    title: titleFromFile || "Video tanpa judul",
-                    channel: "Muhammad Aslambik",
-                    views: "0 views",
-                    date: "Baru saja",
-                    duration: duration,
-                    category: "all",
-                    icon: "🎬",
-                    avatar: "M",
-                    subscribers: "0 subscriber",
-                    description: "Video ini baru saja diupload.",
-                    videoUrl: "indexeddb:" + newId
-                };
+                        try {
 
+                            const canvas =
+                                document.createElement("canvas");
 
-                const currentMeta =
-                    loadUploadedVideosMeta();
+                            canvas.width =
+                                320;
 
-                currentMeta.unshift(
-                    newVideoMeta
-                );
+                            canvas.height =
+                                180;
 
-                saveUploadedVideosMeta(
-                    currentMeta
-                );
+                            const ctx =
+                                canvas.getContext("2d");
 
+                            ctx.drawImage(
+                                tempVideo,
+                                0,
+                                0,
+                                canvas.width,
+                                canvas.height
+                            );
 
-                videos.unshift(
-                    newVideoMeta
-                );
+                            const dataUrl =
+                                canvas.toDataURL(
+                                    "image/jpeg",
+                                    0.7
+                                );
 
+                            finalizeUpload(
+                                dataUrl
+                            );
 
-                clearInterval(
-                    progressInterval
-                );
+                        }
 
-                elements.progressFill.style.width =
-                    "100%";
+                        catch (error) {
 
-                elements.progressText.textContent =
-                    "Selesai! Membuka video...";
+                            console.log(
+                                "Gagal mengambil thumbnail video:",
+                                error
+                            );
 
+                            finalizeUpload(
+                                null
+                            );
 
-                if (videoGrid) {
-
-                    renderVideos(
-                        videos
-                    );
-
-                }
-
-
-                setTimeout(
-                    () => {
-
-                        closeUploadModal();
-
-                        window.location.href =
-                            `watch.html?id=${newId}&autoplay=1`;
+                        }
 
                     },
-                    700
+                    {
+                        once: true
+                    }
                 );
+
+
+                tempVideo.currentTime =
+                    captureTime;
 
             }
 
             catch (error) {
 
-                clearInterval(
-                    progressInterval
+                finalizeUpload(
+                    null
                 );
-
-                console.log(
-                    "Gagal menyimpan video upload:",
-                    error
-                );
-
-                showGlobalToast(
-                    "Gagal menyimpan video. Coba file lain atau browser lain."
-                );
-
-                closeUploadModal();
 
             }
 
@@ -1137,9 +1248,11 @@ function renderVideos(videoList) {
 
             <div class="thumbnail">
 
-                <div class="thumbnail-background">
-                    ${video.icon}
-                </div>
+                ${
+                    video.thumbnailDataUrl
+                        ? `<img class="thumbnail-image" src="${video.thumbnailDataUrl}" alt="">`
+                        : `<div class="thumbnail-background">${video.icon}</div>`
+                }
 
                 <span class="duration">
                     ${video.duration}
@@ -2297,9 +2410,11 @@ const shouldAutoplay =
 
                         <div class="related-thumbnail-wrap">
 
-                            <div class="thumbnail-background">
-                                ${video.icon}
-                            </div>
+                            ${
+                                video.thumbnailDataUrl
+                                    ? `<img class="thumbnail-image" src="${video.thumbnailDataUrl}" alt="">`
+                                    : `<div class="thumbnail-background">${video.icon}</div>`
+                            }
 
                             <span class="duration">
                                 ${video.duration}
