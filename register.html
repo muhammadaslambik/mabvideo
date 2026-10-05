@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - MAB-Video</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="auth-page">
+        <a href="index.html" class="auth-logo"><span class="logo-icon">▶</span><span class="logo-text">MAB-Video</span></a>
+        <div class="auth-card">
+            <h1 class="auth-title">Buat Akun</h1>
+            <p class="auth-subtitle">Buat akun MAB-Video Anda</p>
+            <form id="registerForm" class="auth-form">
+                <div class="auth-row">
+                    <label class="auth-field"><span>Nama depan</span><input type="text" id="registerFirstName" required></label>
+                    <label class="auth-field"><span>Nama belakang</span><input type="text" id="registerLastName"></label>
+                </div>
+                <label class="auth-field"><span>Email</span><input type="email" id="registerEmail" required></label>
+                <label class="auth-field"><span>Kata sandi</span><input type="password" id="registerPassword" required></label>
+                <label class="auth-field"><span>Konfirmasi kata sandi</span><input type="password" id="registerConfirmPassword" required></label>
+                <div class="auth-actions">
+                    <a href="login.html" class="auth-secondary-link">Masuk</a>
+                    <button type="submit" class="auth-primary-button">Berikutnya</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

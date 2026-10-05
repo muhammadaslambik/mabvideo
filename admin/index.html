@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - MAB-Video</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+<header class="admin-header">
+    <div class="admin-header-left">
+        <button class="icon-button" id="adminMenuButton" style="color:#fff;" aria-label="Menu">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z"/></svg>
+        </button>
+        <span class="logo-icon">▶</span> MAB-Video <span style="font-weight:400;opacity:.7;">Admin</span>
+    </div>
+    <div class="admin-header-right"><span class="admin-header-badge">Superadmin</span><span>Muhammad Aslambik</span></div>
+</header>
+<aside class="admin-sidebar" id="adminSidebar">
+    <a href="index.html" class="admin-sidebar-item active">📊 Dashboard</a>
+    <a href="users.html" class="admin-sidebar-item">👤 Pengguna</a>
+    <a href="channels.html" class="admin-sidebar-item">📺 Channel</a>
+    <a href="videos.html" class="admin-sidebar-item">🎬 Video</a>
+    <a href="comments.html" class="admin-sidebar-item">💬 Komentar</a>
+    <a href="reports.html" class="admin-sidebar-item">🚩 Laporan</a>
+    <a href="moderation.html" class="admin-sidebar-item">🛡 Moderasi</a>
+    <a href="analytics.html" class="admin-sidebar-item">📈 Analytics</a>
+    <a href="settings.html" class="admin-sidebar-item">⚙ Pengaturan</a>
+</aside>
+<main class="admin-main">
+    <h1 class="admin-page-title">Dashboard</h1>
+    <div class="admin-stats-row">
+        <div class="admin-stat-card"><p class="admin-stat-label">Total Pengguna</p><p class="admin-stat-value">1.284</p></div>
+        <div class="admin-stat-card"><p class="admin-stat-label">Total Channel</p><p class="admin-stat-value">312</p></div>
+        <div class="admin-stat-card"><p class="admin-stat-label">Total Video</p><p class="admin-stat-value">4.902</p></div>
+        <div class="admin-stat-card"><p class="admin-stat-label">Laporan Menunggu</p><p class="admin-stat-value">7</p></div>
+    </div>
+    <div class="admin-card">
+        <h2 style="font-size:15px;margin-bottom:12px;">Aktivitas Terbaru</h2>
+        <table class="admin-table">
+            <thead><tr><th>Waktu</th><th>Aktivitas</th><th>Pengguna</th></tr></thead>
+            <tbody>
+                <tr><td>2 menit lalu</td><td>Upload video baru</td><td>Muhammad Aslambik</td></tr>
+                <tr><td>15 menit lalu</td><td>Laporan komentar spam</td><td>@rizky_pratama</td></tr>
+                <tr><td>1 jam lalu</td><td>Channel baru terdaftar</td><td>Tech World</td></tr>
+                <tr><td>3 jam lalu</td><td>Video dihapus (pelanggaran)</td><td>Sistem</td></tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<script src="../js/main.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

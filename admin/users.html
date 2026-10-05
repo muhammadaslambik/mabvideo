@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pengguna - Admin - MAB-Video</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+<header class="admin-header">
+    <div class="admin-header-left">
+        <button class="icon-button" id="adminMenuButton" style="color:#fff;" aria-label="Menu">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z"/></svg>
+        </button>
+        <span class="logo-icon">▶</span> MAB-Video <span style="font-weight:400;opacity:.7;">Admin</span>
+    </div>
+    <div class="admin-header-right"><span class="admin-header-badge">Superadmin</span><span>Muhammad Aslambik</span></div>
+</header>
+<aside class="admin-sidebar" id="adminSidebar">
+    <a href="index.html" class="admin-sidebar-item">📊 Dashboard</a>
+    <a href="users.html" class="admin-sidebar-item active">👤 Pengguna</a>
+    <a href="channels.html" class="admin-sidebar-item">📺 Channel</a>
+    <a href="videos.html" class="admin-sidebar-item">🎬 Video</a>
+    <a href="comments.html" class="admin-sidebar-item">💬 Komentar</a>
+    <a href="reports.html" class="admin-sidebar-item">🚩 Laporan</a>
+    <a href="moderation.html" class="admin-sidebar-item">🛡 Moderasi</a>
+    <a href="analytics.html" class="admin-sidebar-item">📈 Analytics</a>
+    <a href="settings.html" class="admin-sidebar-item">⚙ Pengaturan</a>
+</aside>
+<main class="admin-main">
+<h1 class="admin-page-title">Pengguna</h1>
+<div class="admin-card"><table class="admin-table"><thead><tr><th>Nama</th><th>Email</th><th>Bergabung</th><th>Status</th><th>Aksi</th></tr></thead><tbody>
+<tr><td>Muhammad Aslambik</td><td>aslambik@mabvideo.com</td><td>12 Jan 2024</td><td><span class="admin-badge green">Aktif</span></td><td><button class="admin-action-button" data-admin-toast>Kelola</button></td></tr>
+<tr><td>Rizky Pratama</td><td>rizky@mail.com</td><td>3 Feb 2024</td><td><span class="admin-badge green">Aktif</span></td><td><button class="admin-action-button" data-admin-toast>Kelola</button></td></tr>
+<tr><td>Dewi Anjani</td><td>dewi@mail.com</td><td>20 Mar 2024</td><td><span class="admin-badge yellow">Ditangguhkan</span></td><td><button class="admin-action-button" data-admin-toast>Kelola</button></td></tr>
+<tr><td>Bagas Setiawan</td><td>bagas@mail.com</td><td>9 Apr 2024</td><td><span class="admin-badge red">Diblokir</span></td><td><button class="admin-action-button" data-admin-toast>Kelola</button></td></tr>
+</tbody></table></div>
+</main>
+<script src="../js/main.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

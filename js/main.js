@@ -1,3 +1,7 @@
+const MAB_ROOT =
+    window.MAB_ROOT || "";
+
+
 /* ==================================================
    MAB-VIDEO
    MAIN JAVASCRIPT
@@ -923,7 +927,7 @@ async function finishVideoUpload(
                 closeUploadModal();
 
                 window.location.href =
-                    `watch.html?id=${newId}&autoplay=1`;
+                    `${MAB_ROOT}watch.html?id=${newId}&autoplay=1`;
 
             },
             700
@@ -1302,7 +1306,7 @@ function renderVideos(videoList) {
             () => {
 
                 window.location.href =
-                    `watch.html?id=${video.id}&autoplay=1`;
+                    `${MAB_ROOT}watch.html?id=${video.id}&autoplay=1`;
 
             }
         );
@@ -1384,7 +1388,7 @@ function submitSearch() {
 
 
     window.location.href =
-        `index.html?search=${encodeURIComponent(term)}`;
+        `${MAB_ROOT}index.html?search=${encodeURIComponent(term)}`;
 
 }
 
@@ -1735,7 +1739,7 @@ if (profileButton && profileMenu) {
 
                 <button
                     class="profile-card-link"
-                    data-action="toast"
+                    data-action="channel"
                     type="button"
                 >
                     Lihat channel Anda
@@ -1925,7 +1929,17 @@ if (profileButton && profileMenu) {
             if (action === "studio") {
 
                 window.location.href =
-                    "studio.html";
+                    MAB_ROOT + "studio/index.html";
+
+                return;
+
+            }
+
+
+            if (action === "channel") {
+
+                window.location.href =
+                    MAB_ROOT + "channel/index.html";
 
                 return;
 
@@ -2349,6 +2363,17 @@ const shouldAutoplay =
             selectedVideo.title;
 
 
+        try {
+            const rawHistory = localStorage.getItem("mab-video-history");
+            let historyList = rawHistory ? JSON.parse(rawHistory) : [];
+            historyList = historyList.filter(entry => entry.id !== selectedVideo.id);
+            historyList.unshift({ id: selectedVideo.id, watchedAt: new Date().toISOString() });
+            localStorage.setItem("mab-video-history", JSON.stringify(historyList.slice(0, 50)));
+        } catch (error) {
+            console.log("Gagal mencatat riwayat tontonan:", error);
+        }
+
+
         /* ==================================================
            VIDEO TERKAIT (SIDEBAR KANAN ALA YOUTUBE)
         ================================================== */
@@ -2590,7 +2615,7 @@ const shouldAutoplay =
                     if (card) {
 
                         window.location.href =
-                            `watch.html?id=${card.dataset.id}&autoplay=1`;
+                            `${MAB_ROOT}watch.html?id=${card.dataset.id}&autoplay=1`;
 
                     }
 
@@ -7117,7 +7142,7 @@ function goToSettingsPage(pageName) {
                     ];
 
                 window.location.href =
-                    `watch.html?id=${nextVideo.id}&autoplay=1`;
+                    `${MAB_ROOT}watch.html?id=${nextVideo.id}&autoplay=1`;
 
             }
         );

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>MAB-Video</title>
+    <title>Riwayat tontonan - MAB-Video</title>
 
     <meta
         name="description"
@@ -27,7 +27,7 @@
         rel="stylesheet"
     >
 
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 
 <body>
@@ -46,7 +46,7 @@
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z"/></svg>
             </button>
 
-            <a href="index.html" class="logo">
+            <a href="../index.html" class="logo">
                 <span class="logo-icon">▶</span>
                 <span class="logo-text">MAB-Video</span>
             </a>
@@ -176,34 +176,34 @@
 
         <nav>
 
-            <a href="#" class="sidebar-item active">
+            <a href="../index.html" class="sidebar-item">
                 <span><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/></svg></span>
                 <span>Home</span>
             </a>
 
-            <a href="shorts/index.html" class="sidebar-item">
+            <a href="../shorts/index.html" class="sidebar-item">
                 <span><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M10 8l6 4-6 4V8zm2-6a10 10 0 100 20 10 10 0 000-20z"/></svg></span>
                 <span>Shorts</span>
             </a>
 
-            <a href="#" class="sidebar-item">
+            <a href="trending.html" class="sidebar-item">
                 <span><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2c1 3-3 4-3 7a3 3 0 006 0c0-1-1-2-1-3 2 1 4 4 4 7a6 6 0 11-12 0c0-4 3-7 6-11z"/></svg></span>
                 <span>Trending</span>
             </a>
 
-            <a href="#" class="sidebar-item">
+            <a href="subscriptions.html" class="sidebar-item">
                 <span><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M4 5h16a1 1 0 011 1v11a1 1 0 01-1 1h-5v2h-6v-2H4a1 1 0 01-1-1V6a1 1 0 011-1zm5 3v7l6-3.5z"/></svg></span>
                 <span>Subscriptions</span>
             </a>
 
             <div class="sidebar-divider"></div>
 
-            <a href="#" class="sidebar-item">
+            <a href="playlists.html" class="sidebar-item">
                 <span><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="3" y="4" width="18" height="3" rx="1"/><rect x="3" y="10.5" width="18" height="3" rx="1"/><rect x="3" y="17" width="12" height="3" rx="1"/></svg></span>
                 <span>Library</span>
             </a>
 
-            <a href="#" class="sidebar-item">
+            <a href="history.html" class="sidebar-item active">
                 <span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg></span>
                 <span>History</span>
             </a>
@@ -255,97 +255,18 @@
         id="sidebarOverlay"
     ></div>
 
-
-
-    <!-- ================= MAIN ================= -->
-
     <main class="main-content">
-
-
-        <!-- CATEGORY -->
-
-        <div class="category-bar">
-
-            <button
-                class="category-button active"
-                data-category="all"
-            >
-                All
-            </button>
-
-            <button
-                class="category-button"
-                data-category="music"
-            >
-                Music
-            </button>
-
-            <button
-                class="category-button"
-                data-category="gaming"
-            >
-                Gaming
-            </button>
-
-            <button
-                class="category-button"
-                data-category="coding"
-            >
-                Coding
-            </button>
-
-            <button
-                class="category-button"
-                data-category="technology"
-            >
-                Technology
-            </button>
-
-            <button
-                class="category-button"
-                data-category="education"
-            >
-                Education
-            </button>
-
-            <button
-                class="category-button"
-                data-category="news"
-            >
-                News
-            </button>
-
-        </div>
-
-
-
-        <!-- VIDEO SECTION -->
-
-        <section class="video-section">
-
-            <div class="section-header">
-
-                <h1>Recommended videos</h1>
-
+        <section class="video-section" style="padding-top:24px;">
+            <div class="section-header"><h1>Riwayat tontonan</h1></div>
+            <div class="video-grid" id="videoGrid"></div>
+            <div class="studio-card" id="historyEmptyState" style="max-width:520px;margin-top:16px;display:none;">
+                <p class="studio-prompt-text" style="text-align:left;">Video yang kamu tonton akan muncul di sini.</p>
             </div>
-
-
-            <!-- JavaScript akan memasukkan video ke sini -->
-
-            <div
-                class="video-grid"
-                id="videoGrid"
-            ></div>
-
         </section>
-
     </main>
 
-
-
-    <!-- ================= JAVASCRIPT ================= -->
-
-    <script src="js/main.js"></script>
-
+    <script>window.MAB_ROOT = "../";</script>
+    <script src="../js/main.js"></script>
+    <script src="history.js"></script>
 </body>
 </html>
